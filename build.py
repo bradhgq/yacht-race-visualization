@@ -94,13 +94,19 @@ def main():
     assert n == 1, 'DATA:FETCH markers not found in index.html'
     html = html.replace('<link rel="stylesheet" href="styles.css?v=%s">' % version,
                         '<style>\n' + stamp((SRC / 'styles.css').read_text()) + '\n</style>')
+    # inline scripts don't defer — drop the head tags and re-inline them at the
+    # end of <body> so the DOM (and Plotly) exist before app code runs
+    tail = ''
+    plotly = (SRC / 'vendor' / 'plotly-basic-2.35.2.min.js').read_text()
+    tail += '<script id="plotlyjs">\n' + plotly + '\n</script>\n'
     for f in ['helpers.js', 'app.js']:
         tag = '<script src="%s?v=%s" defer></script>' % (f, version)
         assert tag in html, tag
-        html = html.replace(tag, '<script>\n' + stamp((SRC / f).read_text()) + '\n</script>')
-    plotly = (SRC / 'vendor' / 'plotly-basic-2.35.2.min.js').read_text()
-    html = html.replace('<script src="vendor/plotly-basic-2.35.2.min.js" id="plotlyjs" defer></script>',
-                        '<script id="plotlyjs">\n' + plotly + '\n</script>')
+        html = html.replace(tag, '')
+        tail += '<script>\n' + stamp((SRC / f).read_text()) + '\n</script>\n'
+    html = html.replace('<script src="vendor/plotly-basic-2.35.2.min.js" id="plotlyjs" defer></script>', '')
+    assert '</body>' in html
+    html = html.replace('</body>', tail + '</body>')
     (DIST / 'standalone.html').write_text(html)
 
     sizes = {p.relative_to(DIST).as_posix(): p.stat().st_size
