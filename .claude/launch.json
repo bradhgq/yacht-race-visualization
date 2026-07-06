@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dist",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-u", "-m", "http.server", "8113", "--bind", "127.0.0.1", "-d", "/Users/brad/Downloads/ragana-dashboard/dist"],
+      "port": 8113
+    }
+  ]
+}

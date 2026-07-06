@@ -141,7 +141,11 @@ const SCOPES = {
 const pending = new Set(); let rafId = 0;
 function render(scope){
   for(const c of SCOPES[scope]) pending.add(c);
-  if(!rafId) rafId = requestAnimationFrame(flush);
+  if(rafId) return;
+  rafId = 1;
+  // rAF batches rapid toggles into one paint; it never fires in a hidden tab,
+  // so fall back to a timeout there (page loaded in a background tab)
+  if(document.hidden) setTimeout(flush, 0); else requestAnimationFrame(flush);
 }
 function flush(){
   rafId = 0;
