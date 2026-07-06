@@ -20,6 +20,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 SRC, DIST = ROOT / 'src', ROOT / 'dist'
 QUICK_GRPS = {'ragana', 'class', 'nbr', 'podium', 'club', 'maxi'}
+# boats selected by default in app.js (S.boats) must ship with tracks in core
+# even when outside the quick groups — Carina is sdl_other but default-on
+DEFAULT_BOATS = {'RAGANA', 'Christopher Dragon', 'Divide By Zero', 'In Theory', 'Gesture',
+                 'Nicole', 'Carina', 'Hissy Fit II', 'Phoenix USA25329', 'Banter',
+                 'Touch of Grey', 'Gemini II'}
 # used by the app; 'mil' exists in the source data but nothing renders it
 KEEP = ['events', 'watches', 'recon', 'parkFair', 'stats', 'start', 'fin', 'meta']
 
@@ -47,12 +52,16 @@ def main():
     core = {k: data[k] for k in KEEP}
     core['boats'] = {}
     more = {}
+    assert DEFAULT_BOATS <= set(data['boats']), DEFAULT_BOATS - set(data['boats'])
     for name, boat in data['boats'].items():   # insertion order is meaningful (palette assignment)
-        if boat['meta']['grp'] in QUICK_GRPS:
+        if boat['meta']['grp'] in QUICK_GRPS or name in DEFAULT_BOATS:
             core['boats'][name] = boat
         else:
             core['boats'][name] = {'meta': boat['meta']}
             more[name] = {k: v for k, v in boat.items() if k != 'meta'}
+
+    for name in DEFAULT_BOATS:   # default selection must render on first paint
+        assert 't' in core['boats'][name], f'{name} shipped without a track in core.json'
 
     payloads = {'core.json': compact(core), 'more.json': compact(more),
                 'fleet.json': compact(data['fleet'])}

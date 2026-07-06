@@ -22,7 +22,7 @@ const plotlyReady = new Promise(res => {
   s.addEventListener('error', res);   // charts will show an error via the guard below
 });
 
-function dataURL(name) { return 'data/' + name + '?v=be0b8c263b'; }
+function dataURL(name) { return 'data/' + name + '?v=dc7a5b79a9'; }
 async function loadJSON(name) {
   const r = await fetch(dataURL(name));
   if (!r.ok) throw new Error(name + ': HTTP ' + r.status);
@@ -51,6 +51,7 @@ const EVCAT = {
 /* ═══ state ═══ */
 const QUICK_GRPS = ['ragana','class','nbr','podium','club','maxi'];
 const S = {
+  // keep in sync with DEFAULT_BOATS in build.py so every default boat's track ships in core.json
   boats: new Set(['RAGANA','Christopher Dragon','Divide By Zero','In Theory','Gesture','Nicole','Carina','Hissy Fit II','Phoenix USA25329','Banter','Touch of Grey','Gemini II']),
   ev: new Set(['milestone','systems','tactics','sail','insight','crew']),
   watches:false, log:true, fleet:true, gs:true, rhumb:true,
@@ -203,19 +204,22 @@ function makeChip(label,color,active,onclick,locked,cls){
   if(locked) el.disabled=true; else el.onclick=onclick;
   return el;
 }
-function toggleBoat(nm, rowEl){
+/* loading/error live in state (not the DOM) — buildMorePanel re-renders them,
+   so a queued re-render can't wipe them out */
+const trackLoading = new Set();
+let trackLoadErr = null;
+function toggleBoat(nm){
   if(S.boats.has(nm)){ S.boats.delete(nm); render('boats'); return; }
   S.boats.add(nm);
-  render('boats');
   if(!hasTrack(nm)){
-    if(rowEl) rowEl.classList.add('loading');
-    ensureTracks(nm).then(()=>render('boats')).catch(()=>{
-      S.boats.delete(nm); render('boats');
-      const mp=document.getElementById('morePanel');
-      if(mp && S.showMore) mp.insertAdjacentHTML('afterbegin',
-        '<div class="note" style="color:#A33">Couldn’t load that boat’s track — check your connection and try again.</div>');
-    });
+    trackLoading.add(nm);
+    ensureTracks(nm)
+      .then(()=>{ trackLoadErr=null; })
+      .catch(()=>{ S.boats.delete(nm);
+        trackLoadErr='Couldn’t load that boat’s track — check your connection and try again.'; })
+      .finally(()=>{ trackLoading.delete(nm); render('boats'); });
   }
+  render('boats');
 }
 function buildControls(){
   const chips=document.getElementById('chips'); chips.innerHTML='';
@@ -260,8 +264,9 @@ function buildControls(){
   const sel=document.getElementById('refsel'); sel.innerHTML='';
   for(const nm of ORDER){ if(!D.boats[nm].meta.tcf)continue;
     const o=document.createElement('option'); o.value=nm; o.textContent=nm; if(nm===S.ref)o.selected=true; sel.appendChild(o); }
-  sel.onchange=e=>{ S.ref=e.target.value;
-    if(!hasTrack(S.ref)) ensureTracks(S.ref).then(()=>render('race')).catch(()=>{});
+  sel.onchange=e=>{ const prev=S.ref; S.ref=e.target.value;
+    if(!hasTrack(S.ref)) ensureTracks(S.ref).then(()=>render('race'))
+      .catch(()=>{ S.ref=prev; render('race'); });   // fetch failed: fall back to the old reference
     render('race'); };
   bindMode('mode_h','h','raceMode'); bindMode('mode_e','e','raceMode');
   bindMode('view_p','p','raceView'); bindMode('view_t','t','raceView');
@@ -289,19 +294,20 @@ function buildMorePanel(){
   if(!S.showMore){ panel.style.display='none'; panel.innerHTML=''; return; }
   panel.style.display='block';
   const row = nm => { const b=D.boats[nm];
-    return `<button type="button" class="more-row${S.boats.has(nm)?' on':''}" aria-pressed="${S.boats.has(nm)}" data-nm="${nm.replace(/"/g,'&quot;')}">
+    return `<button type="button" class="more-row${S.boats.has(nm)?' on':''}${trackLoading.has(nm)?' loading':''}" aria-pressed="${S.boats.has(nm)}" data-nm="${nm.replace(/"/g,'&quot;')}">
       <span class="more-rank">${b.meta.sdl?'#'+b.meta.sdl:'—'}</span><span class="more-name">${nm}</span>
       <span class="more-type">${b.meta.typ||''}</span><span class="more-corr">${b.meta.corr||(b.meta.retireReason?'DNF':'—')}</span></button>`; };
   const ranked=ORDER.filter(nm=>D.boats[nm].meta.sdl!=null).sort((a,b)=>D.boats[a].meta.sdl-D.boats[b].meta.sdl);
   const dnf=ORDER.filter(nm=>D.boats[nm].meta.grp==='sdl_dnf');
   const others=ORDER.filter(nm=>D.boats[nm].meta.grp==='maxi');
-  panel.innerHTML=`<div class="note" style="margin-bottom:8px">Tap any boat to add or remove it. Ranked by St. David's Lighthouse corrected time.</div>
+  panel.innerHTML=`${trackLoadErr?`<div class="note" style="color:#A33;margin-bottom:6px">${trackLoadErr}</div>`:''}
+    <div class="note" style="margin-bottom:8px">Tap any boat to add or remove it. Ranked by St. David's Lighthouse corrected time.</div>
     <div class="more-cols">
       <div><div class="more-head">SDL Overall (${ranked.length})</div><div class="more-list">${ranked.map(row).join('')}</div></div>
       <div><div class="more-head">Retired (${dnf.length})</div><div class="more-list" style="margin-bottom:12px">${dnf.map(row).join('')}</div>
         <div class="more-head">Outside SDL (${others.length})</div><div class="more-list">${others.map(row).join('')}</div></div>
     </div>`;
-  panel.querySelectorAll('.more-row').forEach(r=>{ r.onclick=()=>toggleBoat(r.dataset.nm, r); });
+  panel.querySelectorAll('.more-row').forEach(r=>{ r.onclick=()=>toggleBoat(r.dataset.nm); });
 }
 
 /* ═══ KPIs (static; built once) ═══ */
@@ -389,7 +395,14 @@ const raceX = m => S.axis==='t' ? edtStr(m===0 ? Date.parse(D.boats['RAGANA'].me
 function buildRace(){
   document.getElementById('refname').textContent=S.ref;
   document.getElementById('racenote').innerHTML=RACE_NOTES[S.raceMode];
-  if(!hasTrack(S.ref)) return;   // re-rendered when the reference's track arrives
+  if(!hasTrack(S.ref)){
+    // reference's track still downloading — blank the chart rather than leave
+    // the previous reference's traces under the new header
+    Plotly.react('race', [], {...BASE(), xaxis:{...GAX,visible:false}, yaxis:{...GAX,visible:false},
+      annotations:[{text:'loading '+S.ref+'’s track…',xref:'paper',yref:'paper',x:.5,y:.5,showarrow:false,
+        font:{size:12,color:'#4C6274',family:'SF Mono, Menlo, monospace'}}]}, PLOTCFG);
+    return;
+  }
   const ref=D.boats[S.ref], refStart=startOf(ref), refTCF=ref.meta.tcf||1;
   const ms=[]; for(let m=620;m>=30;m-=10)ms.push(m);
   const refT=ms.map(m=>hitTime(ref,m));
@@ -574,6 +587,11 @@ function showError(e){
     if(!window.Plotly){ showChartError(); return; }
     chartsOK=true; render('all');
     if(!FLEET) loadFleet();            // ghost layer after first paint
+    // safety net: if a default-selected boat's track isn't in core (build
+    // drift from S.boats), pull the on-demand payload rather than silently
+    // dropping the boat from the charts
+    const missing=[...S.boats].find(nm=>!hasTrack(nm));
+    if(missing) ensureTracks(missing).then(()=>render('boats')).catch(()=>{});
   });
 
   // compress the sticky controls bar once the page scrolls under it
