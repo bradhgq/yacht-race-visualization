@@ -17,7 +17,7 @@
 <meta name="twitter:title" content="RAGANA · Newport Bermuda 2026 · Race Analysis">
 <meta name="twitter:description" content="A crew's-eye reconstruction of the 2026 Newport Bermuda Race from the YB tracker and the nav log.">
 <meta name="twitter:image" content="https://hgq.fyi/ragana-newport-bermuda-2026/og.png">
-<link rel="icon" href="favicon.svg?v=875d50b687" type="image/svg+xml">
+<link rel="icon" href="favicon.svg?v=be0b8c263b" type="image/svg+xml">
 <style>
 :root{
   --water:#EEF4F6; --paper:#FBFCFB; --card:#FFFFFF; --ink:#17293A; --ink2:#4C6274;
@@ -132,10 +132,10 @@ select{font-family:var(--mono);font-size:12px;border:1px solid var(--grid);borde
 #finstrip{height:min(300px,70vw)}
 #xte,#sog{height:420px}
 
-#eventtable,#recon,#parktable{overflow-x:auto}
+#eventtable,#recon,.tblwrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11.5px;margin:8px 0 10px;min-width:720px}
 th{text-align:left;padding:6px 8px;border-bottom:1.5px solid var(--ink);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);white-space:nowrap;background:var(--card)}
-td{padding:6px 8px;border-bottom:1px solid #EDF2F4;white-space:nowrap;background:var(--card)}
+td{padding:6px 8px;border-bottom:1px solid #EDF2F4;white-space:nowrap;background:var(--card);vertical-align:top}
 /* sticky first column so wide tables stay readable while scrolling */
 th:first-child,td:first-child{position:sticky;left:0;z-index:1}
 th:first-child{z-index:2}
@@ -180,8 +180,8 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
   .modebtn{padding:6px 10px}
   .axis-toggle button{padding:8px 12px}
   .more-row{padding:8px 8px}
-  #map{height:78vw}
-  #dtf{height:72vw}
+  #map{height:min(118vw,72vh)}
+  #dtf{height:80vw}
   #race{height:96vw}
   #finstrip{height:66vw}
   #xte,#sog{height:74vw}
@@ -287,7 +287,7 @@ const plotlyReady = new Promise(res => {
   s.addEventListener('error', res);   // charts will show an error via the guard below
 });
 
-function dataURL(name) { return 'data/' + name + '?v=875d50b687'; }
+function dataURL(name) { return 'data/' + name + '?v=be0b8c263b'; }
 async function loadJSON(name) {
   const r = await fetch(dataURL(name));
   if (!r.ok) throw new Error(name + ': HTTP ' + r.status);
@@ -618,9 +618,9 @@ function buildMap(){
     text:D.recon.map(r=>r.temp?r.temp+'°':''),textposition:'middle right',textfont:{size:10,color:'#C0392B',family:'SF Mono, Menlo, monospace'},
     name:'Nav log + water temp',hovertext:D.recon.map(r=>wrapText(`Log ${r.t} (true ${r.matched_edt}) · ${r.log[0]}, ${r.log[1]}${r.temp?' · '+r.temp+'°F':''} — ${r.d} nm from tracker`)),hoverinfo:'text'});
   tr.push({x:[D.start[1]],y:[D.start[0]],mode:'markers+text',marker:{symbol:'circle',size:10,color:'#17293A'},
-    text:['NEWPORT'],textposition:'top center',textfont:{size:10,family:'SF Mono, Menlo, monospace'},showlegend:false,hoverinfo:'skip'});
+    text:['NEWPORT'],textposition:narrow()?'middle right':'top center',textfont:{size:10,family:'SF Mono, Menlo, monospace'},showlegend:false,hoverinfo:'skip'});
   tr.push({x:[D.fin[1]],y:[D.fin[0]],mode:'markers+text',marker:{symbol:'square',size:10,color:'#17293A'},
-    text:["ST. DAVID'S"],textposition:'bottom center',textfont:{size:10,family:'SF Mono, Menlo, monospace'},showlegend:false,hoverinfo:'skip'});
+    text:["ST. DAVID'S"],textposition:narrow()?'middle left':'bottom center',textfont:{size:10,family:'SF Mono, Menlo, monospace'},showlegend:false,hoverinfo:'skip'});
   // phase labels: thin leader lines from empty corners to RAGANA's track at each phase midpoint
   const rag=D.boats['RAGANA'];
   const posAtDTF = m => { for(let i=0;i<rag.dtf.length;i++){ if(rag.dtf[i]<=m) return [rag.lon[i],rag.lat[i]]; }
@@ -630,16 +630,17 @@ function buildMap(){
   const LBL=[ [570,'START + HEAVY RUNNING', 96,-6], [450,'GULF STREAM APPROACH', 116,-14],
     [345,'STREAM + A3 RUN', 122,-8], [238,'SUNDAY BEAT — the recovery', -128,44],
     [128,'THE PARK — Mon dead core', -118,36], [4,'FINISH · Tue 15:55 EDT', 58,-52] ];
-  const mapAnn = LBL.map(([m,txt,ax,ay])=>{ const [x,y]=posAtDTF(m);
+  const nw = narrow();
+  // the leader-line labels need open water around them — no room on a phone
+  const mapAnn = nw ? [] : LBL.map(([m,txt,ax,ay])=>{ const [x,y]=posAtDTF(m);
     return {x,y,ax,ay,xref:'x',yref:'y',text:txt,showarrow:true,arrowhead:0,arrowwidth:.7,
       arrowcolor:'rgba(81,103,122,0.55)',standoff:3,
       font:{size:8.5,color:'#4C6274',family:'SF Mono, Menlo, monospace'},align:'left'}; });
-  const nw = narrow();
   Plotly.react('map',tr,{...BASE(), annotations:mapAnn,
-    xaxis:{...GAX,title:{text:'Longitude',font:AXFONT},range:[-72,-63.6]},
-    yaxis:{...GAX,title:{text:'Latitude',font:AXFONT},range:[31.9,42]},
-    legend: nw ? {orientation:'h',y:-0.12,font:{size:10}} : {orientation:'v',x:1.001,y:1,font:{size:10.5}},
-    margin: nw ? {l:44,r:10,t:8,b:40} : {l:56,r:150,t:8,b:40}}, PLOTCFG);
+    xaxis:{...GAX,title:nw?undefined:{text:'Longitude',font:AXFONT},range:[-72,-63.6]},
+    yaxis:{...GAX,title:nw?undefined:{text:'Latitude',font:AXFONT},range:[31.9,42]},
+    legend: nw ? {orientation:'h',y:-0.08,font:{size:10}} : {orientation:'v',x:1.001,y:1,font:{size:10.5}},
+    margin: nw ? {l:36,r:10,t:8,b:30} : {l:56,r:150,t:8,b:40}}, PLOTCFG);
 }
 
 /* ═══ the race chart (own DTF axis unless the shared toggle is on time) ═══ */
@@ -678,7 +679,7 @@ function buildRace(){
   const shapes=[], ann=[];
   PHASES.forEach(([a,b,l],i)=>{ const x0=raceX(a===635?634:a), x1=raceX(b===0?1:b);
     shapes.push({type:'rect',xref:'x',yref:'paper',x0,x1,y0:0,y1:1,fillcolor:i%2?'rgba(23,41,58,0.028)':'rgba(0,0,0,0)',line:{width:0}});
-    ann.push({x:S.axis==='t'? edtStr((ragT(a===635?634:a)+ragT(b===0?20:b))/2) : (a+b)/2,
+    if(!narrow()) ann.push({x:S.axis==='t'? edtStr((ragT(a===635?634:a)+ragT(b===0?20:b))/2) : (a+b)/2,
       y:1.03,xref:'x',yref:'paper',text:l,showarrow:false,font:{size:9,color:'#4C6274',family:'SF Mono, Menlo, monospace'}}); });
   shapes.push(...gsShape(), ...watchShapes());
   const evs=D.events.filter(e=>S.ev.has(e.cat));
@@ -686,9 +687,12 @@ function buildRace(){
   if(evs.length) tr.push({x:evs.map(e=>evX(e.t)),y:evs.map(()=>19),yaxis:'y2',mode:'markers',
     marker:{symbol:evs.map(e=>EVCAT[e.cat].sym),size:evs.map(e=>['milestone','insight'].includes(e.cat)?12:9),color:evs.map(e=>EVCAT[e.cat].c),line:{width:1,color:'#fff'}},
     text:evs.map(e=>wrapText(`${e.label} · ${fmt(e.t)} EDT — ${e.txt}`)),hoverinfo:'text',showlegend:false});
+  const yTitle = narrow()
+    ? (pace?'min/100nm':'min')+' vs ref (+ = behind)'
+    : (pace?'Min per 100 nm':'Minutes')+' behind (+) / ahead (−) of '+S.ref+(S.raceMode==='h'?' — corrected':' — elapsed');
   Plotly.react('race',tr,{...BASE(),shapes,annotations:ann,margin:{...BASE().margin,t:26},
-    xaxis:sharedXaxis(),
-    yaxis:{...GAX,title:{text:(pace?'Min per 100 nm':'Minutes')+' behind (+) / ahead (−) of '+S.ref+(S.raceMode==='h'?' — corrected':' — elapsed'),font:AXFONT}},
+    xaxis:sharedXaxis(narrow()?{title:undefined}:undefined),
+    yaxis:{...GAX,title:{text:yTitle,font:AXFONT}},
     yaxis2:{overlaying:'y',side:'right',range:[0,20],visible:false,fixedrange:true}}, PLOTCFG);
 }
 
@@ -707,7 +711,7 @@ function buildDTF(){
   PHASES.forEach(([a,b,l],i)=>{
     const t0=ragT(a===635?634:a), t1=(b===0? Date.parse(D.boats['RAGANA'].meta.fin.replace(' ','T')+'-04:00')/1000 : ragT(b));
     if(i>0) shapes.push({type:'line',xref:'x',yref:'paper',x0:edtStr(t0),x1:edtStr(t0),y0:0,y1:1,line:{color:'#B9CBD4',width:1}});
-    ann.push({x:edtStr((t0+t1)/2),y:1.05,xref:'x',yref:'paper',text:l,showarrow:false,
+    if(!narrow()) ann.push({x:edtStr((t0+t1)/2),y:1.05,xref:'x',yref:'paper',text:l,showarrow:false,
       font:{size:8.5,color:'#4C6274',family:'SF Mono, Menlo, monospace'}}); });
   Plotly.react('dtf',tr,{...BASE(),shapes,annotations:ann,margin:{...BASE().margin,t:22,b:36},
     xaxis:{...GAX,tickformat:'%a %H:%M',type:'date'},
@@ -731,7 +735,7 @@ function buildSOG(){
     {type:'rect',xref:'x',yref:'paper',x0:180,x1:80,y0:0,y1:1,fillcolor:'rgba(23,41,58,0.05)',line:{width:0}},
     {type:'rect',xref:'x',yref:'paper',x0:160,x1:140,y0:0,y1:1,fillcolor:'rgba(192,57,43,0.07)',line:{width:0}}]);
   Plotly.react('sog',tr,{...BASE(),shapes,
-    xaxis:sharedXaxis(S.axis==='d'?{title:{text:'Distance to finish (nm) ⟵ (grey = park zone, red = dead core)',font:AXFONT}}:{}),
+    xaxis:sharedXaxis(S.axis==='d'?{title:{text:narrow()?'nm to finish ⟵ (grey = park, red = dead core)':'Distance to finish (nm) ⟵ (grey = park zone, red = dead core)',font:AXFONT}}:{}),
     yaxis:{...GAX,title:{text:'Speed over ground (kts)',font:AXFONT},range:[0,14]}}, PLOTCFG);
 }
 
@@ -745,7 +749,7 @@ function buildParkTable(){
      <td style="text-align:right">${r.hrs}</td><td style="text-align:right">${r.mean}</td><td style="text-align:right">${r.u4}%</td>
      <td style="text-align:right">${r.u2}%</td><td style="text-align:right">${r.xte>0?'+':''}${r.xte}</td></tr>`).join('');
   document.getElementById('parktable').innerHTML=
-    `<table><thead><tr><th scope="col">Boat</th><th scope="col">SDL</th><th scope="col">Reached zone</th><th scope="col">Hours to cross</th><th scope="col">Avg kts</th><th scope="col">% under 4</th><th scope="col">% under 2</th><th scope="col">Avg nm E+</th></tr></thead><tbody>${rows}</tbody></table>
+    `<div class="tblwrap"><table><thead><tr><th scope="col">Boat</th><th scope="col">SDL</th><th scope="col">Reached zone</th><th scope="col">Hours to cross</th><th scope="col">Avg kts</th><th scope="col">% under 4</th><th scope="col">% under 2</th><th scope="col">Avg nm E+</th></tr></thead><tbody>${rows}</tbody></table></div>
      <div class="note">The boats you've selected, fastest crossing first. For context on RAGANA's run, Carina makes the cleanest match: she reached the zone 20 min before RAGANA, ~10 nm nearer the rhumb, and got through 3.7 hours quicker.</div>`;
 }
 function buildEventTable(){
@@ -801,7 +805,7 @@ function buildFinStrip(){
       arrowhead:0,arrowwidth:.7,arrowcolor:'rgba(194,24,126,0.55)',standoff:9,
       font:{size:10,color:'#C2187E',family:'SF Mono, Menlo, monospace'}}];
   Plotly.react('finstrip',tr,{...BASE(),shapes,annotations:ann,margin:{...BASE().margin,t:14,b:44},showlegend:false,
-    xaxis:{...GAX,title:{text:'Corrected time (hours) — St. David’s Lighthouse fleet, left is better',font:AXFONT}},
+    xaxis:{...GAX,title:{text:narrow()?'Corrected time (h) — left is better':'Corrected time (hours) — St. David’s Lighthouse fleet, left is better',font:AXFONT}},
     yaxis:{...GAX,visible:false,range:[-0.8,0.8]}}, PLOTCFG);
 }
 
