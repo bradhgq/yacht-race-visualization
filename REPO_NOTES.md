@@ -115,3 +115,44 @@ records what I *did* about it.
     See DOC_GAPS #14.
 19. **Name-hygiene assertions extended to every selection surface** (defaults,
     group buttons, module boat lists) — Phase 3 scope, per adjudication #4.
+
+## Phase 2/3 — shell migration + tests
+
+20. **Packaging: classic scripts + registration, not ESM.** RETROSPECTIVE §2
+    sketches `export default` for race config and modules; the shell instead
+    uses `window.__RACE_CONFIG__` / `registerModule()` / `registerOverlay()`
+    with the ABI **object shapes unchanged**. Why: the standalone single-file
+    build stays a trivial script concat (ESM inline imports break on file://),
+    and the node harness stays dependency-free. The ctx ABI is frozen as
+    implemented in `shell/app/core.js` (`makeCtx`).
+21. **copy.js is copy.md's machine form.** The retro's "copy.md (structured
+    slots)" is implemented as a hand-derived `copy.js` (`window.__COPY__`);
+    copy.md stays the human-readable frozen record. Keeping them in sync is a
+    per-race authoring step — candidate for a generator later.
+22. **Overlay ABI addition: `mapLayer: under|over|top`** — the shipped map's
+    draw order (Gulf Stream under boats, watch segments over boats, nav-log
+    fixes over event markers) needs three insertion slots; the retro ABI had
+    no ordering hint. Additive, optional (default `over`).
+23. **Park SOG shading via config, not module shapes.** Retro §1 says the park
+    rects "belong to the park module", but the section-module ABI has no
+    chart-shape hook; the shading ships as `charts.parkShading` config read by
+    the sog chart (renders only when present + distance axis). Revisit if the
+    ABI ever grows a bands hook for section modules.
+24. **navlog registers twice** (section: recon table; overlay: map pill +
+    fixes) — one feature, two ABI surfaces; the ABI supports it naturally.
+25. **presentation.js config additions** discovered during the port:
+    `groups.{dnfKey,outsideKey,fallbackKey}`, `eventCategories.*.big` (12/14px
+    markers), `charts.{dtf,xte,sog}.eventTopY`, `race.ratingLabel`,
+    `controls.pills` (pill row order incl. shell pills '@ghosts'/'@rhumb'),
+    `layout` (section order incl. module mounts + 'two:' column pairing),
+    `course.dtfStartFallback`, `meta.twitterDescription`.
+26. **Two stylesheets** (tokens.css + styles.css) replace the single
+    styles.css; build.py stamps and inlines both.
+27. **Harness invocation**: `node tests/test_dashboard.js <race_dir>
+    [regression.json]` against `dist/standalone.html` (embedded data → no
+    fetch mocks), not REPO_SPEC's `<built.html> <goldens.json>` positional
+    pair. Fixtures live at `races/<race>/tests/regression.json` (prompt wins
+    over REPO_SPEC's `tests/goldens/<race>.json`). 11 fixed-count assertions
+    across the four I10 categories; the count itself is asserted so a skipped
+    block fails loudly. Verified green under both TZ=America/New_York and
+    TZ=UTC; the tampered-golden path refuses the build.

@@ -1,0 +1,32 @@
+name: ci
+
+on: [push, pull_request]
+
+jobs:
+  nb2026:
+    runs-on: ubuntu-latest
+    env:
+      TZ: America/New_York   # I1: the suite must run under a non-UTC zone
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: pip install -r requirements.txt
+
+      - name: Build data payload from the raw tracker export
+        run: python3 pipeline/build_data.py races/nb2026/config.yaml
+
+      - name: GATE A — semantic parity vs the frozen payload (tie-exempt rule)
+        run: |
+          python3 pipeline/compare_data.py \
+            examples/nb2026/out/dashboard_data.json \
+            examples/nb2026/frozen/dashboard_data.json \
+            --ties examples/nb2026/out/rounding_ties.json
+
+      - name: Build the dashboard (runs the regression harness as its gate)
+        run: python3 shell/build.py races/nb2026
+
+      - name: Regression harness, explicitly, under UTC as well
+        run: TZ=UTC node tests/test_dashboard.js races/nb2026

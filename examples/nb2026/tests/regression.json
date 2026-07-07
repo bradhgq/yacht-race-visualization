@@ -1,0 +1,11 @@
+{
+  "_comment": "NB2026 frozen goldens (prime rule 3) — the four I10 categories. Changing any value requires a recorded user instruction. finstrip_count is 82 scored boats (adjudication said 81 = non-hero dots; oracle-verified 82, see REPO_NOTES #17).",
+  "tz_probe": { "epoch": 1782094500, "rendered": "2026-06-21 22:15" },
+  "endpoints": { "ref": "Christopher Dragon", "corrected_min": 94.0, "elapsed_min": 155.3, "pace_min_per_100": 14.81 },
+  "module_canaries": { "park": { "boat": "Gemini II", "u4": 31 } },
+  "names_present": ["Phoenix USA25329", "Phoenix USA93063", "Hissy Fit II"],
+  "names_absent": ["Hissy  Fit II"],
+  "finstrip_count": 82,
+  "duration_roundtrip": { "str": "4d 01:34:52", "seconds": 351292 },
+  "start_window": { "boat": "RAGANA", "date": "2026-06-19", "hm_min": "13:40", "hm_max": "14:30" }
+}
