@@ -92,7 +92,8 @@ def consistency_check(race_dir, cfg):
     fix_path = race_dir / 'tests' / 'regression.json'
     if fix_path.exists() and ana.get('goldens'):
         g, f = ana['goldens'], json.loads(fix_path.read_text())
-        for key in ('tz_probe', 'names_present', 'names_absent', 'finstrip_count'):
+        for key in ('tz_probe', 'names_present', 'names_absent', 'finstrip_count',
+                    'vmc', 'class_filter', 'tcf_bands', 'distspeed', 'corrections'):
             if key in g and key in f:
                 eq(f'goldens.{key}', g[key], f[key])
         for key in ('ref', 'corrected_min', 'elapsed_min'):
@@ -146,7 +147,8 @@ def section_html(cfg, copy):
 
     def card_plot(cid, hd=None):
         title = hd if hd is not None else f'<h2>{sec[cid]["title"]}</h2>'
-        note = f'<div class="note">{sec[cid]["note"]}</div>' if sec[cid].get('note') else ''
+        # notes carry an id so metric toggles can swap the caption (e.g. SOG|VMC)
+        note = f'<div class="note" id="{cid}_note">{sec[cid]["note"]}</div>' if sec[cid].get('note') else ''
         return (f'<section class="card">\n  {title}\n  {note}\n'
                 f'  <div id="{cid}" class="plot"></div>\n  <div class="tapnote" id="tap_{cid}"></div>\n</section>')
 
@@ -176,8 +178,15 @@ def section_html(cfg, copy):
             return (f'<section class="card">\n  {hd}\n  <div class="note" id="racenote"></div>\n'
                     '  <div id="race" class="plot"></div>\n  <div class="tapnote" id="tap_race"></div>\n</section>')
         if tok in ('xte', 'sog'):
-            return card_plot(tok, f'<div class="hd"><h2>{sec[tok]["title"]}</h2>'
-                                  f'<span class="tools" id="{tok}_axnote"></span></div>')
+            tools = f'<span class="tools" id="{tok}_axnote"></span>'
+            if tok == 'sog':
+                metrics = (cfg.get('charts', {}).get('sog') or {}).get('metrics')
+                if metrics:
+                    tools = ('<span class="tools">'
+                             f'<button class="modebtn" id="sogm_s">{metrics["s"]}</button>'
+                             f'<button class="modebtn" id="sogm_v">{metrics["v"]}</button>'
+                             '&nbsp;·&nbsp;<span id="sog_axnote"></span></span>')
+            return card_plot(tok, f'<div class="hd"><h2>{sec[tok]["title"]}</h2>{tools}</div>')
         if tok == 'events':
             return (f'<section class="card">\n  <h2>{sec["events"]["title"]}</h2>\n'
                     f'  <div class="note">{sec["events"]["note"]}</div>\n'

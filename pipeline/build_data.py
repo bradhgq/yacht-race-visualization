@@ -138,7 +138,7 @@ def main():
                 grp=grp_for(row['rank'], disp), sail=row['sail'])
         else:
             entries[track_name] = dict(
-                disp=disp, typ=row['type'], tcf=None, cls='', clsPos=None, sdl=None,
+                disp=disp, typ=row['type'], tcf=None, cls=row['division'], clsPos=None, sdl=None,
                 corr=None, el=None, fin=None, grp=groups['dnf_key'], sail=row['sail'],
                 retireReason=row['retire_reason'])
     for extra in cfg.get('extra_boats') or []:
@@ -215,11 +215,31 @@ def main():
             skipped.append(name)
             continue
         feat_series[name] = s
+        # per-boat aggregates for the distance-vs-speed view: sailed distance
+        # from the raw pings (same basis as stats.dist_sailed), average speed
+        # against the OFFICIAL elapsed so iso-elapsed rays are exact (v = d/t)
+        hop = geo.hav(s['lat'].shift(), s['lon'].shift(), s['lat'], s['lon']).fillna(0)
+        sailed = float(hop.sum())
+        disp = meta['disp']
+        if meta['el'] and meta['corr']:
+            meta = dict(meta,
+                        sailedNm=tie.r(sailed, 1, f'boats.{disp}.meta.sailedNm'),
+                        avgKt=tie.r(sailed / (scoring.parse_duration(meta['el']) / 3600.0), 2,
+                                    f'boats.{disp}.meta.avgKt'))
+            entries[name] = meta
         g = s.set_index('ts')[['lat', 'lon', 'dtf', 'xte', 'sog']]
         g = g.reindex(g.index.union(grid)).interpolate('time', limit=grid_cfg['interpolate_limit']).reindex(grid)
         g = g[g.index <= s['ts'].max()]
         g = g.dropna(subset=['lat'])
-        disp = meta['disp']
+        # VMC toward the finish: rate of closing distance-to-finish, centered
+        # difference on the grid (grid step 15 min -> ~30-min effective window,
+        # consistent with the SOG smoothing). Negatives are real (tacks, park
+        # drift) and ship as-is. Ends carry no centered estimate -> null.
+        ts_g = np.array([x.timestamp() for x in g.index])
+        dtf_g = g['dtf'].to_numpy(dtype=float)
+        vmc = np.full(len(g), np.nan)
+        if len(g) > 2:
+            vmc[1:-1] = (dtf_g[:-2] - dtf_g[2:]) / ((ts_g[2:] - ts_g[:-2]) / 3600.0)
         boats_out[disp] = dict(
             meta=meta,
             t=[int(x.timestamp()) for x in g.index],
@@ -228,7 +248,9 @@ def main():
             dtf=[tie.r(v, 1, f'boats.{disp}.dtf[{i}]') for i, v in enumerate(g['dtf'])],
             xte=[tie.r(v, 1, f'boats.{disp}.xte[{i}]') for i, v in enumerate(g['xte'])],
             sog=[None if np.isnan(v) else tie.r(v, 1, f'boats.{disp}.sog[{i}]')
-                 for i, v in enumerate(g['sog'])])
+                 for i, v in enumerate(g['sog'])],
+            vmc=[None if np.isnan(v) else tie.r(v, 2, f'boats.{disp}.vmc[{i}]')
+                 for i, v in enumerate(vmc)])
 
     # ── milestone corrected-time series (scoring-function corrected, I2 feeds off official) ──
     mil_cfg = cfg['milestones']

@@ -119,16 +119,17 @@ function watchLegend() {
   return (o && S.ov.watches && o.legendTrace) ? o.legendTrace(makeCtx()) : null;
 }
 
-/* generic line-series builder over selected boats; valueKey ∈ dtf|xte|sog */
+/* generic line-series builder over selected boats; valueKey ∈ dtf|xte|sog|vmc */
+const SERIES_UNIT = { sog: ' kts', vmc: ' kts VMC', xte: ' nm', dtf: ' nm to go' };
 function seriesTraces(valueKey, widthFn) {
   const tr = [];
   for (const nm of ORDER) {
-    if (!S.boats.has(nm) || !hasTrack(nm)) continue; const b = D.boats[nm];
+    if (!S.boats.has(nm) || !hasTrack(nm) || !D.boats[nm][valueKey]) continue; const b = D.boats[nm];
     const xs = [], ys = [];
     for (let i = 0; i < b.t.length; i++) { xs.push(axVal(b, i)); ys.push(b[valueKey][i]); }
     tr.push({ x: xs, y: ys, mode: 'lines', name: nm, showlegend: valueKey === 'dtf',
       line: { color: boatColor[nm], width: widthFn(nm) }, opacity: nm === HERO ? 1 : .82,
-      hovertemplate: `${nm} · %{x}${S.axis === 't' ? '' : ' nm'} · %{y}${valueKey === 'sog' ? ' kts' : (valueKey === 'xte' ? ' nm' : ' nm to go')}<extra></extra>` });
+      hovertemplate: `${nm} · %{x}${S.axis === 't' ? '' : ' nm'} · %{y}${SERIES_UNIT[valueKey] ?? ''}<extra></extra>` });
   }
   return tr;
 }
@@ -158,6 +159,8 @@ function initRegistry() {
     map: ['controls', 'map'],                                  /* map-only pills */
     axis: ['controls', 'race', 'xte', 'sog'],
     race: ['controls', 'race'],
+    speed: ['controls', 'sog'],                                /* SOG|VMC y-metric toggle */
+    controls: ['controls'],                                    /* filter feedback only */
   };
   for (const m of SECTION_MODULES) {
     const el = document.getElementById('sec_' + m.id);
@@ -257,6 +260,59 @@ function toggleBoat(nm) {
   }
   render('boats');
 }
+/* ═══ class + rating-band selection (round 2) ═══
+   Both are set-selection ACTIONS over the one S.boats set, with filter state
+   kept so they compose: when a class and a band are both active the target is
+   the INTERSECTION. S.filterSel tracks only the boats the filters added, so
+   toggling a filter off never removes a manually- or default-selected boat. */
+const clsLabel = n => `${CFG.classFilter.prefix} ${n}`;
+function filterTargets() {
+  if (!S.clsSel.size && !S.band) return null;
+  const out = [];
+  for (const nm of ORDER) {
+    const m = D.boats[nm].meta;
+    if (S.clsSel.size && !S.clsSel.has(m.cls)) continue;
+    if (S.band && !(m.tcf != null && m.tcf >= S.band.min - 1e-9 && m.tcf <= S.band.max + 1e-9)) continue;
+    if (!S.clsSel.size && S.band && !m.corr) continue;   // band alone: scored boats only
+    out.push(nm);
+  }
+  return out;
+}
+function applyFilters() {
+  const target = filterTargets();
+  for (const nm of [...S.filterSel])
+    if (!target || !target.includes(nm)) { if (nm !== HERO) S.boats.delete(nm); S.filterSel.delete(nm); }
+  if (target) for (const nm of target)
+    if (!S.boats.has(nm)) { S.boats.add(nm); S.filterSel.add(nm); }
+  const missing = [...S.filterSel].filter(nm => !hasTrack(nm));
+  if (missing.length) ensureTracks(missing[0]).then(() => render('boats')).catch(() => {});
+  render('boats');
+}
+function toggleClassFilter(n) {
+  if (!CFG.classFilter) return;
+  const label = clsLabel(n);
+  if (!Number.isFinite(n) || !ORDER.some(nm => D.boats[nm].meta.cls === label)) {
+    S.clsErr = (COPY.filters?.noSuchClass || 'No class “{x}” in the record.').replace('{x}', label);
+    render('controls');
+    return;
+  }
+  S.clsErr = null;
+  S.clsSel.has(label) ? S.clsSel.delete(label) : S.clsSel.add(label);
+  applyFilters();
+}
+function bandCount(min, max) {
+  let n = 0;
+  for (const nm of ORDER) { const m = D.boats[nm].meta;
+    if (m.corr && m.tcf != null && m.tcf >= min - 1e-9 && m.tcf <= max + 1e-9) n++; }
+  return n;
+}
+function setBand(min, max, key) {
+  S.clsErr = null;
+  S.band = (S.band && S.band.key === key && key !== 'custom') ? null
+    : (min <= max ? { min, max, key } : null);
+  applyFilters();
+}
+
 function buildControls() {
   const chips = document.getElementById('chips'); chips.innerHTML = '';
   const quick = ORDER.filter(nm => CFG.groups.quick.includes(D.boats[nm].meta.grp));
@@ -285,7 +341,72 @@ function buildControls() {
     gb.appendChild(btn);
   }
   const clr = document.createElement('button'); clr.type = 'button'; clr.className = 'grpbtn'; clr.textContent = HERO + ' only';
-  clr.onclick = () => { S.boats = new Set([HERO]); render('boats'); }; gb.appendChild(clr);
+  clr.onclick = () => { S.boats = new Set([HERO]); S.clsSel.clear(); S.band = null; S.filterSel.clear(); render('boats'); }; gb.appendChild(clr);
+
+  // class-number input: one control instead of a button per class (round 2)
+  if (CFG.classFilter) {
+    const cf = CFG.classFilter;
+    const wrapEl = document.createElement('span'); wrapEl.className = 'clsadd';
+    wrapEl.title = COPY.filters?.classTitle || '';
+    const lab = document.createElement('span'); lab.className = 'clsadd-label'; lab.textContent = cf.inputLabel;
+    const inp = document.createElement('input');
+    inp.id = 'clsInput'; inp.type = 'text'; inp.inputMode = 'numeric';
+    inp.placeholder = cf.placeholder; inp.setAttribute('aria-label', COPY.filters?.classTitle || cf.inputLabel);
+    const go = document.createElement('button'); go.type = 'button'; go.className = 'grpbtn clsadd-go'; go.textContent = 'Add';
+    const submit = () => { toggleClassFilter(parseInt(inp.value, 10)); };
+    go.onclick = submit;
+    inp.onkeydown = e => { if (e.key === 'Enter') submit(); };
+    for (const el of [lab, inp, go]) wrapEl.appendChild(el);
+    gb.appendChild(wrapEl);
+    for (const label of [...S.clsSel]) {   // active classes read as toggled-on group buttons
+      const b = document.createElement('button'); b.type = 'button';
+      b.className = 'grpbtn allon'; b.textContent = '− ' + label;
+      b.setAttribute('aria-pressed', 'true');
+      b.onclick = () => { S.clsSel.delete(label); applyFilters(); };
+      gb.appendChild(b);
+    }
+    if (S.clsErr) {
+      const err = document.createElement('span'); err.className = 'clserr';
+      err.setAttribute('role', 'status'); err.textContent = S.clsErr;
+      gb.appendChild(err);
+    }
+  }
+  // F-TCF band chips: true rating peers around the hero (round 2)
+  if (CFG.ratingBands) {
+    const t0 = D.boats[HERO].meta.tcf;
+    const bandRow = document.createElement('span'); bandRow.className = 'bandrow';
+    bandRow.title = COPY.filters?.bandTitle || '';
+    const lab = document.createElement('span'); lab.className = 'clsadd-label';
+    lab.textContent = `${CFG.race.ratingLabel} ${t0}`;
+    bandRow.appendChild(lab);
+    for (const w of CFG.ratingBands.widths) {
+      const key = String(w), n = bandCount(t0 - w, t0 + w);
+      const on = S.band && S.band.key === key;
+      const b = document.createElement('button'); b.type = 'button';
+      b.className = 'grpbtn' + (on ? ' allon' : '');
+      b.textContent = (COPY.filters?.bandChip || '±{w} ({n})').replace('{w}', key).replace('{n}', n);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.onclick = () => setBand(t0 - w, t0 + w, key);
+      bandRow.appendChild(b);
+    }
+    // custom min/max band
+    const mkNum = (id, ph) => { const i = document.createElement('input');
+      i.id = id; i.type = 'text'; i.inputMode = 'decimal'; i.placeholder = ph; i.className = 'bandnum'; return i; };
+    const lo = mkNum('bandMin', S.band?.key === 'custom' ? String(S.band.min) : 'min');
+    const hi = mkNum('bandMax', S.band?.key === 'custom' ? String(S.band.max) : 'max');
+    const setb = document.createElement('button'); setb.type = 'button';
+    setb.className = 'grpbtn' + (S.band?.key === 'custom' ? ' allon' : '');
+    setb.textContent = COPY.filters?.bandApply || 'set';
+    setb.onclick = () => {
+      if (S.band?.key === 'custom' && !lo.value && !hi.value) { setBand(1, 0, 'custom'); return; }  // clear
+      const mn = parseFloat(lo.value), mx = parseFloat(hi.value);
+      if (Number.isFinite(mn) && Number.isFinite(mx)) setBand(mn, mx, 'custom');
+    };
+    const cl = document.createElement('span'); cl.className = 'clsadd-label';
+    cl.textContent = COPY.filters?.bandCustomLabel || 'custom';
+    for (const el of [cl, lo, hi, setb]) bandRow.appendChild(el);
+    gb.appendChild(bandRow);
+  }
 
   const ov = document.getElementById('overlays'); ov.innerHTML = '';
   const add = (label, color, get, set) => { ov.appendChild(makeChip(label, color, get(), () => { set(!get()); }, false, 'pill')); };
@@ -314,6 +435,10 @@ function buildControls() {
   };
   bindMode('mode_h', 'h', 'raceMode'); bindMode('mode_e', 'e', 'raceMode');
   bindMode('view_p', 'p', 'raceView'); bindMode('view_t', 't', 'raceView');
+  if (CFG.charts.sog && CFG.charts.sog.metrics) {   // SOG|VMC y-metric buttons live in the speed card header
+    bindMode('sogm_s', 'sog', 'speedMetric', 'speed');
+    bindMode('sogm_v', 'vmc', 'speedMetric', 'speed');
+  }
   document.querySelectorAll('#axisToggle button').forEach(btn => {
     const on = btn.dataset.ax === S.axis;
     btn.classList.toggle('on', on);
@@ -357,20 +482,21 @@ function closeSheet() {
   document.body.style.overflow = '';
   if (narrow()) bar.focus({ preventScroll: true });
 }
-function bindMode(id, val, key) {
+function bindMode(id, val, key, scope) {
   const el = document.getElementById(id);
   el.className = 'modebtn' + (S[key] === val ? ' on' : '');
   el.setAttribute('aria-pressed', S[key] === val ? 'true' : 'false');
-  el.onclick = () => { S[key] = val; render('race'); };
+  el.onclick = () => { S[key] = val; render(scope || 'race'); };
 }
 
 function buildMorePanel() {
   const panel = document.getElementById('morePanel');
   if (!S.showMore) { panel.style.display = 'none'; panel.innerHTML = ''; return; }
   panel.style.display = 'block';
+  const ft = filterTargets();   // class/band matches get a highlight rail
   const row = nm => {
     const b = D.boats[nm];
-    return `<button type="button" class="more-row${S.boats.has(nm) ? ' on' : ''}${trackLoading.has(nm) ? ' loading' : ''}" aria-pressed="${S.boats.has(nm)}" data-nm="${nm.replace(/"/g, '&quot;')}">
+    return `<button type="button" class="more-row${S.boats.has(nm) ? ' on' : ''}${trackLoading.has(nm) ? ' loading' : ''}${ft && ft.includes(nm) ? ' match' : ''}" aria-pressed="${S.boats.has(nm)}" data-nm="${nm.replace(/"/g, '&quot;')}">
       <span class="more-rank">${b.meta.sdl ? '#' + b.meta.sdl : '—'}</span><span class="more-name">${nm}</span>
       <span class="more-type">${b.meta.typ || ''}</span><span class="more-corr">${b.meta.corr || (b.meta.retireReason ? 'DNF' : '—')}</span></button>`;
   };
@@ -445,6 +571,8 @@ async function boot() {
   S.ref = CFG.defaults.ref; S.showMore = false;
   S.raceMode = CFG.defaults.raceMode; S.raceView = CFG.defaults.raceView;
   S.axis = CFG.defaults.axis; S.panelOpen = true;
+  S.speedMetric = CFG.defaults.speedMetric || 'sog';
+  S.clsSel = new Set(); S.band = null; S.filterSel = new Set(); S.clsErr = null;
 
   try {
     D = window.__DATA_EMBEDDED__
@@ -470,7 +598,13 @@ async function boot() {
     sec.hidden = false;
     sec.querySelector('h2').innerHTML = m.section.title;
     if (m.section.note) sec.querySelector('.note').innerHTML = m.section.note;
-    if (m.section.kind === 'plot') sec.querySelector('[data-mount]').classList.add('plot');
+    if (m.section.kind === 'plot') {
+      const mount = sec.querySelector('[data-mount]');
+      mount.classList.add('plot');
+      // Plotly needs an explicit height; modules declare theirs (CSS min()
+      // keeps it responsive) instead of leaking their ids into shell CSS
+      if (m.section.height) mount.style.height = m.section.height;
+    }
   }
 
   document.getElementById('appstate').remove();

@@ -68,7 +68,7 @@ window.__RACE_CONFIG__ = {
     ref: 'Christopher Dragon',
     fleet: true, rhumb: true,
     overlays: { gulfstream: true, watches: false, navlog: true },
-    raceMode: 'h', raceView: 'p', axis: 'd',
+    raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'sog',
   },
   race: {                                                            // app.js:445,452,464
     milestoneTop: 620, milestoneBottom: 30, milestoneStep: 10,
@@ -77,11 +77,21 @@ window.__RACE_CONFIG__ = {
   },
   charts: {
     dtf: { yRange: [680, -15], eventTopY: 660 },                     // app.js:500,511
-    sog: { yRange: [0, 14], eventTopY: 13.4 },                       // app.js:524,532
+    sog: { yRange: [0, 14], eventTopY: 13.4,                         // app.js:524,532
+           // y-metric toggle (round 2): VMC = closing speed on the finish,
+           // computed from positions — labelled VMC, never VMG (no wind data)
+           metrics: { s: 'SOG', v: 'VMC (toward finish)' },
+           vmcYRange: [-3, 14] },
     xte: { eventTopY: 26 },                                          // app.js:515
     parkShading: { zone: [180, 80], core: [160, 140] },              // app.js:528-529 (CP-2 judgment; sog shading)
   },
   finstrip: { whatIfHours: [1, 2] },                                 // app.js:590
+  // round 2 (Sebastian's upgrades): class + rating-band selection controls.
+  // Class labels are '<prefix> <n>' against meta.cls (from official results —
+  // full splits gleaned from racing.bermudarace.com, reconciled 2026-07-08).
+  classFilter: { prefix: 'SDL', inputLabel: '+ SDL', placeholder: 'class #, e.g. 3' },
+  ratingBands: { widths: [0.01, 0.02] },                             // hero-centred F-TCF bands
+  distspeed: { isoDays: [3.5, 4.0, 4.5] },                           // iso-elapsed rays (v = d/t)
   kpis: [                                                            // app.js:361-368; {stats.*} resolve from data.stats
     { label: 'Result', value: '46 / 86', sub: 'St. David’s Lighthouse · 8/10 in class' },
     { label: 'Distance sailed', value: '{stats.dist_sailed}<span class="u"> nm</span>', sub: '+{stats.extra} over the 635 nm rhumb' },
@@ -102,7 +112,7 @@ window.__RACE_CONFIG__ = {
   controls: {                    // overlay-pill row order after the event categories (app.js:275-279)
     pills: ['navlog', '@ghosts', 'gulfstream', '@rhumb', 'watches'],
   },
-  layout: ['map', 'dtf', 'race', '@finstrip', 'two:xte,sog', '@parkfair', 'events', '@navlog'],
-  modules: ['parkfair', 'finstrip', 'navlog'],
+  layout: ['map', 'dtf', 'race', '@finstrip', '@distspeed', 'two:xte,sog', '@parkfair', 'events', '@navlog'],
+  modules: ['parkfair', 'finstrip', 'distspeed', 'navlog'],
   overlays: ['gulfstream', 'watches'],
 };

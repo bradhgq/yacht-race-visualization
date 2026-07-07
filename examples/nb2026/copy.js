@@ -24,7 +24,8 @@ window.__COPY__ = {
     xte: { title: 'Distance from the rhumb line',
       note: "Plus is east of the direct line, minus is west. RAGANA held the most easterly track of the quick-select set (23 nm east at most, never more than 8 west). East wasn't wrong on its own — the St. David's podium won from the east — but among boats hitting the light air the same evening, the ones nearer the rhumb got through it faster." },
     sog: { title: 'Speed over ground',
-      note: '30-minute smoothed GPS speed. Switch the axis to <b>distance</b> to line every boat up on the same stretch of ocean — the fair way to compare the park. The speedo failure early Monday is invisible here because this speed is GPS-derived, which is exactly why steering to it worked when the paddlewheel quit.' },
+      note: '30-minute smoothed GPS speed. Switch the axis to <b>distance</b> to line every boat up on the same stretch of ocean — the fair way to compare the park. The speedo failure early Monday is invisible here because this speed is GPS-derived, which is exactly why steering to it worked when the paddlewheel quit.',
+      noteVmc: 'VMC: how fast the boat is actually closing on Bermuda — speed × how much of it points the right way. This is the number the routing doctrine says to maximize when the rhumb is forward of the wind. The gap between a boat\'s SOG and its VMC is the price of its angles; dips below zero are real (tacks, and moments sailing away from the mark in the park). (Computed from positions; the tracker has no wind data, so this is VMC to the mark, not wind-VMG.) Sunday check: at equal distance sailed, RAGANA still gained — the post-shift beat was a lifted fetch for the whole comparison set, and the gain was boatspeed (7.6 vs 6.2 kt on the rating twin), not shorter routing.' },
     events: { title: 'Race log — every marked moment',
       note: 'Everything driving the markers and shading above, in order, with the boat\'s distance-to-finish at each point. Includes the analysis notes (the "insight" rows). Filter by category in the Overlays row.' },
   },
@@ -40,6 +41,12 @@ window.__COPY__ = {
   },
   controlsHint: 'Sets the x-axis on the rhumb-offset and speed charts. <b>Distance</b> lines every boat up on the same water; <b>clock</b> shows what was happening when.',
   pills: { ghosts: 'Ghosts', rhumb: 'Rhumb line' },
+  filters: {
+    noSuchClass: 'No class “{x}” in the record.',
+    bandChip: '±{w} ({n})', bandCustomLabel: 'custom', bandApply: 'set',
+    bandTitle: 'F-TCF band around RAGANA (0.5945) — true rating peers',
+    classTitle: 'Select a whole SDL class by number',
+  },
   morePanel: {
     note: "Tap any boat to add or remove it. Ranked by St. David's Lighthouse corrected time.",
     rankedHead: 'SDL Overall', dnfHead: 'Retired', otherHead: 'Outside SDL',

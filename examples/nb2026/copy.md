@@ -42,6 +42,15 @@ Plus is east of the direct line, minus is west. RAGANA held the most easterly tr
 ### sog — "Speed over ground"
 30-minute smoothed GPS speed. Switch the axis to **distance** to line every boat up on the same stretch of ocean — the fair way to compare the park. The speedo failure early Monday is invisible here because this speed is GPS-derived, which is exactly why steering to it worked when the paddlewheel quit.
 
+### sog, VMC mode — round-2 addition (Sebastian's request; hypothesis tested against the tracker before shipping)
+VMC: how fast the boat is actually closing on Bermuda — speed × how much of it points the right way. This is the number the routing doctrine says to maximize when the rhumb is forward of the wind. The gap between a boat's SOG and its VMC is the price of its angles; dips below zero are real (tacks, and moments sailing away from the mark in the park). (Computed from positions; the tracker has no wind data, so this is VMC to the mark, not wind-VMG.) Sunday check: at equal distance sailed, RAGANA still gained — the post-shift beat was a lifted fetch for the whole comparison set, and the gain was boatspeed (7.6 vs 6.2 kt on the rating twin), not shorter routing.
+
+### distspeed — "Distance sailed vs speed — minimum distance at maximum speed" (round-2 module)
+The prime directive of long-distance racing, drawn: every mile off the rhumb is an investment that must be repaid in boatspeed. Each dot is a scored St. David's boat — how far it actually sailed (the vertical line is the 635 nm rhumb, the theoretical minimum) against how fast it went (distance sailed ÷ official elapsed, so the grey rays through the origin are lines of equal finish time — boats on the same ray finished the same water in the same time, and up-and-left wins). Distance right of the line is miles a boat chose, or was forced, to sail beyond the direct course; height above the ray it started on is speed that paid for them. RAGANA bought 52 extra miles; this chart shows who bought their miles cheaply and who paid for miles that never paid back.
+
+### filters — round-2 controls microcopy
+No-such-class state: 'No class “{x}” in the record.' · band chips: '±{w} ({n})' · custom band: 'custom … set' · titles: 'Select a whole SDL class by number' / 'F-TCF band around RAGANA (0.5945) — true rating peers'.
+
 ### park — "The park, measured fairly — each boat's own run through DTF 180 → 80"
 *(CP-3 amendment 2026-07-07, decisions/CP-3-amendment-park-copy.yaml: 19–39% was 16–38%, third-slowest was second-slowest, and the Park-run KPI subtitle became "fastest shown 24.2 h (Carina)" — the shipped values quoted the debrief's 18-boat comparison set above this displayed default-12 table. The "Everyone parked" insight event keeps the 18-set numbers: it cites "the comparison set" and is correctly scoped.)*
 
