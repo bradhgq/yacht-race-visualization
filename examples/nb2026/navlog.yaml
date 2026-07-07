@@ -132,10 +132,12 @@ fixes:
     hem: W
   speed: '9.7'
   course: 154°M
-  wind: — (word unclear, reads "Kevin")
+  wind: — ("Kevin", see note)
   temp: 80
   verdict: match
-  note: Wind/notes field has an illegible word transcribed as "Kevin" — unclear meaning, quoted as written.
+  note: The word in the margin is "Kevin" — Steve's mid-ocean tribute to a friend and U.S. Coast Guard
+    veteran who had recently passed away in a car accident. A memorial note in the margin of a working
+    log, kept here with respect.
 - label: Sun 05:01
   t_local: 2026-06-21 05:01
   lat:

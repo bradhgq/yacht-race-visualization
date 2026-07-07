@@ -38,11 +38,13 @@ events:
   visibility: public
 - t: 2026-06-19 16:00
   cat: crew
-  label: Seasickness sets in
-  txt: Three of the crew feel the sea state Friday evening and are sailing through it — on deck, on watch,
-    getting the job done, just not at their sharpest. Nobody had pre-medicated. A reminder that in fresh
-    going the edge you lose to seasickness is comfort and precision, and that pre-race meds are cheap
-    insurance.
+  label: Seasickness sets in (mostly)
+  txt: Two of the five crew feel the sea state Friday evening and are sailing through it — on deck, on
+    watch, getting the job done, just not at their sharpest. A third brief episode was logged as
+    seasickness at the time but is corrected here for the record 😂 — it was an electrolyte drink mix
+    with artificial sweeteners, which Sebastian's stomach doesn't tolerate. Nobody had pre-medicated.
+    Both lessons stand — pre-race meds are cheap insurance, and the galley plan should vet electrolyte
+    mixes for artificial ingredients.
   source: journal
   visibility: public
 - t: 2026-06-19 20:00
