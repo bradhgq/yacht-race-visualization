@@ -71,3 +71,5 @@ whitespace-normalized from the CSV's double space.
 
 Out-of-scope wishlist (footer): NOAA Gulf Stream overlay, GFS wind underlay,
 animated time scrubber, synced hover.
+
+RETROSPECTIVE.md — what generalizes to other races and what does not; seeds the reusable race-viz shell.
