@@ -177,3 +177,80 @@ records what I *did* about it.
 31. **Offline decoder fixture**: real 41 KB ildr2025 AllPositions3 blob
     (sha256-pinned) + 5 unittest assertions in CI; discovered and documented
     that the binary stores moments newest-first.
+
+## GATE B adjudication (2026-07-07) — approvals, report-backs, v1.1 reconciliation
+
+28. **GATE B APPROVED**; all three intentional deltas accepted (Zelee toggle
+    fix, dual stylesheets, template+copy-slot assembly). The shipped site's
+    Zélée failure stays documented as the deliberate red case for the
+    name-hygiene fixture. ABI amendment rule adopted from v1.1: additive
+    optional fields need only a REPO_NOTES entry (mapLayer accepted under it);
+    breaking changes need gate adjudication.
+
+29. **Report-back 4a — the KPI's "fastest in set 22.9 h" matches NO set in the
+    frozen payload.** No boat has hrs == 22.9. Candidate sets: full parkFair
+    fleet min = Black Jack 100 6.0 h (maxi) / monohull min Boudicca 17.1 h;
+    default 12-boat selection min = Carina 24.2 h; quick-select monohull min =
+    Palantir 5 24.3 h; closest value anywhere = Cybele 22.8 h (sdl_other, in no
+    featured set). The string is shipped verbatim (parity confirmed — same
+    literal in legacy app.js buildKPIs), so this is a SHIPPED-COPY artifact,
+    not a build regression. Two sibling claims share the pattern: the park
+    note's "RAGANA's 27.9 h was second-slowest" (she is THIRD-slowest in the
+    default set — Hissy Fit II 29.7, Touch of Grey 28.4 are slower; same text
+    also lives in the "Everyone parked" insight event) and "16–38% under 4 kts"
+    (default set's actual u4 range: 19–39%). Two sibling claims check out
+    exactly: the 5.5 h spread (29.7 − 24.2) and the Carina footnote (27.9 −
+    24.2 = 3.7 h quicker). Hypothesis: 22.9 / second-slowest / 16–38% were
+    authored against an earlier analysis pass and survived the v5 copy edit.
+    PROPOSED (not applied — frozen copy, CP-3 territory): "fastest in set
+    22.9 h" → "24.2 h"; "second-slowest" → "third-slowest"; "16–38%" →
+    "19–39%". Owner decision.
+
+30. **Report-back 4b — REPO_NOTES #17 closed with arithmetic.** The extracted
+    official_results.csv holds 82 FIN rows (ranks 1..82) + 4 DNF rows
+    (Temptation Oakcliff JV66, Hydromec, Dancing Bear, Cougar) = 86 SDL
+    entries. "46 / 86" ranks RAGANA among the 86 entries; the finish strip's
+    "every scored St. David's Lighthouse boat" = the 82 finishers with
+    corrected times — all 82 are in the payload and the strip (81 dots + hero
+    diamond; the legacy harness's finstripDots comment "scored SDL boats minus
+    RAGANA" confirms the 81 reading). No boats are missing and the caption
+    does NOT overclaim — "scored" and "entered" simply differ by the 4 DNFs.
+    No fix needed.
+
+31. **v0→v1.1 REPO_SPEC diff, reconciled** (v1.1 at docs/REPO_SPEC_v1.1.md;
+    DOC_GAPS #14/#1/#2 closed):
+    - *Adopted*: legacy retirement set (export_json.py + dashboard_template
+      .html + test_dashboard.js → examples/nb2026/legacy/; template/ dir
+      removed, SEAMS resolved); races/_template gains presentation.js,
+      copy.md, tests/regression.json; ctx ABI text matches makeCtx verbatim;
+      zone-detection language matches implementation; ABI amendment rule.
+    - *Adopted with adaptation*: "two-config drift, resolved" — v1.1 says
+      build.py DERIVES overlapping keys from config.yaml; implemented instead
+      as a build-time CONSISTENCY CHECK (client_boat/hero, time, course
+      coords/length, goldens ↔ tests/regression.json) that refuses the build
+      on divergence. Same guarantee (one source, no silent drift), less
+      machinery; presentation.js stays self-contained for the node harness.
+    - *Kept, delta logged*: fixtures are hand-frozen in races/<race>/tests/
+      regression.json and cross-checked against config goldens, not "emitted
+      by build_data.py" (v1.1 Tests §) — emission would let a pipeline bug
+      rewrite its own fixtures; prime rule 3 wants them authored-frozen.
+      build_data's out/goldens.json remains the emitted view.
+    - *Kept, delta logged*: examples/nb2026 keeps frozen/ + gitignored out/
+      (v1.1 shows out/dashboard_data.json committed) — REPO_NOTES #2 stands.
+    - *Kept*: harness invocation `node tests/test_dashboard.js <race_dir>`
+      (REPO_NOTES #27); v1.1's own "three commands" block still shows the
+      monolith-era invocation its Tests section retires (DOC_GAPS #18).
+    - Legacy harness insights absorbed: its pace tolerance was 0.15 (mine
+      0.05, tighter); its park canary was conditional on the boat being
+      selected (mine force-selects — strictly stronger); its "initial render
+      produced core charts" check is implicit in my endpoint reads.
+
+32. **pipeline/assemble.py** template default now resolves race-relative
+    (`legacy/dashboard_template.html`) then repo-relative, since template/ is
+    gone; documented as the monolith-era path kept for archaeology and
+    single-file injection builds.
+
+33. **decyb license: owner-adjudicated as not blocking** while the port stays
+    private; before anything public or client-facing, obtain terms from the
+    author or cleanroom-reimplement from acquisition/README.md's byte-layout
+    notes (which document the format, not decyb's code).

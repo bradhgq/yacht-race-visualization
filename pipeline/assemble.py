@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
-"""Config-aware injection build: inject <race>/out/dashboard_data.json into the
-dashboard template at the __DATA__ marker.
+"""Config-aware injection build: inject <race>/out/dashboard_data.json into a
+single-file dashboard template at the __DATA__ marker.
 
     python3 pipeline/assemble.py races/<race>/config.yaml
 
-Template path, data path, and output name all come from config. The '</'
-escaping is load-bearing: raw JSON inside a <script> block would otherwise
-terminate the tag at the first '</' in a text field.
+Template path (config `template.path`, resolved against the race dir, then the
+repo root), data path, and output name all come from config. The '</' escaping
+is load-bearing: raw JSON inside a <script> block would otherwise terminate the
+tag at the first '</' in a text field.
+
+NOTE: with the shell landed (REPO_SPEC v1.1), `shell/build.py` is the primary
+build; this injection path remains for monolith-style templates (the NB2026
+reference monolith lives at examples/nb2026/legacy/dashboard_template.html).
 """
 import argparse
 import sys
@@ -26,7 +31,8 @@ def main():
     cfg = yaml.safe_load(cfg_path.read_text())
 
     out_dir = race_dir / cfg['output']['dir']
-    template = REPO / cfg.get('template', {}).get('path', 'template/dashboard_template.html')
+    tpl_rel = cfg.get('template', {}).get('path', 'legacy/dashboard_template.html')
+    template = (race_dir / tpl_rel) if (race_dir / tpl_rel).exists() else (REPO / tpl_rel)
     data_file = out_dir / 'dashboard_data.json'
     out_file = out_dir / f"{cfg['race']['slug']}_dashboard.html"
 

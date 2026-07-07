@@ -69,6 +69,44 @@ def compact(obj):
     return json.dumps(obj, ensure_ascii=False, separators=(',', ':'))
 
 
+def consistency_check(race_dir, cfg):
+    """REPO_SPEC v1.1 'two-config drift, resolved': config.yaml stays the
+    analysis source of record; the keys presentation.js shares with it must
+    match exactly, and the frozen goldens must agree with the runner fixtures.
+    Divergence refuses the build."""
+    import yaml
+    ana = yaml.safe_load((race_dir / 'config.yaml').read_text())
+    errs = []
+
+    def eq(label, a, b):
+        if a != b:
+            errs.append(f'{label}: config.yaml has {a!r}, presentation/fixtures have {b!r}')
+
+    eq('client_boat / hero.name', ana['client_boat'], cfg['hero']['name'])
+    eq('time.utc_offset', ana['time']['utc_offset'], cfg['time']['utcOffset'])
+    eq('time.tz_label', ana['time']['tz_label'], cfg['time']['tzLabel'])
+    eq('course.start', ana['course']['start'], cfg['course']['start'])
+    eq('course.finish', ana['course']['finish'], cfg['course']['finish'])
+    eq('course.official_length_nm / rhumbNm', ana['course']['official_length_nm'], cfg['course']['rhumbNm'])
+
+    fix_path = race_dir / 'tests' / 'regression.json'
+    if fix_path.exists() and ana.get('goldens'):
+        g, f = ana['goldens'], json.loads(fix_path.read_text())
+        for key in ('tz_probe', 'names_present', 'names_absent', 'finstrip_count'):
+            if key in g and key in f:
+                eq(f'goldens.{key}', g[key], f[key])
+        for key in ('ref', 'corrected_min', 'elapsed_min'):
+            if key in g.get('endpoints', {}) and key in f.get('endpoints', {}):
+                eq(f'goldens.endpoints.{key}', g['endpoints'][key], f['endpoints'][key])
+        gp = (g.get('module_canaries') or {}).get('park')
+        fp = (f.get('module_canaries') or {}).get('park')
+        if gp and fp:
+            eq('goldens.module_canaries.park', gp, fp)
+    if errs:
+        sys.exit('config.yaml <-> presentation.js/fixtures DIVERGED — not building:\n  '
+                 + '\n  '.join(errs))
+
+
 def section_html(cfg, copy):
     """{{SECTIONS}} from cfg.layout: shell sections carry copy; module sections
     are hidden scaffolds the shell fills at boot (title/note live in module code)."""
@@ -130,6 +168,7 @@ def main():
 
     cfg = read_js_global(race_dir / 'presentation.js', '__RACE_CONFIG__')
     copy = read_js_global(race_dir / 'copy.js', '__COPY__')
+    consistency_check(race_dir, cfg)
     data = json.loads((race_dir / 'out' / 'dashboard_data.json').read_text())
 
     # ── payload split (I7: defaults ⊆ core; I8: insertion order preserved) ──

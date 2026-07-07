@@ -102,3 +102,23 @@ without guessing. (What I *did* about each is in `REPO_NOTES.md`.)
     the YS results CSV has no such column (finish_status only); the template
     maps it anyway for organizer-sourced files. Retirement narratives remain
     hand-authored data.
+
+## Closed / updated at GATE B adjudication
+
+- **#14 CLOSED**: REPO_SPEC v1.1 and the legacy test_dashboard.js were
+  delivered with the GATE B adjudication (v1.1 archived at
+  docs/REPO_SPEC_v1.1.md; harness retired to examples/nb2026/legacy/).
+- **#1, #2 RESOLVED by that delivery** (kept above for the audit trail). The
+  legacy harness turns out to be 9 assertions — "9/9" now verifiable; all nine
+  are covered by the authoritative runner's 11.
+- **#15 RESOLVED**: the legacy harness's own comment ("finstripDots: 81 —
+  scored SDL boats minus RAGANA") confirms the 81-vs-82 reading; arithmetic
+  closed in REPO_NOTES #30.
+
+18. **REPO_SPEC v1.1 internal inconsistencies** (new): its "Build flow, three
+    commands" block still shows the retired monolith-era harness invocation
+    (`tests/test_dashboard.js <built.html> tests/goldens/<race>.json`) that
+    its own Tests section supersedes; and its "config.yaml additions" block
+    still shows the v0 flat `name_overrides: {}` and the nine-column results
+    map, both of which the build demonstrably outgrew (see #6 — still open
+    for skill schemas.md too).
