@@ -122,3 +122,8 @@ without guessing. (What I *did* about each is in `REPO_NOTES.md`.)
     still shows the v0 flat `name_overrides: {}` and the nine-column results
     map, both of which the build demonstrably outgrew (see #6 — still open
     for skill schemas.md too).
+
+- **#18 CLOSED** (CP-3 amendment housekeeping): `docs/REPO_SPEC_v1.1.md` is a
+  historical archive — its internal inconsistencies stand as shipped and the
+  archive is not to be edited; the repo README is authoritative for current
+  layout and invocations.

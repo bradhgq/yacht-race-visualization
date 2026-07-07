@@ -107,6 +107,38 @@ def consistency_check(race_dir, cfg):
                  + '\n  '.join(errs))
 
 
+def park_copy_lint(race_dir, cfg, data):
+    """CP-3 amendment §4: the park KPI + section note quote numbers about the
+    DISPLAYED default selection — assert they match the payload so copy can't
+    silently drift from data again. (The '3.3 kt dead core' claim is pooled
+    raw-sample math unavailable from the payload; covered by the CP-3 record.)"""
+    if 'parkfair' not in cfg.get('modules', []):
+        return
+    pf = data['parkFair']
+    sel = [b for b in cfg['defaults']['boats'] if b in pf]
+    hrs = sorted(pf[b]['hrs'] for b in sel)
+    u4s = [pf[b]['u4'] for b in sel]
+    rank_from_slow = sorted(sel, key=lambda b: -pf[b]['hrs']).index(cfg['hero']['name']) + 1
+    ordinal = {1: 'slowest', 2: 'second-slowest', 3: 'third-slowest', 4: 'fourth-slowest'}
+    note = subprocess.run(
+        ['node', '-e', 'let out;const registerModule=m=>out=m,registerOverlay=()=>{};'
+         f'eval(require("fs").readFileSync({str(race_dir / "modules/parkfair.js")!r},"utf8"));'
+         'process.stdout.write(out.section.note)'],
+        capture_output=True, text=True).stdout
+    kpi = next((k['sub'] for k in cfg['kpis'] if 'fastest shown' in k.get('sub', '')), '')
+    errs = []
+    if f'{hrs[0]}' not in kpi:
+        errs.append(f'park KPI sub should quote fastest shown {hrs[0]} h: {kpi!r}')
+    if f'{min(u4s)}–{max(u4s)}%' not in note:
+        errs.append(f'park note should quote u4 range {min(u4s)}–{max(u4s)}%')
+    if ordinal.get(rank_from_slow, f'{rank_from_slow}th-slowest') not in note:
+        errs.append(f'park note rank word should be {ordinal.get(rank_from_slow)!r}')
+    if f'{round(hrs[-1] - hrs[0], 1)} hours' not in note:
+        errs.append(f'park note spread should be {round(hrs[-1] - hrs[0], 1)} hours')
+    if errs:
+        sys.exit('park copy <-> payload DIVERGED — not building:\n  ' + '\n  '.join(errs))
+
+
 def section_html(cfg, copy):
     """{{SECTIONS}} from cfg.layout: shell sections carry copy; module sections
     are hidden scaffolds the shell fills at boot (title/note live in module code)."""
@@ -170,6 +202,7 @@ def main():
     copy = read_js_global(race_dir / 'copy.js', '__COPY__')
     consistency_check(race_dir, cfg)
     data = json.loads((race_dir / 'out' / 'dashboard_data.json').read_text())
+    park_copy_lint(race_dir, cfg, data)
 
     # ── payload split (I7: defaults ⊆ core; I8: insertion order preserved) ──
     quick = set(cfg['groups']['quick'])

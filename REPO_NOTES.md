@@ -279,3 +279,37 @@ records what I *did* about it.
     course shape of the next two races). The approach blend + past-closest
     advance is the fix; the monotonicity test now pins it. Point-to-point
     races are untouched (GATE A re-verified 0 real diffs after integration).
+
+## CP-3 amendment — park copy (2026-07-07, owner-adjudicated; closes #29)
+
+36. **The three park-copy fixes are APPLIED** per
+    `examples/nb2026/decisions/CP-3-amendment-park-copy.yaml` (the repo's first
+    real checkpoint record): KPI sub → "fastest shown 24.2 h (Carina)"; park
+    note → "19–39%" and "third-slowest". Root cause was MIS-SCOPING: the
+    dashboard quoted the published debrief's 18-boat comparison set (no Hissy
+    Fit II, no Divide By Zero; includes Cybele 22.9) above the displayed
+    default-12 table. The debrief/blog stand untouched — internally consistent
+    over their own set, "second-slowest" included. The "Everyone parked"
+    insight EVENT keeps the 18-set numbers by design: it cites "the comparison
+    set" (correctly scoped) and lives in the payload, which stays frozen
+    (GATE A: 0 real / 39 exempt after the change, as required). A copy↔payload
+    lint now runs in shell/build.py (`park_copy_lint`): fastest-shown, u4
+    range, rank word, and spread must match the payload for the displayed
+    selection or the build refuses. The "3.3 kt dead core" claim is pooled
+    raw-sample math not derivable from the payload — covered by the CP-3
+    record, not the lint.
+
+37. **Historical drift, logged not fixed** (debrief table vs frozen payload,
+    both predating this repo; the payload is the oracle for all NEW copy, the
+    published debrief stands as its own pass): hours match everywhere except
+    Cybele 22.9→22.8; %-under-4 drifted UPWARD 1–2 pts on ten of eighteen
+    boats — Cybele 22→24, In Theory 22→23, Banter 25→26, Legacy 29→30, Flying
+    Lady 30→32, Speck 33→34, Phoenix USA25329 34→35, Gesture 37→39, RAGANA
+    38→39, Touch of Grey 35→36. Systematic (threshold-boundary or grid
+    handling between the two historical passes); cause not investigable from
+    this repo; no action. Golden Gemini II 31% stable in both.
+
+38. **The deployed live site now trails the repo by four known, fixed
+    defects**: the Zélée phantom group-button entry (#11) plus these three
+    copy claims (#36). Redeploying is an owner decision, out of scope for this
+    build.

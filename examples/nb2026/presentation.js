@@ -86,7 +86,7 @@ window.__RACE_CONFIG__ = {
     { label: 'Result', value: '46 / 86', sub: 'St. David’s Lighthouse · 8/10 in class' },
     { label: 'Distance sailed', value: '{stats.dist_sailed}<span class="u"> nm</span>', sub: '+{stats.extra} over the 635 nm rhumb' },
     { label: 'Average speed', value: '{stats.avg_sog}<span class="u"> kts</span>', sub: 'peaked {stats.max_sog} in the Stream' },
-    { label: 'Park run', value: '{park.hero.hrs}<span class="u"> h</span>', sub: 'through DTF 180→80 · fastest in set 22.9 h' },
+    { label: 'Park run', value: '{park.hero.hrs}<span class="u"> h</span>', sub: 'through DTF 180→80 · fastest shown 24.2 h (Carina)' },   // CP-3 amendment: was 'fastest in set 22.9 h' (mis-scoped to the debrief's 18-boat set)
     { label: 'Easting', value: '{stats.max_xte_e}<span class="u"> nm</span>', sub: 'most east · only {stats.max_xte_w_abs} nm west, ever' },
     { label: 'vs 2022', value: '+19<span class="u"> pctl</span>', sub: '72nd → 53rd percentile of finishers' },
   ],

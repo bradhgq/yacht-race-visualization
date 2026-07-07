@@ -1,0 +1,12 @@
+# CP-3 amendment — park copy (adjudicates REPO_NOTES #29)
+corrections:
+  - { before: "fastest in set 22.9 h", after: "fastest shown 24.2 h",
+      source: "GATE-B report-back 4a + coordinating-session payload verification",
+      propagated_to: [copy.md] }
+  - { before: "16–38% of each run under 4 kts", after: "19–39% of each run under 4 kts",
+      source: "same", propagated_to: [copy.md] }
+  - { before: "second-slowest", after: "third-slowest",
+      source: "same", propagated_to: [copy.md] }
+spine_approved: true   # debrief + blog claims stand — correctly scoped to their 18-boat set
+confirmed_by: Brad
+date: 2026-07-07

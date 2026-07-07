@@ -10,7 +10,10 @@ registerModule({
   section: {
     kind: 'table',
     title: 'The park, measured fairly — each boat’s own run through DTF 180 → 80',
-    note: 'Comparing "the park" by wall-clock window is misleading: faster boats clear the light air before slower boats reach it, so you end up comparing different water. This table instead measures the empirically slow zone — the 180-to-80-nm-to-go band, with a dead core around 140–160 where the fleet-median speed bottomed at 3.3 kts — as each boat actually traversed it, on its own clock. The finding: everyone parked (16–38% of each run under 4 kts), the whole set’s traversal times fall within 5.5 hours of each other, and RAGANA’s 27.9 hours was second-slowest — an honest gap of two to four hours from the most easterly lane, with an instrument failure and a sail repair both landing inside the dead core.',
+    // CP-3 amendment (decisions/CP-3-amendment-park-copy.yaml): 19–39% was
+    // 16–38%, third-slowest was second-slowest — the old values quoted the
+    // debrief's 18-boat comparison set above this displayed default-12 table.
+    note: 'Comparing "the park" by wall-clock window is misleading: faster boats clear the light air before slower boats reach it, so you end up comparing different water. This table instead measures the empirically slow zone — the 180-to-80-nm-to-go band, with a dead core around 140–160 where the fleet-median speed bottomed at 3.3 kts — as each boat actually traversed it, on its own clock. The finding: everyone parked (19–39% of each run under 4 kts), the whole set’s traversal times fall within 5.5 hours of each other, and RAGANA’s 27.9 hours was third-slowest — an honest gap of two to four hours from the most easterly lane, with an instrument failure and a sail repair both landing inside the dead core.',
   },
   build(ctx) {
     const { D, S, h } = ctx, hero = ctx.cfg.hero.name;
