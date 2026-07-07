@@ -7,6 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TZ: America/New_York   # I1: the suite must run under a non-UTC zone
+    defaults:
+      run:
+        working-directory: starter   # the tooling lives under starter/ in the monorepo
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

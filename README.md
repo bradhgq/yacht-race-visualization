@@ -1,49 +1,49 @@
-# race-viz-starter
+# yacht-race-visualization
 
-Reusable yacht-race visualization pipeline + dashboard, generalized from the
-RAGANA · Newport Bermuda 2026 worked example. **Private repo**: `races/<race>/`
-may contain client journals and nav logs; public artifacts are exported builds
-only, after the CP-5 ledger cut.
-
-The process and judgment layer lives in [`skill/race-viz/`](skill/race-viz/SKILL.md)
-(single source of truth, versioned with the code it governs). The six doctrines
-in `SKILL.md` are enforced as testable predicates — each one was paid for with
-a real bug in the worked example.
-
-## Quickstart — build the worked example
-
-```bash
-python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python pipeline/build_data.py races/nb2026/config.yaml
-.venv/bin/python pipeline/assemble.py  races/nb2026/config.yaml
-# regression harness (Phase 3): TZ=America/New_York node tests/test_dashboard.js …
-```
-
-`build_data.py` refuses to run fleet math until ≥2 probe boats reproduce their
-official corrected times within 1 s, and writes a run log (invocation + input
-hashes) next to every payload — shipped numbers come only from the pipeline
-(prime rule 1).
-
-## Starting a new race
-
-Copy `races/_template/` to `races/<race>/`, drop the tracker export / results /
-scratch sheet into `raw/`, fill `config.yaml` (facts only — narrative goes in
-`events.yaml`), then run the three commands. See the skill's stage files for
-the checkpoint protocol; never skip CP-0 or CP-2.
+Tooling and hosted dashboards for turning yacht-race tracker data into researched,
+interactive race analysis. One public home for the reusable engine, the skill that
+drives it, and every race deployed from it.
 
 ## Layout
 
 ```
-adapters/          tracker-vendor adapters + canonical schema (contract: adapters/README.md)
-pipeline/          build_data / scoring / zones / reconcile / assemble / compare_data
-template/          v0 dashboard template + SEAMS.md (shell split lands in Phase 2)
-tests/             parameterized JS harness + per-race goldens (Phase 3)
-races/_template/   copy me to start a race
-races/nb2026 -> examples/nb2026
-examples/nb2026/   the frozen worked example: config, events, navlog, results,
-                   presentation.js + copy.md extractions, frozen/ reference
-                   payload, legacy/ original script
+starter/            the reusable product — the race-viz engine
+  shell/            generalized dashboard shell (charts, controls, build)
+  pipeline/         data pipeline (tracks → dashboard_data.json)
+  adapters/         tracker-vendor adapters (YB, YachtScoring, …)
+  acquisition/      race-data downloaders
+  skills/race-viz/  the /race-viz skill — process & judgment, source of truth
+  tests/            parameterized regression harness
+  docs/             REPO_SPEC and design docs
+  examples/nb2026/  the worked example — also the LIVE Newport Bermuda 2026 deploy
+  races/            per-race configs (_template/, nb2026 → examples/nb2026)
+races/
+  archive/          retired builds kept for deploy rollback (deleted once verified)
 ```
 
-Build-status docs: `REPO_NOTES.md` (spec deltas), `DOC_GAPS.md` (documentation
-audit), `GATE_A_REPORT.md` (pipeline-parity evidence).
+`starter/` is nested as one unit so its internal relative paths hold; a new race is
+a new `starter/races/<race>/` config plus its built `starter/examples/<race>/dist/`.
+
+## Deployed
+
+| Race | URL | Build |
+|---|---|---|
+| RAGANA · Newport Bermuda 2026 | [hgq.fyi/ragana-newport-bermuda-2026](https://hgq.fyi/ragana-newport-bermuda-2026/) | `starter/examples/nb2026/dist/` |
+
+Hosting is on silverbox via `nix-config` (the repo is a `flake = false` input; nginx
+aliases each race's URL to its committed `dist/`). The deployed `dist/` is committed
+(force-added past the global `dist/` ignore) because the flake input serves straight
+from the git tree.
+
+## Build a race
+
+```
+cd starter
+python3 pipeline/build_data.py races/<race>/config.yaml   # tracks → dashboard_data.json
+python3 shell/build.py races/<race>                        # → examples/<race>/dist (gated on tests)
+TZ=America/New_York node tests/test_dashboard.js races/<race>
+```
+
+See `starter/README.md` for the doctrines and `starter/docs/REPO_SPEC_v1.1.md` for the
+full spec. The `/race-viz` skill in `starter/skills/race-viz/` is the authoritative
+process layer.

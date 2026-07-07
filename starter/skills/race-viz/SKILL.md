@@ -1,6 +1,6 @@
 ---
 name: race-viz
-description: Turn yacht-race tracker data plus supporting documents into researched race analysis, quantitative insights, and an interactive dashboard through a staged, checkpointed pipeline. Use this skill whenever the user provides a race tracker export (YB, Kattack, TracTrac, PredictWind, or similar), a scratch sheet or entry list, official race results, crew journals, or navigation logs — or asks for race analysis, a race debrief, a race dashboard or visualization, post-race commentary, "how did we do," "where did we win or lose the race," or a race blog / story site. Also use when resuming any stage of an existing race-viz project (reviewing findings, iterating on dashboard screenshots, preparing or executing a Claude Code handoff), even if the user doesn't name the skill.
+description: Turn yacht-race tracker data plus supporting documents into researched race analysis, quantitative insights, and an interactive dashboard through a staged, checkpointed pipeline. Use this skill whenever the user provides a race tracker export (YB, Kattack, TracTrac, PredictWind, or similar), a scratch sheet or entry list, official race results, crew journals, or navigation logs — or asks for race analysis, a race debrief, a race dashboard or visualization, post-race commentary, "how did we do," "where did we win or lose the race," or a race blog / story site. Also use when resuming any stage of an existing race-viz project (reviewing findings, iterating on dashboard screenshots, preparing or executing a Claude Code handoff) — or when the user provides a YB Tracking or YachtScoring race link or event id to pull data from — even if the user doesn't name the skill.
 ---
 
 # race-viz — staged race analysis and visualization
@@ -17,8 +17,8 @@ Worked example: RAGANA / Newport Bermuda 2026, kept in the starter repo under `e
 
 The same skill files serve both environments; each stage file states its default home.
 
-- **Claude chat** is the orchestration home: stages 0–4, every checkpoint conversation, the research pass (use the deep Research feature when available), and the screenshot-iteration loop. The chat container may execute the pipeline for exploration and for normal-size fleets.
-- **Claude Code** always executes stage 5 (productionize), and executes stage 2's pipeline from the start when an escalation trigger fires: fleet > ~150 boats, raw pings > ~1M, a marks course requiring new routed-DTF code, or a new tracker-vendor adapter. (Thresholds are provisional — calibrated on one race; revisit after race #2.)
+- **Claude chat** is the orchestration home: stages 0–4, every checkpoint conversation, the research pass (use the deep Research feature when available), and the screenshot-iteration loop. The chat container may execute the pipeline for exploration and for normal-size fleets. The chat session is also the **coordinator**: at every Claude-Code-bound step (data acquisition, escalated analysis, new geometry code, productionization) it emits a complete, paste-ready prompt — the user never composes a handoff themselves.
+- **Claude Code** executes data acquisition (the race APIs are unreachable from the chat container's restricted network), always executes stage 5 (productionize), and executes stage 2's pipeline from the start when an escalation trigger fires: fleet > ~150 boats, raw pings > ~1M, a course geometry the repo's route model can't express (standard mark courses are covered by `pipeline/route.py`), or a new tracker-vendor adapter. (Thresholds are provisional — calibrated on one race; revisit after race #2.)
 - State passes between environments as files: `config.yaml`, `events.yaml`, `decisions/CP-*.yaml`, `dashboard_data.json`, and a thin per-race `PROMPT.md` for the Claude Code session.
 
 ## Prime rules
@@ -35,6 +35,7 @@ Read the stage's reference file before executing it. Do not load stage files ahe
 
 | Stage | Read first | Runs in | Requires | Emits | Checkpoint |
 |---|---|---|---|---|---|
+| acq (optional) | `references/data-acquisition.md` | Claude Code or user-run locally | race identifiers (YachtScoring event id / YB race id) | tracks, scratch sheet, results CSVs + manifest | none — verification lands in CP-0 |
 | 0 Intake & scope | `references/stage-0-intake.md` | chat | user's raw inputs | manifest, fleet parse, TZ verification, draft `config.yaml` | **CP-0 Scope Record** — hard stop |
 | 1 Research | `references/stage-1-research.md` | chat (Research feature preferred) | CP-0 | research brief + claims-in-circulation list | soft review, no hard stop |
 | 2 Analysis | `references/stage-2-analysis.md` | chat-orchestrated; pipeline in container or Claude Code per triggers | CP-0 | `dashboard_data.json`, findings memo, frozen goldens | **CP-2 Findings & Modules Record** — hard stop |
@@ -62,3 +63,5 @@ Soft doctrines: **show the arithmetic** (every derived number traceable in-docum
 ## Contracts
 
 All formats live in `references/schemas.md`: `config.yaml`, `events.yaml`, `dashboard_data.json`, decision-record templates CP-0…CP-5, the findings-memo format, the discrepancy-register format, and the Claude Code `PROMPT.md` skeleton. Build commands and code live in the starter repo — this skill defines process and judgment; the repo defines code; `config.yaml` defines the race.
+
+Starter repo: `github:bradhgq/yacht-race-visualization` (public); the tooling this skill governs lives under `starter/`. Acquisition scripts live in `starter/acquisition/`; the worked example in `starter/examples/nb2026/`.

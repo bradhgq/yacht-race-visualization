@@ -2,7 +2,7 @@
 __pycache__/
 *.pyc
 .DS_Store
-# build products (frozen references live in examples/*/frozen/, which IS committed)
-races/*/out/
-examples/*/out/
+# build products (frozen references live in examples/*/frozen/, which IS committed;
+# the one deployed build under starter/examples/*/dist is force-added for hosting)
+**/out/
 dist/

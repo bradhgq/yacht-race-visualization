@@ -27,7 +27,7 @@ example is the refactor's regression test.**
 ```
 race-viz-starter/                  (private repo — see Privacy)
 ├── README.md                      # quickstart, the six doctrines, pointers
-├── skill/race-viz/                # the skill, versioned with the code it governs (single source of truth)
+├── skills/race-viz/               # the skill, versioned with the code it governs (single source of truth)
 │   ├── SKILL.md
 │   └── references/
 ├── acquisition/                   # data acquisition, verified live against four races
