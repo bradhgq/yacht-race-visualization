@@ -20,7 +20,7 @@ registerModule({
        <td style="text-align:right">${r.d}</td><td>${r.speed}</td><td>${r.course}</td><td>${r.wind}</td>
        <td>${r.temp != null ? r.temp + '°F' : '—'}</td><td>${badge(r.verdict)}</td><td style="white-space:normal;min-width:280px">${r.note || ''}</td></tr>`).join('');
     ctx.el.innerHTML =
-      `<table><thead><tr><th scope="col">Log time</th><th scope="col">True EDT</th><th scope="col">Log position</th><th scope="col">Tracker position</th><th scope="col">Δ nm</th><th scope="col">Speed</th><th scope="col">Course</th><th scope="col">Wind</th><th scope="col">Water</th><th scope="col">Verdict</th><th scope="col">Note</th></tr></thead><tbody>${rows}</tbody></table>`
+      `<div class="tblwrap"><table><thead><tr><th scope="col">Log time</th><th scope="col">True EDT</th><th scope="col">Log position</th><th scope="col">Tracker position</th><th scope="col">Δ nm</th><th scope="col">Speed</th><th scope="col">Course</th><th scope="col">Wind</th><th scope="col">Water</th><th scope="col">Verdict</th><th scope="col">Note</th></tr></thead><tbody>${rows}</tbody></table></div>`
       + `<div class="note swipehint">Swipe the table sideways for the rest of the columns.</div>`;
   },
 });

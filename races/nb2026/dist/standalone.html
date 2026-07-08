@@ -17,7 +17,7 @@
 <meta name="twitter:title" content="RAGANA · Newport Bermuda 2026 · Race Analysis">
 <meta name="twitter:description" content="A crew's-eye reconstruction of the 2026 Newport Bermuda Race from the YB tracker and the nav log.">
 <meta name="twitter:image" content="https://hgq.fyi/ragana-newport-bermuda-2026/og.png">
-<link rel="icon" href="favicon.svg?v=7ddafa5c94" type="image/svg+xml">
+<link rel="icon" href="favicon.svg?v=f84f6ab8fb" type="image/svg+xml">
 <style>
 /* Design tokens — the chart-paper / NOAA-chart identity (RETROSPECTIVE §3).
    Race-agnostic except --magenta, the HERO ACCENT: per-boat re-skin = change
@@ -283,6 +283,7 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
   </div>
   <div id="ctlBody">
     <div class="ctl-row"><div class="ctl-label big">Groups</div><div class="chips big" id="grpbtns"></div></div>
+    <div class="ctl-row" id="filterRow"><div class="ctl-label">Filter</div><div class="chips" id="filterctl"></div></div>
     <div class="ctl-row"><div class="ctl-label">Boats</div><div class="chips" id="chips"></div></div>
     <div id="morePanel" style="display:none;margin:2px 0 10px;padding-top:10px;border-top:1px dashed var(--rule)"></div>
     <div class="ctl-row"><div class="ctl-label">Overlays</div><div class="chips" id="overlays"></div></div>
@@ -560,7 +561,7 @@ const plotlyReady = new Promise(res => {
   else go();
 });
 
-function dataURL(name) { return 'data/' + name + '?v=7ddafa5c94'; }
+function dataURL(name) { return 'data/' + name + '?v=f84f6ab8fb'; }
 async function loadJSON(name) {
   const r = await fetch(dataURL(name));
   if (!r.ok) throw new Error(name + ': HTTP ' + r.status);
@@ -872,9 +873,13 @@ function buildControls() {
     btn.onclick = () => { const all = names.every(n => S.boats.has(n)); names.forEach(n => all ? S.boats.delete(n) : S.boats.add(n)); render('boats'); };
     gb.appendChild(btn);
   }
-  const clr = document.createElement('button'); clr.type = 'button'; clr.className = 'grpbtn'; clr.textContent = HERO + ' only';
+  const clr = document.createElement('button'); clr.type = 'button'; clr.className = 'grpbtn';
+  clr.textContent = 'Clear'; clr.title = `Reset the selection to ${HERO} only`;
   clr.onclick = () => { S.boats = new Set([HERO]); S.clsSel.clear(); S.band = null; S.filterSel.clear(); render('boats'); }; gb.appendChild(clr);
 
+  // ── Filter row: class-number input + rating-band chips (their own labeled row
+  //    so the band group doesn't wrap as a block and strand the Groups line) ──
+  const fb = document.getElementById('filterctl'); fb.innerHTML = '';
   // class-number input: one control instead of a button per class (round 2)
   if (CFG.classFilter) {
     const cf = CFG.classFilter;
@@ -889,18 +894,18 @@ function buildControls() {
     go.onclick = submit;
     inp.onkeydown = e => { if (e.key === 'Enter') submit(); };
     for (const el of [lab, inp, go]) wrapEl.appendChild(el);
-    gb.appendChild(wrapEl);
-    for (const label of [...S.clsSel]) {   // active classes read as toggled-on group buttons
+    fb.appendChild(wrapEl);
+    for (const label of [...S.clsSel]) {   // active classes read as toggled-on filter chips
       const b = document.createElement('button'); b.type = 'button';
       b.className = 'grpbtn allon'; b.textContent = '− ' + label;
       b.setAttribute('aria-pressed', 'true');
       b.onclick = () => { S.clsSel.delete(label); applyFilters(); };
-      gb.appendChild(b);
+      fb.appendChild(b);
     }
     if (S.clsErr) {
       const err = document.createElement('span'); err.className = 'clserr';
       err.setAttribute('role', 'status'); err.textContent = S.clsErr;
-      gb.appendChild(err);
+      fb.appendChild(err);
     }
   }
   // F-TCF band chips: true rating peers around the hero (round 2)
@@ -937,8 +942,11 @@ function buildControls() {
     const cl = document.createElement('span'); cl.className = 'clsadd-label';
     cl.textContent = COPY.filters?.bandCustomLabel || 'custom';
     for (const el of [cl, lo, hi, setb]) bandRow.appendChild(el);
-    gb.appendChild(bandRow);
+    fb.appendChild(bandRow);
   }
+  // hide the whole Filter row if neither filter is configured
+  const filterRow = document.getElementById('filterRow');
+  if (filterRow) filterRow.style.display = (CFG.classFilter || CFG.ratingBands) ? '' : 'none';
 
   const ov = document.getElementById('overlays'); ov.innerHTML = '';
   const add = (label, color, get, set) => { ov.appendChild(makeChip(label, color, get(), () => { set(!get()); }, false, 'pill')); };
@@ -1865,7 +1873,7 @@ registerModule({
        <td style="text-align:right">${r.d}</td><td>${r.speed}</td><td>${r.course}</td><td>${r.wind}</td>
        <td>${r.temp != null ? r.temp + '°F' : '—'}</td><td>${badge(r.verdict)}</td><td style="white-space:normal;min-width:280px">${r.note || ''}</td></tr>`).join('');
     ctx.el.innerHTML =
-      `<table><thead><tr><th scope="col">Log time</th><th scope="col">True EDT</th><th scope="col">Log position</th><th scope="col">Tracker position</th><th scope="col">Δ nm</th><th scope="col">Speed</th><th scope="col">Course</th><th scope="col">Wind</th><th scope="col">Water</th><th scope="col">Verdict</th><th scope="col">Note</th></tr></thead><tbody>${rows}</tbody></table>`
+      `<div class="tblwrap"><table><thead><tr><th scope="col">Log time</th><th scope="col">True EDT</th><th scope="col">Log position</th><th scope="col">Tracker position</th><th scope="col">Δ nm</th><th scope="col">Speed</th><th scope="col">Course</th><th scope="col">Wind</th><th scope="col">Water</th><th scope="col">Verdict</th><th scope="col">Note</th></tr></thead><tbody>${rows}</tbody></table></div>`
       + `<div class="note swipehint">Swipe the table sideways for the rest of the columns.</div>`;
   },
 });

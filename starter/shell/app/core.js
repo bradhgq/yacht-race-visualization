@@ -341,9 +341,13 @@ function buildControls() {
     btn.onclick = () => { const all = names.every(n => S.boats.has(n)); names.forEach(n => all ? S.boats.delete(n) : S.boats.add(n)); render('boats'); };
     gb.appendChild(btn);
   }
-  const clr = document.createElement('button'); clr.type = 'button'; clr.className = 'grpbtn'; clr.textContent = HERO + ' only';
+  const clr = document.createElement('button'); clr.type = 'button'; clr.className = 'grpbtn';
+  clr.textContent = 'Clear'; clr.title = `Reset the selection to ${HERO} only`;
   clr.onclick = () => { S.boats = new Set([HERO]); S.clsSel.clear(); S.band = null; S.filterSel.clear(); render('boats'); }; gb.appendChild(clr);
 
+  // ── Filter row: class-number input + rating-band chips (their own labeled row
+  //    so the band group doesn't wrap as a block and strand the Groups line) ──
+  const fb = document.getElementById('filterctl'); fb.innerHTML = '';
   // class-number input: one control instead of a button per class (round 2)
   if (CFG.classFilter) {
     const cf = CFG.classFilter;
@@ -358,18 +362,18 @@ function buildControls() {
     go.onclick = submit;
     inp.onkeydown = e => { if (e.key === 'Enter') submit(); };
     for (const el of [lab, inp, go]) wrapEl.appendChild(el);
-    gb.appendChild(wrapEl);
-    for (const label of [...S.clsSel]) {   // active classes read as toggled-on group buttons
+    fb.appendChild(wrapEl);
+    for (const label of [...S.clsSel]) {   // active classes read as toggled-on filter chips
       const b = document.createElement('button'); b.type = 'button';
       b.className = 'grpbtn allon'; b.textContent = '− ' + label;
       b.setAttribute('aria-pressed', 'true');
       b.onclick = () => { S.clsSel.delete(label); applyFilters(); };
-      gb.appendChild(b);
+      fb.appendChild(b);
     }
     if (S.clsErr) {
       const err = document.createElement('span'); err.className = 'clserr';
       err.setAttribute('role', 'status'); err.textContent = S.clsErr;
-      gb.appendChild(err);
+      fb.appendChild(err);
     }
   }
   // F-TCF band chips: true rating peers around the hero (round 2)
@@ -406,8 +410,11 @@ function buildControls() {
     const cl = document.createElement('span'); cl.className = 'clsadd-label';
     cl.textContent = COPY.filters?.bandCustomLabel || 'custom';
     for (const el of [cl, lo, hi, setb]) bandRow.appendChild(el);
-    gb.appendChild(bandRow);
+    fb.appendChild(bandRow);
   }
+  // hide the whole Filter row if neither filter is configured
+  const filterRow = document.getElementById('filterRow');
+  if (filterRow) filterRow.style.display = (CFG.classFilter || CFG.ratingBands) ? '' : 'none';
 
   const ov = document.getElementById('overlays'); ov.innerHTML = '';
   const add = (label, color, get, set) => { ov.appendChild(makeChip(label, color, get(), () => { set(!get()); }, false, 'pill')); };
