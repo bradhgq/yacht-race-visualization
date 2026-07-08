@@ -54,10 +54,11 @@ project (github.com/rahra/decyb, `html/decyb.js` → `function parse(e)`), which
 itself was reverse-engineered from YB's own JS client. **decyb declares NO
 license** (checked 2026-07-07: no LICENSE file, no README terms, GitHub API
 license field null; author Bernhard R. Fischer <bf@abenteuerland.at>). An
-unlicensed repo is all-rights-reserved by default. Before this code ships in
-anything public or client-facing, contact the author for terms or replace the
-port with a cleanroom implementation from the byte-layout notes above (which
-describe a data format, not decyb's code). Tracked in DOC_GAPS.md #16.
+unlicensed repo is all-rights-reserved by default. This project is personal and
+non-commercial, so the port ships as-is (owner decision, 2026-07-08), with
+attribution to the author. If it ever goes commercial, cross that bridge then —
+contact the author for terms, or cleanroom-reimplement from the byte-layout notes
+above (which describe a data format, not decyb's code). Tracked in DOC_GAPS.md #16.
 
 ### Gotchas (all hit in practice)
 

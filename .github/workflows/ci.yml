@@ -7,35 +7,36 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TZ: America/New_York   # I1: the suite must run under a non-UTC zone
-    defaults:
-      run:
-        working-directory: starter   # the tooling lives under starter/ in the monorepo
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
       - uses: actions/setup-node@v4
         with: { node-version: '22' }
-      - run: pip install -r requirements.txt
+      - run: pip install -r starter/requirements.txt
 
+      # engine tests import the pipeline package (starter/ on sys.path) — run from starter/
       - name: Acquisition decoder regression (offline fixture — network paths stay out of CI)
+        working-directory: starter
         run: python3 -m unittest discover -s acquisition/tests
 
       - name: Routed distance-remaining (marks courses — synthetic geometry suite)
+        working-directory: starter
         run: python3 -m unittest tests.test_route
 
+      # build/harness take a race dir; races/ live at the repo root now
       - name: Build data payload from the raw tracker export
-        run: python3 pipeline/build_data.py races/nb2026/config.yaml
+        run: python3 starter/pipeline/build_data.py races/nb2026/config.yaml
 
       - name: GATE A — semantic parity vs the frozen payload (tie-exempt rule)
         run: |
-          python3 pipeline/compare_data.py \
-            examples/nb2026/out/dashboard_data.json \
-            examples/nb2026/frozen/dashboard_data.json \
-            --ties examples/nb2026/out/rounding_ties.json
+          python3 starter/pipeline/compare_data.py \
+            races/nb2026/out/dashboard_data.json \
+            races/nb2026/frozen/dashboard_data.json \
+            --ties races/nb2026/out/rounding_ties.json
 
       - name: Build the dashboard (runs the regression harness as its gate)
-        run: python3 shell/build.py races/nb2026
+        run: python3 starter/shell/build.py races/nb2026
 
       - name: Regression harness, explicitly, under UTC as well
-        run: TZ=UTC node tests/test_dashboard.js races/nb2026
+        run: TZ=UTC node starter/tests/test_dashboard.js races/nb2026

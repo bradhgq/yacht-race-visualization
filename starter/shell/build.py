@@ -153,7 +153,16 @@ def section_html(cfg, copy):
                 f'  <div id="{cid}" class="plot"></div>\n  <div class="tapnote" id="tap_{cid}"></div>\n</section>')
 
     def module_card(mid):
-        return (f'<section class="card" id="sec_{mid}" hidden>\n  <h2></h2>\n  <div class="note"></div>\n'
+        # a module may declare a y-metric toggle in cfg[mid].toggle; render its
+        # buttons in the card header (state + wiring handled generically in core.js)
+        tog = (cfg.get(mid) or {}).get('toggle')
+        if tog:
+            btns = ''.join(f'<button class="modebtn" id="mtog_{mid}_{s["v"]}">{s["label"]}</button>'
+                           for s in tog['states'])
+            head = f'<div class="hd"><h2></h2><span class="tools">{btns}</span></div>'
+        else:
+            head = '<h2></h2>'
+        return (f'<section class="card" id="sec_{mid}" hidden>\n  {head}\n  <div class="note"></div>\n'
                 f'  <div id="{mid}" data-mount></div>\n  <div class="tapnote" id="tap_{mid}"></div>\n</section>')
 
     def one(tok):

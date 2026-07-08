@@ -11,7 +11,8 @@ tag at the first '</' in a text field.
 
 NOTE: with the shell landed (REPO_SPEC v1.1), `shell/build.py` is the primary
 build; this injection path remains for monolith-style templates (the NB2026
-reference monolith lives at examples/nb2026/legacy/dashboard_template.html).
+reference monolith is preserved in git history behind the tag
+nb2026-single-race-final, not in the working tree).
 """
 import argparse
 import sys

@@ -1,0 +1,38 @@
+# Round 3 — repo consolidation + Sebastian/Brad follow-up tweaks
+# (recorded instruction: Brad, 2026-07-08, this session). Authorizes the
+# frozen-oracle re-freeze below; GATE A's role remains cross-machine
+# reproducibility, not port parity (pre-R3 oracle lives in git history).
+repo:
+  - consolidated into the public monorepo bradhgq/yacht-race-visualization
+    (renamed from ragana-newport-bermuda-2026; old lineage tagged
+    nb2026-single-race-final)
+  - layout: docs/ skills/ races/ at top level; starter/ holds only engine code
+    (shell pipeline adapters acquisition tests); this race is now races/nb2026
+    (was starter/examples/nb2026); deployed dist committed at races/nb2026/dist
+  - licensing concern on the vendored YB decoder (decyb): dropped per Brad —
+    non-commercial, revisit if/when it becomes commercial
+tweaks:
+  - id: kevin-note
+    what: "recon note for the Sun 03:xx fix trimmed — dropped the trailing
+      'A memorial note in the margin of a working log, kept here with respect.'
+      (implied). Tribute facts (Kevin, U.S. Coast Guard veteran) unchanged."
+    gate_a: "recon[7].note text change — re-frozen here (authorized)"
+  - id: race-pace-opening
+    what: "race chart paceMinDone 50 -> 15 so the pace view renders the opening
+      leg (was blanking ~4 opening milestones, read as 'the start isn't drawn').
+      milestoneTop already caps done>=15, so no divide-by-near-zero."
+    gate_a: "presentation-only; no payload change"
+  - id: distspeed-elapsed-corrected
+    what: "distance-vs-speed scatter gains an elapsed|corrected y-metric toggle
+      (S.distMode; generic module-toggle mechanism: cfg[mid].toggle -> buttons in
+      the module card header). Corrected divides sailedNm by official corrected
+      time; rays = isoDaysCorr [2.2,2.5,2.8]. Default stays elapsed (goldens hold)."
+    gate_a: "presentation-only; no payload change"
+  - id: distspeed-boudicca
+    what: "mode-aware outlier clamp — Boudicca (Class-8, 10.04 kt elapsed vs 8.24
+      next) peels off the elapsed y-range and is labelled at the top edge so the
+      pack keeps the full scale; noted in the caption as a non-peer faster boat.
+      Corrected view pulls the fleet together, so nothing peels there."
+    gate_a: "presentation-only; no payload change"
+refreeze: "races/nb2026/frozen/dashboard_data.json := out/dashboard_data.json
+  after the kevin-note edit (the only payload delta this round)"
