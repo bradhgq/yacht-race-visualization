@@ -145,3 +145,79 @@ allowlist can't override.
    supply only the goldens + the assertion list. Record the two gotchas in §3 as kit docs.
 5. Reconcile `goldens.json`/`config.yaml` with the oracle at freeze time (NF1/NF2) so the
    golden file can't drift from the payload it's supposed to guard.
+
+## 7. R9 — what the first post-launch owner round taught (2026-07-09)
+
+The board went live and Brad's first real-use pass produced eleven fixes
+([`decisions/R9-owner-review.yaml`](decisions/R9-owner-review.yaml); every one a
+named `R9_*` test — the suite is now 34). Three lessons worth carrying forward:
+
+- **§1's divergence argument applies *within* one build.** The monolith had three
+  separate decor code paths (`actBandsTime`, `actBandsDist`, `eventDecor`) and they
+  had already drifted: the lane chart had no acts or events at all, and SOG's event
+  markers were drawn at y=13 on a fixed [0,11] axis — present in the figure spec,
+  invisible on screen. The fix (one `decor(xOf)` with a per-chart x-mapper) is the
+  same medicine as the shell extraction: shared scaffolding, thin per-chart adapters.
+- **Spec-level tests can't see "invisible."** The jsdom/Plotly-capture harness
+  verified the SOG marker trace *existed* — it never asserted the markers sat inside
+  the chart's y-range. That class of check (`marker.y within layout.yaxis.range`) is
+  now part of the shared A12 test and belongs in the shell's test kit.
+- **Coverage combinatorics beat screenshot rounds.** 8 human rounds never clicked
+  "All boats + Total view"; the R9 code review did, and found a pre-existing crash
+  (Inisharon, DNF, `parseHMS(undefined)`). Cheap adversarial passes over the state
+  space (every toggle × every view) catch what curated screenshots structurally miss.
+
+Also at R9: prime rule 4 was questioned, explained (it comes from the skill, not
+from Brad), and **reconfirmed by the owner**; the `private/never_public.txt`
+indirection was reverted to the simpler hardcoded `NEVER_PUBLIC`; and the NF1/NF2
+stale golden name-lists were reconciled in `config.yaml` with a ledger entry.
+
+## 8. Wishlist — further work
+
+Recorded here so a future round can pick items with fresh consent; none of these
+change shipped analysis numbers without a new checkpoint.
+
+### 8a. Visual
+- **Synced hover / time-scrubber across charts.** One hovered moment highlighting
+  map position, DTF, race gap, and SOG simultaneously — the single biggest
+  readability win available. (Plotly `hoversubplots` doesn't span separate divs;
+  needs a small shared-cursor layer over the existing `decor()` mappers.)
+- **Basemap under the course.** A light coastline (Long Island, the CT shore,
+  Block Island itself) as an inline SVG layer would ground the map without
+  breaking the no-CDN rule. The island's outline would also make the starboard
+  annotation self-evident.
+- **Pace-view y-clamp** (deferred since CP-4): min/100nm amplifies as remaining
+  distance → 0; clamp the last ~20 nm or add a note. Now that the start anchor
+  exists the asymmetry is more visible.
+- **Leader-line labels on the map** at the DTF milestones (the nb2026
+  `mapLabels` pattern) instead of hover-only identification.
+- **Print/story mode**: a one-column, chart-per-viewport scroll layout with the
+  act narrative interleaved — the FINDINGS memo as a guided tour of the same
+  figures.
+- **Dark mode** via the existing CSS variables (the palette is already
+  tokenized; mostly a `prefers-color-scheme` block + Plotly template swap).
+
+### 8b. Research integration
+- **Wind field.** The biggest analytical gap: no wind data on the board (the LIS
+  buoys were down for the window — footer already says so). NOAA NDBC station
+  44039/44060 archives, ASOS coastal stations (GON, BID), or ERA5 reanalysis
+  could give an hourly wind barb strip under the SOG chart and would let the
+  Act-3 "building breeze" narrative be shown, not asserted.
+- **Current/tide gates.** The Race and Plum Gut are current gates; NOAA tidal
+  current predictions for the race window would explain the Friday-night
+  compression visible in the DTF chart and belong as a shaded overlay on the
+  DTF/SOG time axes.
+- **1BI charted coordinate** (open since CP-4): pin from NOAA chart 13215/13217
+  or the USCG Light List; then rounding *timestamps* can ship via route.py's
+  stateful leg logic (the +4.7 nm distance is already robust to this).
+- **Per-leg decomposition table.** The register already supports it: elapsed and
+  corrected deltas vs CD per act (out / sound→1BI / rounding+home), replacing the
+  single "Act 3 alone +182 min" line in FINDINGS with a small table module.
+- **Polars/target overlay** (needs owner data): Ragana's ORC speed guide vs
+  achieved SOG by leg would turn "the rest is pace" into "which pace, where."
+- **Crew narrative depth**: the events layer could link each log row to a
+  fuller story panel (transcript excerpts are already in events.yaml `txt`);
+  a click-to-expand row keeps the table compact while surfacing the research.
+- **Fleet analytics**: lane-vs-outcome scatter (south-max vs corrected finish
+  across Class 6/all ORC) — the round-3 stress-test finding as its own chart
+  rather than prose in the upwind note.

@@ -8,7 +8,8 @@ confirmed_by: "Brad"
 productionization:
   assertions_codified: true          # JOB 1 — CP-4's G1–G5 + A1–A16 as a runnable suite
   test_suite: "races/bir2026/test/regression.test.cjs (+ harness.cjs)"
-  test_count: 23                     # 5 goldens + 16 CP-4 assertions + 2 new findings
+  test_count: 34                     # 5 goldens + 16 CP-4 + NF1/NF2 + 11 R9 (post-launch owner
+                                     # round; was 23 at first deploy — see R9-owner-review.yaml)
   test_runner: "TZ=America/New_York node --test test/regression.test.cjs"
   green_before_and_after: true       # prime rule 5 — non-UTC TZ, green both times
   shell_migration: "declined — see RETROSPECTIVE §shell. The monolith's chart engine
@@ -31,7 +32,11 @@ productionization:
        still list Windfall under names_absent — that golden is STALE vs the oracle; without
        Windfall the PHRF finstrip band is 22, not the golden 23. Test asserts the oracle."
     - "NF2: display-name override (Zèlèe→Zélée) is applied in the payload; goldens.json
-       names_present still shows the raw 'Zèlèe'. Test asserts the applied display name."
+       names_present still shows the raw 'Zèlèe'. Test asserts the applied display name.
+       [Both name-lists reconciled in config.yaml at R9 — ledger in R9-owner-review.yaml.]"
+    - "R9k: Inisharon (DNF, track but no official time) crashed the race chart on
+       All boats + Total view (parseHMS(undefined)) — pre-existing in the approved
+       monolith, caught by the R9 code review; now skipped on that chart only."
 
 publication:
   decision: "Host exactly like the nb2026 board — public, full narrative — confirmed by Brad 2026-07-07."
@@ -59,11 +64,15 @@ deploy:
     repo: "github:bradhgq/yacht-race-visualization"
     branch: "main"
     path: "races/bir2026/  (full source; served build in races/bir2026/dist/)"
+    local_checkout: "~/silverdrive/projects/yacht-race-visualization"
   nix_config:
     repo: "github:bradhgq/nix-config"
     branch: "main"
     file: "hosts/silverbox/ragana-dashboard.nix"
-    change: "input ragana-bir2026-site + nginx alias /ragana-block-island-2026/ → races/bir2026/dist/ (nb2026 untouched on its own input)"
-  ship_an_update: "commit to yacht-race-visualization main, then on silverbox:
-    nix flake update ragana-bir2026-site && sudo nixos-rebuild switch --flake .#silverbox"
+    change: "ONE race-viz-site input (nix-config 95d0ced); nginx aliases
+      /ragana-newport-bermuda-2026/ → races/nb2026/dist/ and
+      /ragana-block-island-2026/ → races/bir2026/dist/"
+  ship_an_update: "commit to yacht-race-visualization main (since nix-config 95d0ced one
+    race-viz-site input serves EVERY race at that rev), then on silverbox:
+    nix flake update race-viz-site && sudo nixos-rebuild switch --flake .#silverbox"
   status: "LIVE at https://hgq.fyi/ragana-block-island-2026/"

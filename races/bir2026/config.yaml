@@ -135,15 +135,19 @@ goldens:
       boat: Ragana
       vs: Christopher Dragon XII
       nm: 4.7
+  # name lists reconciled with the frozen oracle at R9 (NF1/NF2 — ledger entry in
+  # decisions/R9-owner-review.yaml): the payload uses display names, and Windfall
+  # ships meta-only (untracked PHRF finisher; required for the PHRF band = 23)
   names_present:
   - Ragana
   - Christopher Dragon XII
   - In Theory
   - Groupe 5
   - Young American
-  - Zèlèe
-  names_absent:
+  - Zélée
+  names_meta_only:
   - Windfall
+  names_absent:
   - MXM
   - Towhee
   finstrip_count: 33

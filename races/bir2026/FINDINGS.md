@@ -64,3 +64,21 @@ Module retitled "Distance vs. finish — what the 4.7 nm cost, and what it didn'
 **Challenge:** the map's "starboard rounding" label looked wrong — boats appear to pass Block Island to port.
 
 **Resolution: SI is correct (starboard); the label was mis-placed.** The single-point "closest approach to island center" test returns port for all 58 boats — but that measures the boat mid-loop on the WEST/return side, where the island is naturally to port. The rule concerns the government marks (1BI off the north reef, Southeast Light). Winner's traced path (CD XII): approaches from W along 41.23–24N heading E → turns N to 41.26 rounding 1BI off the north reef (06:07–06:10) → runs S down the EAST side 41.26→41.14 (06:10–07:10) → around the south end past SE Light → back. Island is to starboard throughout the operative leg (57/58 boats starboard vs the SE-Light point). Fix: annotation moved to the east side where starboard is unambiguous; stale "dashed track" copy corrected (tracks are solid since round 4). No data or golden change.
+
+## Addendum — R9: post-launch owner review (2026-07-09)
+
+First review of the live board. No analysis number changed; every item is
+presentation-layer and is locked by a named `R9_*` regression test. Full ledger:
+[`decisions/R9-owner-review.yaml`](decisions/R9-owner-review.yaml). Items that
+touch claims in this memo:
+
+| memo claim | R9 disposition |
+|---|---|
+| §3 "Inisharon retained (RET, on-map)" | Still true for map/DTF/SOG. New nuance: Inisharon is **skipped on the won/lost chart** — with no official elapsed/corrected there is no honest start or endpoint, and the Total view crashed on `parseHMS(undefined)` (review find, pre-existing in the approved monolith). |
+| Round-3 addendum: "the strong version is contradicted" | The dashboard note no longer carries the bolded "distance is not why Ragana finished last" sentence — Brad's call: it undercut the chart it captioned. The disciplined version (≈53 min of 276; Zélée +8.9 counterexample; 0.83 correlation) still ships verbatim (A6-locked). |
+| §2 finish-spread module ("25 of 58 at/after 2300") | The *fact* stays in this memo and in the section note; the chart's **title** no longer claims it ("The finish — every corrected time, division by division") because the corrected-time x-axis cannot show a wall-clock statement. |
+| §1/H5 upwind timing | Unchanged. The race chart now anchors every line at (188.7 nm, 0) — the gap is zero at each boat's own gun by construction — so the pace view renders the whole race instead of starting at 160 nm-to-go. |
+| Pre-start milling (H1's CP-4 r2 correction) | The same 6 pre-start pings per boat also scribbled the SOG distance axis; distance-axis series now start at each boat's official gun. Clock-axis views keep the full pre-start record. |
+
+Also at R9: the two stale golden name-lists found at CP-5 (NF1 Windfall, NF2
+Zélée) were reconciled in `config.yaml` with a ledger entry (prime rule 3).

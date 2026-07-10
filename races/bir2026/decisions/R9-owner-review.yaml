@@ -1,0 +1,87 @@
+# R9 — Post-launch owner review — BIR 2026 RAGANA
+# Brad's first review of the LIVE board (2026-07-09), the round after CP-5.
+# Every item below was human-caught and is locked by a named R9_* test in
+# test/regression.test.cjs (prime rule 5 does not stop at launch). Shipped as
+# monorepo rev 7728756, dist version a846173baf.
+confirmed_by: "Brad"
+date: "2026-07-09"
+
+privacy:
+  - decision: "Prime rule 4 carve-out RECONFIRMED after Brad asked what the rule was
+      and where it's defined (skills/race-viz/SKILL.md §Prime rules): 'the rule is
+      sound and let's keep it out.' The two groundings stay out of every public artifact."
+  - decision: "REVERTED the private/never_public.txt indirection + its gitignore entry
+      (added during the source-publication pass). NEVER_PUBLIC labels are hardcoded in
+      build.py again; the sentinel is ALL_EXCEPT_GROUNDINGS. Labels in the public tree
+      are fine; the event BODIES remain only in the private client record."
+
+controls:
+  - fix: "Hide-controls button right-aligned — .ctl-head flex rule existed only inside
+      the mobile media query, so on desktop the button sat inline next to the title."
+    test: R9a
+  - fix: "Max added to the default-on selection (S.boats + build.py DEFAULT_BOATS)."
+    test: R9b
+  - fix: "Overlay chips render only for categories that actually have events."
+    test: R9c
+  - fix: "One label set for event categories — EVCAT.label is the single source for
+      chips, log table and hovers; the SHORT map (Sails vs Sail drift) deleted."
+    test: R9d
+
+charts:
+  - fix: "ONE decor(xOf, topY, xBand) path gives all four time charts (dtf, race, sog,
+      upwind-lane) identical act bands + hoverable event overlays. The lane maps
+      moments onto its distance-sailed axis via Ragana's leg (events after her
+      rounding drop off; act bands clip). Replaces three diverged code paths
+      (actBandsTime, actBandsDist, eventDecor)."
+    test: A12+R9
+  - fix: "SOG event markers were drawn at y=13 on a fixed [0,11] range — invisible.
+      Now 10.4; the shared test asserts every chart's markers sit inside its y-range."
+    test: A12+R9
+  - fix: "All four time charts uniform 360px (dtf was 320)."
+    test: A15+R9
+  - fix: "Race chart: every line anchored at (DTF_START, 0) — the gap is zero at each
+      boat's own gun by construction — so the pace view no longer 'loses' the first
+      20 nm (its min/100nm normalization only engages past 20 nm sailed)."
+    test: R9e
+  - fix: "SOG distance axis starts each boat at its official start; 6 pre-start
+      milling pings per boat interleaved x back-and-forth (Ragana's dtf dips to 183
+      pre-gun) and drew a hairball at the right edge. Clock axis keeps the honest
+      pre-start record."
+    test: R9f
+  - fix: "Map: taller (380px); direction arrows rebuilt as (invisible-anchor, head)
+      pairs so angleref:'previous' takes the local 15-min segment, not a long chord;
+      hover now name · class · nm-to-go (class map derived from results.csv by sail
+      number at build time, 58/58 matched, injected as core.classes — presentation
+      metadata, oracle untouched); selected events pinned to Ragana's course;
+      starboard label right-anchored inside the frame so it cannot clip."
+    tests: [A8, R9g, R9h, A13]
+  - fix: "Race log: Cat column 88px ('Milestones' at 11.5px mono needs ~80px and was
+      clobbering Event), Event squeezed to 172px. No horizontal scroll needed."
+    test: R9i
+
+copy:
+  - fix: "Upwind module note: deleted the bolded 'And distance is not why Ragana
+      finished last' sentence — it undercut the chart it captioned. The honest
+      quantification stays (≈53 min of 276; Zélée +8.9 counterexample; both A6-locked)."
+  - fix: "Finstrip retitled 'The finish — every corrected time, division by division'
+      (was '25 of 58 crossed after 2300 Saturday' — a claim the chart cannot show)."
+    test: R9j
+
+review_find:
+  - fix: "Inisharon (DNF: track but no official elapsed/corrected) crashed the entire
+      race chart on 'All boats + Total view' — parseHMS(undefined). Pre-existing in
+      the CP-4-approved monolith; 8 screenshot rounds never hit that combination.
+      DNF boats without official times are now skipped on the race chart only (no
+      honest start/endpoint exists); they still draw on map/dtf/sog. FINDINGS §3's
+      'Inisharon retained (RET, on-map)' still holds."
+    test: R9k
+
+golden_reconciliation:   # prime rule 3 — ledger entry for fixture-metadata changes
+  - change: "config.yaml goldens: names_absent [Windfall, MXM, Towhee] was stale vs
+      the frozen oracle (NF1) — Windfall ships meta-only (untracked PHRF finisher,
+      required for the PHRF band = 23). Moved to a names_meta_only entry."
+  - change: "config.yaml goldens names_present: 'Zèlèe' → the applied display name
+      'Zélée' (NF2). No golden VALUE changed; both are name-list metadata
+      reconciliations, asserted by tests NF1/NF2 since CP-5."
+
+suite: "34 tests green under TZ=America/New_York (5 goldens + 16 CP-4 + NF1/NF2 + 11 R9)."
