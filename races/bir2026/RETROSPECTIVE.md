@@ -120,15 +120,13 @@ Each is now a named test:
 ## 5. Publication (CP-5) — the one place a machine must not decide
 
 All 16 events are `visibility: private`. Brad's instruction was "host exactly like the
-nb2026 board" — public, full narrative. I honored it **except** two private
-third-party milestone events (prime rule 4 marks them non-publishable *regardless* —
-firsthand-confirmed incidents about **other boats**, not in the public record).
-"Same as nb2026" was about mechanism and publicness; it did not explicitly reverse
-that written third-party carve-out, so the public build withholds those two (their
-labels live only in a private, gitignored list) and ships the other 14. Including
-them would take an explicit, separate "yes." The decision and the deploy path are in
-[`decisions/CP-5.yaml`](decisions/CP-5.yaml); the withheld items are recorded only in
-the private client build.
+nb2026 board" — public, full narrative. I honored it **except** the two groundings
+(Loki, Full Tilt): prime rule 4 marks them non-publishable *regardless* — firsthand-
+confirmed incidents about **other boats**, not in the public record. Asked directly,
+Brad confirmed the carve-out ("the rule is sound and let's keep it out"), so
+`build.py` hard-blocks the two labels (`NEVER_PUBLIC`) and the public build ships the
+other 14; the event bodies exist only in the private client record. The decision and
+the deploy path are in [`decisions/CP-5.yaml`](decisions/CP-5.yaml).
 
 This is the general shape for any future public race board: the client (private) build
 is the default; the public build is an opt-in *subtraction*, with a hard floor the

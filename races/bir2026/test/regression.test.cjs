@@ -185,7 +185,17 @@ test('A8 · boat tracks carry periodic mid-line direction arrows (scaled to sele
   const { CAP } = loadDashboard({ select: ['Ragana', 'Christopher Dragon XII'] });
   const arrows = CAP.map.traces.filter(t => t.marker && t.marker.symbol === 'arrow' && t.marker.angleref === 'previous');
   assert.ok(arrows.length >= 2, 'expected an arrow trace per selected boat');
-  assert.ok(arrows.every(a => a.x.length >= 3 && a.x.length <= 6), 'arrow count per track out of the 3–6 range');
+  for (const a of arrows) {
+    // R9 upgrade: each arrow is an (anchor, head) pair — anchor size 0 at the
+    // previous ping — so 'previous' means the LOCAL segment, not a long chord
+    assert.ok(a.x.length >= 6 && a.x.length <= 12 && a.x.length % 2 === 0,
+      `arrow trace has ${a.x.length} points, expected 6–12 in pairs`);
+    assert.ok(Array.isArray(a.marker.size), 'arrow sizes must be per-point (anchors invisible)');
+    for (let i = 0; i < a.marker.size.length; i += 2) {
+      assert.equal(a.marker.size[i], 0, 'pair anchor must be invisible (size 0)');
+      assert.ok(a.marker.size[i + 1] > 0, 'pair head must be visible');
+    }
+  }
 });
 
 test('A9 · .note paragraphs render at full column width (max-width:none, not an 80ch clamp)', () => {
@@ -214,14 +224,21 @@ test('A11 · upwind-lane on distance-sailed x (0 → ~105 nm), fills frame, roun
   assert.ok(CAP.xte.traces.some(t => t.marker && t.marker.symbol === 'circle-open'), 'no Block Island rounding markers');
 });
 
-test('A12 · DTF + race + SOG charts all carry the identical 3 act bands', () => {
+test('A12+R9 · DTF, race, SOG AND upwind-lane all carry the 3 act bands + hoverable event markers', () => {
   const { CAP } = loadDashboard({ select: ['Ragana', 'Christopher Dragon XII'] });
-  for (const id of ['dtf', 'race', 'sog']) {
+  for (const id of ['dtf', 'race', 'sog', 'xte']) {
     assert.equal(rectShapes(CAP[id].layout).length, 3, `${id} does not have 3 act bands`);
     const labels = actAnns(CAP[id].layout).map(a => a.text).sort();
     assert.equal(labels.length, 3, `${id} missing act-band labels`);
     assert.ok(labels.some(t => /OUT/.test(t)) && labels.some(t => /SOUND → BLOCK ISLAND/.test(t)) && labels.some(t => /ROUNDING & HOME/.test(t)),
       `${id} act labels wrong: ${labels}`);
+    const marker = CAP[id].traces.find(t => t.hoverinfo === 'text' && t.mode === 'markers');
+    assert.ok(marker, `${id} has no hoverable event-marker trace (r9: every time chart carries the overlays)`);
+    // markers must be VISIBLE: inside the chart's y-range when one is fixed
+    const yr = CAP[id].layout.yaxis.range;
+    if (Array.isArray(yr)) for (const y of marker.y)
+      assert.ok(y >= Math.min(yr[0], yr[1]) && y <= Math.max(yr[0], yr[1]),
+        `${id} event marker at y=${y} is outside the y-range [${yr}] — invisible (the old SOG bug)`);
   }
 });
 
@@ -242,9 +259,9 @@ test('A14 · map y-range clipped to lat p1–p99 with no scaleanchor (content fi
   assert.ok(y.range[1] - y.range[0] < 1.0, `map lat span ${(y.range[1] - y.range[0]).toFixed(2)}° too wide — outliers not clipped`);
 });
 
-test('A15 · race + upwind-lane (xte) + SOG charts are all 360px tall', () => {
+test('A15+R9 · all four time charts (dtf, race, xte, sog) are 360px tall', () => {
   const c = css();
-  for (const id of ['race', 'xte', 'sog'])
+  for (const id of ['dtf', 'race', 'xte', 'sog'])
     assert.match(c, new RegExp('#' + id + '\\{height:360px\\}'), `#${id} is not 360px`);
 });
 
@@ -273,4 +290,99 @@ test('NF1 · Windfall ships meta-only (untracked PHRF finisher, injected post-po
 test('NF2 · display-name override applied: payload uses "Zélée" (goldens.json still shows the raw "Zèlèe")', () => {
   assert.ok(boats['Zélée'], 'display name Zélée not applied');
   assert.ok(!boats['Zèlèe'], 'raw pre-override name leaked into the payload');
+});
+
+/* ─────────────────────── R9 (owner review, 2026-07-09) ───────────────────────
+   Post-launch review by Brad — prime rule 5: every human-caught defect becomes
+   a named assertion. */
+
+test('R9a · controls header: Hide/Done button is right-aligned (flex space-between at base)', () => {
+  assert.match(css(), /\.ctl-head\{display:flex;align-items:center;justify-content:space-between/,
+    'the .ctl-head base rule vanished — the Hide button was sitting inline next to the title');
+});
+
+test('R9b · Max is default-on and draws on first paint', () => {
+  const { APP, CAP } = loadDashboard();
+  assert.ok(APP.S.boats.has('Max'), 'Max missing from the default selection');
+  assert.ok(CAP.sog.traces.some(t => t.name === 'Max'), 'Max selected but not drawn');
+});
+
+test('R9c · overlay chips: a category with no events gets no chip', () => {
+  const data = FROZEN();
+  data.events = data.events.filter(e => e.cat !== 'crew');
+  const { document } = loadDashboard({ data });
+  const labels = [...document.querySelectorAll('#overlays button')].map(b => b.textContent.trim());
+  assert.ok(!labels.includes('Crew'), 'Crew chip rendered with zero crew events');
+  assert.ok(labels.includes('Ghosts') && labels.includes('Course line'), 'non-event overlay pills must stay');
+});
+
+test('R9d · one label set: overlay chips and log-table categories use identical strings', () => {
+  const { document, APP } = loadDashboard();
+  const chipLabels = new Set([...document.querySelectorAll('#overlays button')].map(b => b.textContent.trim()));
+  const tableCats = new Set([...document.querySelectorAll('#eventtable tbody tr td:nth-child(2)')].map(td => td.textContent.trim()));
+  for (const cat of tableCats)
+    assert.ok(chipLabels.has(cat), `log table says "${cat}" but no overlay chip carries that label (the Sails/Sail drift)`);
+  assert.ok(tableCats.has('Sails') || tableCats.has('Insights') || tableCats.size > 0, 'table categories empty?');
+});
+
+test('R9e · race chart anchors every line at the start (pace view no longer loses the first 20 nm)', () => {
+  const { CAP, APP } = loadDashboard({ select: ['Ragana', 'Christopher Dragon XII'], state: { raceView: 'p', raceMode: 'h' } });
+  const rag = CAP.race.traces.find(t => t.name === 'Ragana');
+  assert.equal(rag.x[0], 188.7, `pace-view line starts at ${rag.x[0]}, expected the 188.7 start anchor`);
+  assert.equal(rag.y[0], 0, 'start anchor must be 0 — offsets removed, the gap is zero at the gun');
+  assert.ok(rag.x.includes(160), 'milestone points missing after the anchor');
+});
+
+test('R9f · SOG distance axis starts each boat at its own gun (no pre-start scribble)', () => {
+  const { CAP } = loadDashboard({ select: ['Ragana', 'Christopher Dragon XII'], state: { axis: 'd' } });
+  for (const tr of CAP.sog.traces.filter(t => t.mode === 'lines')) {
+    for (let i = 1; i < tr.x.length; i++)
+      assert.ok(tr.x[i] <= tr.x[i - 1] + 0.001,
+        `${tr.name} SOG x doubles back at i=${i} (${tr.x[i - 1]} → ${tr.x[i]}) — pre-start milling leaked in`);
+  }
+});
+
+test('R9g · map hover carries class and distance-to-go', () => {
+  const data = FROZEN();
+  data.classes = { 'Ragana': 'Class 6 ORC' };
+  const { CAP } = loadDashboard({ data, select: ['Ragana'] });
+  const rag = CAP.map.traces.find(t => t.name === 'Ragana' && t.mode === 'lines');
+  assert.match(rag.hovertemplate, /Class 6 ORC/, 'class missing from map hover');
+  assert.match(rag.hovertemplate, /nm to go/, 'distance-to-go missing from map hover');
+  assert.ok(rag.customdata && rag.customdata.length === rag.x.length, 'per-point dtf customdata missing');
+});
+
+test('R9h · selected event overlays render on the map along Ragana’s course', () => {
+  const { CAP } = loadDashboard({ select: ['Ragana'] });
+  const ev = CAP.map.traces.find(t => t.hoverinfo === 'text' && t.mode === 'markers');
+  assert.ok(ev, 'no event-marker trace on the map');
+  assert.equal(ev.x.length, 14, `map draws ${ev && ev.x.length} event markers, expected all 14 public events`);
+  // each marker must sit on Ragana's track envelope
+  const rag = FROZEN().boats['Ragana'];
+  const lonLo = Math.min(...rag.lon), lonHi = Math.max(...rag.lon);
+  for (const x of ev.x) assert.ok(x >= lonLo - 0.01 && x <= lonHi + 0.01, `event marker lon ${x} off Ragana's track`);
+});
+
+test('R9i · log table: Cat column wide enough for "Milestones" (88px), Event squeezed to fit', () => {
+  const { document } = loadDashboard();
+  const html = document.getElementById('eventtable').innerHTML;
+  assert.match(html, /width:88px/, 'Cat column no longer 88px — "Milestones" clobbers the Event column below ~80px');
+  assert.match(html, /width:172px/, 'Event column width drifted');
+});
+
+test('R9j · finstrip title describes what the chart shows (no off-chart 2300 claim)', () => {
+  const html = indexHtml();
+  assert.ok(!/crossed after 2300/.test(html.match(/<h2>The finish[^<]*<\/h2>/)[0]),
+    'finstrip title still claims the 2300 fact the chart cannot show');
+  assert.match(html, /<h2>The finish — every corrected time, division by division<\/h2>/);
+});
+
+test('R9k · a DNF boat with no official time cannot crash the race chart (Total view)', () => {
+  // Inisharon: DNF, has a track, meta.el/corr null. Selecting it with Total view
+  // used to throw parseHMS(undefined) and kill the whole chart (review find).
+  const { CAP } = loadDashboard({ select: ['Ragana', 'Christopher Dragon XII', 'Inisharon'],
+    state: { raceView: 't', raceMode: 'e' } });
+  assert.ok(CAP.race, 'race chart failed to render with a DNF boat selected');
+  assert.ok(!CAP.race.traces.some(t => t.name === 'Inisharon'),
+    'DNF boat drew a comparison line — its elapsed would be measured from track start, not the gun');
 });

@@ -49,10 +49,12 @@ const GRP = {
   fleet_dnf:{label:'Retired', colors:['#9AA5AC']},
   fleet_other:{label:'Fleet', colors:['#4A6B7A','#6E8B98','#8DA5AF','#5C7D8C']}
 };
+/* one label per category, used verbatim by the overlay chips, the log table and
+   event hovers — chip text and table text must never drift apart (R9) */
 const EVCAT = {
   crew:{c:'#B9770E',sym:'circle',label:'Crew'},
-  systems:{c:'#C0392B',sym:'x',label:'Systems'}, sail:{c:'#0E5A8A',sym:'triangle-up',label:'Sail'},
-  tactics:{c:'#7D3C98',sym:'diamond',label:'Tactics'}, insight:{c:'#C2187E',sym:'star-diamond',label:'Insight'},
+  systems:{c:'#C0392B',sym:'x',label:'Systems'}, sail:{c:'#0E5A8A',sym:'triangle-up',label:'Sails'},
+  tactics:{c:'#7D3C98',sym:'diamond',label:'Tactics'}, insight:{c:'#C2187E',sym:'star-diamond',label:'Insights'},
   milestone:{c:'#17293A',sym:'star',label:'Milestones'}
 };
 
@@ -63,7 +65,7 @@ const C6=['Christopher Dragon XII','In Theory','Groupe 5','SqueeZeplay','Save th
 // names of interest so users don't have to open +More for the obvious ones.
 const CHIP_EXTRA=['Young American','Max','Loki','Banter','Touch of Grey','Full Tilt'];
 const S = {
-  boats: new Set(['Ragana','Christopher Dragon XII','In Theory','Groupe 5']),
+  boats: new Set(['Ragana','Christopher Dragon XII','In Theory','Groupe 5','Max']),
   ev: new Set(['milestone','systems','tactics','sail','insight','crew']),
   fleet:true, rhumb:true, ref:'Christopher Dragon XII',
   showMore:false, raceMode:'h', raceView:'p', axis:'d', panelOpen:true
@@ -108,50 +110,59 @@ function sharedXaxis(extra){
     : {...GAX, title:{text:'Distance to finish (nm) — race runs right to left ⟵',font:AXFONT}, autorange:'reversed'};
   return {...base, ...(extra||{})};
 }
-function eventDecor(topY, timeFixed){
-  const xf = timeFixed ? (t=>edtStr(t)) : evX;
-  const evs=D.events.filter(e=>S.ev.has(e.cat));
-  const shapes=evs.map(e=>({type:'line',xref:'x',yref:'paper',x0:xf(evT(e)),x1:xf(evT(e)),y0:0,y1:1,
-    line:{color:EVCAT[e.cat].c,width:1,dash:'dot'},opacity:.5}));
-  const marker = evs.length ? {x:evs.map(e=>xf(evT(e))), y:evs.map(()=>topY), mode:'markers',
-    marker:{symbol:evs.map(e=>EVCAT[e.cat].sym), size:evs.map(e=>['milestone','insight'].includes(e.cat)?12:9),
-      color:evs.map(e=>EVCAT[e.cat].c), line:{width:1,color:'#fff'}},
-    text:evs.map(e=>wrapText(`${e.label} · ${fmt(evT(e))} EDT · ${Math.round(ragDTFat(evT(e)))} nm to go — ${e.txt}`)),
-    hoverinfo:'text', showlegend:false} : null;
-  return {shapes, marker};
-}
-function seriesTraces(valueKey, widthFn){
-  const tr=[];
-  for(const nm of ORDER){ if(!S.boats.has(nm)||!hasTrack(nm))continue; const b=D.boats[nm];
-    const xs=[], ys=[];
-    for(let i=0;i<b.t.length;i++){ xs.push(axVal(b,i)); ys.push(b[valueKey][i]); }
-    tr.push({x:xs, y:ys, mode:'lines', name:nm, showlegend:valueKey==='dtf',
-      line:{color:boatColor[nm], width:widthFn(nm)}, opacity:nm==='Ragana'?1:.82,
-      hovertemplate:`${nm} · %{x}${S.axis==='t'?'':' nm'} · %{y}${valueKey==='sog'?' kts':(valueKey==='xte'?' nm':' nm to go')}<extra></extra>`}); }
-  return tr;
-}
-
-/* ═══ act bands (shared across DTF / race / speed charts) — monolith ═══ */
+/* ═══ act bands + event overlays — ONE code path for every time-based chart ═══
+   Each chart supplies an x-mapper (epoch → its x-space) and gets identical act
+   bands, event vlines and hoverable top-pinned event markers (R9: dtf, race,
+   upwind-lane and sog must never drift apart on this).
+     xOf(t)   → x for a moment, or null when the moment is off this chart
+                (events off-chart are dropped, e.g. post-rounding on the lane)
+     xBand(t) → same, but clamped to the chart's domain (act bands are clipped,
+                not dropped). Defaults to xOf. */
 const ACTS_DEF=[
   ["2026-05-22 12:35","2026-05-22 20:35","ACT 1 · OUT","rgba(78,121,167,0.06)"],
   ["2026-05-22 20:35","2026-05-23 09:09","ACT 2 · SOUND → BLOCK ISLAND","rgba(125,60,152,0.06)"],
   ["2026-05-23 09:09","2026-05-24 02:05","ACT 3 · ROUNDING & HOME","rgba(194,24,126,0.06)"]];
 const _actEp=s=>Date.parse(s.replace(' ','T')+'-04:00')/1000;
-function actBandsTime(){
-  const shapes=ACTS_DEF.map(([a,b,_,fill])=>({type:'rect',xref:'x',yref:'paper',x0:a,x1:b,y0:0,y1:1,fillcolor:fill,line:{width:0}}));
-  const ann=ACTS_DEF.map(([a,b,lbl])=>({x:edtStr((_actEp(a)+_actEp(b))/2),y:1.05,xref:'x',yref:'paper',
-    text:lbl,showarrow:false,xanchor:'center',font:{size:9,color:'#51677A',family:'SF Mono, Menlo, monospace'}}));
-  return {shapes,ann};
+const ACTFONT={size:9,color:'#51677A',family:'SF Mono, Menlo, monospace'};
+const xTime = t => edtStr(t);
+const xDist = t => ragDTFat(t);
+function decor(xOf, topY, xBand){
+  xBand = xBand || xOf;
+  const shapes=[], ann=[];
+  for(const [a,b,lbl,fill] of ACTS_DEF){
+    const ea=_actEp(a), eb=_actEp(b);
+    const x0=xBand(ea), x1=xBand(eb);
+    if(x0==null||x1==null||x0===x1) continue;
+    shapes.push({type:'rect',xref:'x',yref:'paper',x0,x1,y0:0,y1:1,fillcolor:fill,line:{width:0}});
+    const xm=xBand((ea+eb)/2);
+    if(xm!=null) ann.push({x:xm,y:1.05,xref:'x',yref:'paper',text:lbl,showarrow:false,xanchor:'center',font:ACTFONT});
+  }
+  const evs=D.events.filter(e=>S.ev.has(e.cat) && xOf(evT(e))!=null);
+  for(const e of evs) shapes.push({type:'line',xref:'x',yref:'paper',x0:xOf(evT(e)),x1:xOf(evT(e)),y0:0,y1:1,
+    line:{color:EVCAT[e.cat].c,width:1,dash:'dot'},opacity:.5});
+  const marker = evs.length ? {x:evs.map(e=>xOf(evT(e))), y:evs.map(()=>topY), mode:'markers',
+    marker:{symbol:evs.map(e=>EVCAT[e.cat].sym), size:evs.map(e=>['milestone','insight'].includes(e.cat)?12:9),
+      color:evs.map(e=>EVCAT[e.cat].c), line:{width:1,color:'#fff'}},
+    text:evs.map(e=>wrapText(`${e.label} · ${fmt(evT(e))} EDT · ${Math.round(ragDTFat(evT(e)))} nm to go — ${e.txt}`)),
+    hoverinfo:'text', showlegend:false} : null;
+  return {shapes, ann, marker};
 }
-function actBandsDist(){
-  const b=D.boats['Ragana'];
-  const dtfAt=ep=>{ if(ep<=b.t[0])return DTF_START; if(ep>=b.t[b.t.length-1])return 0;
-    let i=b.t.findIndex(x=>x>=ep); const f=(ep-b.t[i-1])/(b.t[i]-b.t[i-1]); return b.dtf[i-1]+f*(b.dtf[i]-b.dtf[i-1]); };
-  const shapes=ACTS_DEF.map(([a,b2,_,fill])=>({type:'rect',xref:'x',yref:'paper',
-    x0:dtfAt(_actEp(a)),x1:dtfAt(_actEp(b2)),y0:0,y1:1,fillcolor:fill,line:{width:0}}));
-  const ann=ACTS_DEF.map(([a,b2,lbl])=>({x:(dtfAt(_actEp(a))+dtfAt(_actEp(b2)))/2,y:1.05,xref:'x',yref:'paper',
-    text:lbl,showarrow:false,xanchor:'center',font:{size:9,color:'#51677A',family:'SF Mono, Menlo, monospace'}}));
-  return {shapes,ann};
+
+/* a boat's official start (pre-start milling scribbles the distance axis) */
+const startCut = b => (b.meta.el && b.meta.fin) ? startOf(b) : _actEp('2026-05-22 12:05');
+function seriesTraces(valueKey, widthFn){
+  const tr=[];
+  for(const nm of ORDER){ if(!S.boats.has(nm)||!hasTrack(nm))continue; const b=D.boats[nm];
+    // on the distance axis, pre-start pings interleave x back and forth around
+    // 186–191 nm and draw a hairball at the right edge — start each series at
+    // the boat's own gun (R9; the clock axis keeps the honest pre-start record)
+    const cut = S.axis==='d' ? startCut(b) : -Infinity;
+    const xs=[], ys=[];
+    for(let i=0;i<b.t.length;i++){ if(b.t[i]<cut)continue; xs.push(axVal(b,i)); ys.push(b[valueKey][i]); }
+    tr.push({x:xs, y:ys, mode:'lines', name:nm, showlegend:valueKey==='dtf',
+      line:{color:boatColor[nm], width:widthFn(nm)}, opacity:nm==='Ragana'?1:.82,
+      hovertemplate:`${nm} · %{x}${S.axis==='t'?'':' nm'} · %{y}${valueKey==='sog'?' kts':(valueKey==='xte'?' nm':' nm to go')}<extra></extra>`}); }
+  return tr;
 }
 
 /* ═══ scoped re-rendering, batched through rAF ═══ */
@@ -160,7 +171,7 @@ const BUILDERS = {controls:buildControls, map:renderMap, dtf:renderDTF, race:ren
   upwind:renderUpwind, finstrip:renderFinstrip, xte:renderXTE, sog:renderSOG, events:renderTable};
 const SCOPES = {
   boats:['controls','map','dtf','race','upwind','finstrip','xte','sog'],
-  ev:['controls','dtf','race','sog','events'],
+  ev:['controls','map','dtf','race','sog','xte','events'],
   map:['controls','map'],                 // fleet / rhumb
   axis:['controls','xte','sog'],
   race:['controls','race'],
@@ -297,9 +308,10 @@ function buildControls(){
   gb.appendChild(allb);
 
   const ov=document.getElementById('overlays'); ov.innerHTML='';
-  const SHORT={crew:'Crew',systems:'Systems',sail:'Sails',tactics:'Tactics',insight:'Insights',milestone:'Milestones'};
-  for(const [k,v] of Object.entries(EVCAT)){ const el=makeChip(SHORT[k]||v.label, v.c, S.ev.has(k),
-    ()=>{ S.ev.has(k)?S.ev.delete(k):S.ev.add(k); render('ev'); }); ov.appendChild(el); }
+  for(const [k,v] of Object.entries(EVCAT)){
+    if(!D.events.some(e=>e.cat===k)) continue;   // no events in this category → no chip
+    const el=makeChip(v.label, v.c, S.ev.has(k),
+      ()=>{ S.ev.has(k)?S.ev.delete(k):S.ev.add(k); render('ev'); }); ov.appendChild(el); }
   const addT=(label,color,get,set)=>{ const el=makeChip(label,color,get(),()=>{set(!get());render('map');}); ov.appendChild(el); };
   addT('Ghosts', '#9AACB8', ()=>S.fleet, x=>{S.fleet=x; if(x) loadFleet();});
   addT('Course line', '#C2187E', ()=>S.rhumb, x=>S.rhumb=x);
@@ -383,18 +395,39 @@ function renderMap(){
   if(S.rhumb){ tr.push({x:[D.start[1],D.fin[1]],y:[D.start[0],D.fin[0]],mode:'lines',
     line:{color:'#C2187E',width:1,dash:'dot'},opacity:.5,name:'Start–finish',hoverinfo:'skip',showlegend:false}); }
   for(const nm of ORDER){ if(!S.boats.has(nm)||!hasTrack(nm))continue; const b=D.boats[nm];
-    tr.push({x:b.lon,y:b.lat,mode:'lines',name:nm,
+    const cls=(D.classes&&D.classes[nm])||b.meta.cls||'';
+    tr.push({x:b.lon,y:b.lat,mode:'lines',name:nm,customdata:b.dtf,
       line:{color:boatColor[nm],width:nm==='Ragana'?2.4:1.5},
-      opacity:nm==='Ragana'?1:.9,hovertemplate:`${nm}<extra></extra>`});
+      opacity:nm==='Ragana'?1:.9,
+      hovertemplate:`${nm}${cls?' · '+cls:''} · %{customdata:.0f} nm to go<extra></extra>`});
     const nsel=[...S.boats].length;
     const K = nsel>10 ? 3 : (nsel>4 ? 4 : 6);              // arrows per track, scaled to clutter
-    const axx=[],ayy=[];
+    // each arrow ships as an invisible anchor at the PREVIOUS ping plus the
+    // visible head, so angleref:'previous' aligns it with the local segment
+    // (in screen space, so the unequal lat/lon aspect is handled by Plotly)
+    const axx=[],ayy=[],asz=[];
     for(let j=1;j<=K;j++){ const i=Math.floor(b.lat.length*j/(K+1));
-      if(i>0&&i<b.lat.length){axx.push(b.lon[i]);ayy.push(b.lat[i]);} }
+      if(i>0&&i<b.lat.length){
+        axx.push(b.lon[i-1]);ayy.push(b.lat[i-1]);asz.push(0);
+        axx.push(b.lon[i]);ayy.push(b.lat[i]);asz.push(nm==='Ragana'?11:8);} }
     tr.push({x:axx,y:ayy,mode:'markers',
-      marker:{symbol:'arrow',size:nm==='Ragana'?11:8,angleref:'previous',
+      marker:{symbol:'arrow',size:asz,angleref:'previous',
         color:boatColor[nm],line:{width:0.5,color:'#fff'}},
       opacity:nm==='Ragana'?1:.9,hoverinfo:'skip',showlegend:false}); }
+  // selected event overlays, pinned to Ragana's position at each moment (no legend)
+  {const rag=D.boats['Ragana'];
+   if(rag&&rag.t&&rag.t.length){
+     const posAt=t=>{ if(t<=rag.t[0]) return [rag.lat[0],rag.lon[0]];
+       const n=rag.t.length; if(t>=rag.t[n-1]) return [rag.lat[n-1],rag.lon[n-1]];
+       let i=rag.t.findIndex(x=>x>=t); const f=(t-rag.t[i-1])/(rag.t[i]-rag.t[i-1]);
+       return [rag.lat[i-1]+f*(rag.lat[i]-rag.lat[i-1]), rag.lon[i-1]+f*(rag.lon[i]-rag.lon[i-1])]; };
+     const evs=D.events.filter(e=>S.ev.has(e.cat));
+     if(evs.length){ const pts=evs.map(e=>posAt(evT(e)));
+       tr.push({x:pts.map(p=>p[1]), y:pts.map(p=>p[0]), mode:'markers',
+         marker:{symbol:evs.map(e=>EVCAT[e.cat].sym), size:evs.map(e=>['milestone','insight'].includes(e.cat)?12:9),
+           color:evs.map(e=>EVCAT[e.cat].c), line:{width:1,color:'#fff'}},
+         text:evs.map(e=>wrapText(`${e.label} · ${fmt(evT(e))} EDT · ${Math.round(ragDTFat(evT(e)))} nm to go — ${e.txt}`)),
+         hoverinfo:'text', showlegend:false}); } } }
   tr.push({x:[D.start[1]],y:[D.start[0]],mode:'markers+text',marker:{color:'#17293A',size:8,symbol:'square'},
     text:['Start'],textposition:'bottom right',textfont:{size:10,color:'#51677A'},hoverinfo:'skip',showlegend:false});
   tr.push({x:[D.fin[1]],y:[D.fin[0]],mode:'markers+text',marker:{color:'#C2187E',size:8,symbol:'star'},
@@ -406,9 +439,12 @@ function renderMap(){
     font:{size:10,color:'#51677A',family:'SF Mono, Menlo, monospace'},bgcolor:'rgba(253,254,253,.75)'}));
   // annotate on the EAST side of the island, where boats run north→south with the
   // island to starboard — the leg the SI's 'leave to starboard' actually refers to.
-  ann.push({x:-71.50,y:41.20,ax:-71.545,ay:41.20,xref:'x',yref:'y',axref:'x',ayref:'y',
+  // text right-anchored just inside the frame's fixed right bound (so it can
+  // never clip at any viewport width), arrow to the east-side leg where the
+  // starboard rounding is geometrically unambiguous (r6 decision)
+  ann.push({x:-71.49,y:41.21,ax:-71.36,ay:41.247,xref:'x',yref:'y',axref:'x',ayref:'y',
     showarrow:true,arrowhead:2,arrowsize:1.1,arrowwidth:1.4,arrowcolor:'#7D3C98',
-    text:'island to starboard<br>down the east side',xanchor:'left',
+    text:'island to starboard<br>down the east side',xanchor:'right',
     font:{size:9.5,color:'#7D3C98',family:'SF Mono, Menlo, monospace'},bgcolor:'rgba(253,254,253,.85)'});
   const allLat=[], allLon=[];
   for(const nm of ORDER){ if(!S.boats.has(nm)||!hasTrack(nm))continue; const b=D.boats[nm];
@@ -417,10 +453,13 @@ function renderMap(){
   const pct=(arr,p)=>{const s=[...arr].sort((a,b)=>a-b);return s[Math.floor(s.length*p)];};
   const latLo=pct(allLat,0.01), latHi=pct(allLat,0.99);
   const lonLo=Math.min(...allLon), lonHi=Math.max(...allLon);
+  // pads sized so the geo labels and the starboard note render un-clipped:
+  // extra head-room for 'The Race' (41.27) and a right margin that fits the
+  // wrapped starboard label east of the island
   const latPad=(latHi-latLo)*0.06, lonPad=(lonHi-lonLo)*0.02;
   react('map',tr,{...BASE,annotations:ann,
-    xaxis:{...GAX,title:{text:'Longitude',font:AXFONT},range:[lonLo-lonPad,lonHi+lonPad*4]},
-    yaxis:{...GAX,title:{text:'Latitude',font:AXFONT},range:[latLo-latPad,latHi+latPad]},
+    xaxis:{...GAX,title:{text:'Longitude',font:AXFONT},range:[lonLo-lonPad,Math.max(lonHi+lonPad*4,-71.33)]},
+    yaxis:{...GAX,title:{text:'Latitude',font:AXFONT},range:[latLo-latPad,Math.max(latHi+latPad*2,41.285)]},
     showlegend:false});
 }
 
@@ -430,10 +469,9 @@ function renderDTF(){
   for(const nm of ORDER){ if(!S.boats.has(nm)||!hasTrack(nm))continue; const b=D.boats[nm];
     tr.push({x:b.t.map(edtStr),y:b.dtf,mode:'lines',name:nm,line:{color:boatColor[nm],width:nm==='Ragana'?2.4:1.5},
       opacity:nm==='Ragana'?1:.82,hovertemplate:`${nm} · %{x} · %{y} nm to go<extra></extra>`}); }
-  const dec=eventDecor(DTF_START*0.97,true);
+  const dec=decor(xTime, DTF_START*0.97);
   if(dec.marker) tr.push(dec.marker);
-  const ab=actBandsTime();
-  react('dtf',tr,{...BASE,annotations:ab.ann,margin:{...BASE.margin,t:24},shapes:[...ab.shapes,...dec.shapes],
+  react('dtf',tr,{...BASE,annotations:dec.ann,margin:{...BASE.margin,t:24},shapes:dec.shapes,
     xaxis:{...GAX,tickformat:'%a %H:%M',type:'date'},
     yaxis:{...GAX,title:{text:'Distance to finish (nm)',font:AXFONT},rangemode:'tozero'},showlegend:false});
 }
@@ -450,10 +488,17 @@ function renderRace(){
   function corrFactor(b){ return b.meta.tcf||1; }
   const tr=[];
   for(const nm of ORDER){ if(!S.boats.has(nm)||nm===S.ref||!hasTrack(nm))continue; const b=D.boats[nm];
+    if(!b.meta.el){continue;}   // DNF without an official time: no honest start/endpoint — a
+                                // comparison line here would run from TRACK start and, in Total
+                                // view, crash on parseHMS(undefined) (review find, R9k)
     if(CROSS_CIRCLE.has(nm)){hiddenDiv++;continue;}
     if(S.raceMode==='h' && b.meta.cls!==refCls){hiddenDiv++;continue;}   // corrected never crosses divisions
     const bStart=startOf(b);
-    const xs=[],ys=[];
+    // anchor every line at the start: with start offsets removed the gap is 0
+    // by construction at each boat's own gun — without it the pace view (whose
+    // min/100nm normalization only turns on past 20 nm sailed) began at 160 nm
+    // to go and the first fifth of the race looked like missing data (R9)
+    const xs=[DTF_START],ys=[0];
     for(const m of milestones){
       const tb=hitTime(b,m), tr_=hitTime(ref,m); if(tb==null||tr_==null)continue;
       let eb=tb-bStart, er=tr_-refStart;          // elapsed-to-milestone, start-offset removed
@@ -473,12 +518,10 @@ function renderRace(){
   const allY=tr.flatMap(q=>q.y).filter(v=>isFinite(v));
   const yMin=Math.min(0,...allY), yMax=Math.max(...allY,0);
   const yPad=(yMax-yMin)*0.08;
-  {const sA=S.axis; S.axis='d'; const rdec=eventDecor(0);
-   if(rdec.marker){ rdec.marker.y=rdec.marker.x.map(()=>yMax+yPad*0.5); tr.push(rdec.marker);} S.axis=sA;}
-  const sAx=S.axis; S.axis='d'; const dec=eventDecor(0); S.axis=sAx;
-  const rab=actBandsDist();
-  react('race',tr,{...BASE,margin:{...BASE.margin,t:24},annotations:rab.ann,
-    shapes:[...rab.shapes,{type:'line',xref:'paper',x0:0,x1:1,yref:'y',y0:0,y1:0,line:{color:'#B9CBD4',width:1}},...dec.shapes],
+  const dec=decor(xDist, yMax+yPad*0.5);
+  if(dec.marker) tr.push(dec.marker);
+  react('race',tr,{...BASE,margin:{...BASE.margin,t:24},annotations:dec.ann,
+    shapes:[...dec.shapes,{type:'line',xref:'paper',x0:0,x1:1,yref:'y',y0:0,y1:0,line:{color:'#B9CBD4',width:1}}],
     xaxis:{...GAX,title:{text:'Distance to finish (nm) — race runs right to left ⟵',font:AXFONT},autorange:'reversed'},
     yaxis:{...GAX,title:{text:S.raceView==='p'?'Min per 100 nm behind ref':'Minutes behind ref',font:AXFONT},range:[yMin-yPad,yMax+yPad*1.4]},
     showlegend:false});
@@ -575,7 +618,7 @@ function renderXTE(){
   const R=3440.065, rad=Math.PI/180;
   const hv=(a,b2,c,d)=>{const dp=(c-a)*rad,dl=(d-b2)*rad;
     const x=Math.sin(dp/2)**2+Math.cos(a*rad)*Math.cos(c*rad)*Math.sin(dl/2)**2;return 2*R*Math.asin(Math.sqrt(x));};
-  const tr=[]; let maxRound=0;
+  const tr=[]; let maxRound=0, ragLeg=null;
   for(const nm of ORDER){ if(!S.boats.has(nm)||!hasTrack(nm))continue; const b=D.boats[nm];
     let i0=-1,i1=-1;
     for(let i=0;i<b.lat.length;i++){ const dc=hv(b.lat[i],b.lon[i],C[0],C[1]);
@@ -592,6 +635,7 @@ function renderXTE(){
       const px=b.lon[i]*kx, py=b.lat[i]*ky;
       ys.push(((px-ax)*dy-(py-ay)*dx)/L);
     }
+    if(nm==='Ragana') ragLeg={ts:b.t.slice(0,im+1), cums:xs};
     maxRound=Math.max(maxRound,cum);
     tr.push({x:xs,y:ys,mode:'lines',name:nm,line:{color:boatColor[nm],width:nm==='Ragana'?2.6:1.4},
       opacity:nm==='Ragana'?1:.82,
@@ -599,14 +643,25 @@ function renderXTE(){
     tr.push({x:[cum],y:[ys[ys.length-1]],mode:'markers',
       marker:{symbol:'circle-open',size:9,color:boatColor[nm],line:{width:2}},
       hovertemplate:`${nm} rounds Block Island · ${cum.toFixed(0)} nm sailed<extra></extra>`,showlegend:false}); }
-  const shapes=[{type:'line',xref:'paper',x0:0,x1:1,yref:'y',y0:0,y1:0,line:{color:'#B9CBD4',width:1}}];
-  const ann=[{x:maxRound,y:5.8,xref:'x',yref:'y',xanchor:'right',showarrow:false,
+  // shared acts + events, mapped onto this chart's x (Ragana's distance sailed
+  // up the leg): an event lands where Ragana was when it happened; moments after
+  // her rounding are off this chart and are dropped, act bands clip to the leg
+  const cumAt=(t,clamp)=>{ if(!ragLeg) return null;
+    const {ts,cums}=ragLeg;
+    if(t<=ts[0]) return clamp?0:(t<ts[0]-1?null:0);
+    if(t>=ts[ts.length-1]) return clamp?cums[cums.length-1]:null;
+    let i=ts.findIndex(x=>x>=t); const f=(t-ts[i-1])/(ts[i]-ts[i-1]);
+    return cums[i-1]+f*(cums[i]-cums[i-1]); };
+  const dec=decor(t=>cumAt(t,false), 6.0, t=>cumAt(t,true));
+  if(dec.marker) tr.push(dec.marker);
+  const shapes=[...dec.shapes,{type:'line',xref:'paper',x0:0,x1:1,yref:'y',y0:0,y1:0,line:{color:'#B9CBD4',width:1}}];
+  const ann=[...dec.ann,{x:maxRound,y:-5.8,xref:'x',yref:'y',xanchor:'right',showarrow:false,
     text:'← boats round Block Island here',font:{size:10,color:'#7D3C98',family:'SF Mono, Menlo, monospace'}},
     {x:2,y:4.3,xref:'x',yref:'y',xanchor:'left',showarrow:false,text:'SOUTH ↑',
       font:{size:9,color:'#9AAAB8',family:'SF Mono, Menlo, monospace'}},
     {x:2,y:-4.3,xref:'x',yref:'y',xanchor:'left',showarrow:false,text:'NORTH ↓',
       font:{size:9,color:'#9AAAB8',family:'SF Mono, Menlo, monospace'}}];
-  react('xte',tr,{...BASE,shapes,annotations:ann,
+  react('xte',tr,{...BASE,shapes,annotations:ann,margin:{...BASE.margin,t:24},
     xaxis:{...GAX,title:{text:'Distance sailed from start (nm) — leg out to Block Island',font:AXFONT},range:[0,maxRound*1.02]},
     yaxis:{...GAX,title:{text:'Offset from direct line (nm) — + south',font:AXFONT},range:[-6.5,6.5]},showlegend:false});
 }
@@ -615,17 +670,16 @@ function renderXTE(){
 function renderSOG(){
   document.getElementById('sog_axnote').textContent = S.axis==='t'?'x-axis: clock time':'x-axis: distance to finish';
   const tr=seriesTraces('sog',nm=>nm==='Ragana'?2.4:1.3);
-  const dec=eventDecor(13);
+  const dec=decor(S.axis==='t' ? xTime : xDist, 10.4);   // top-pinned within range [0,11]
   if(dec.marker) tr.push(dec.marker);
-  const ab = S.axis==='t' ? actBandsTime() : actBandsDist();
-  react('sog',tr,{...BASE,margin:{...BASE.margin,t:24},annotations:ab.ann,shapes:[...ab.shapes,...dec.shapes],
+  react('sog',tr,{...BASE,margin:{...BASE.margin,t:24},annotations:dec.ann,shapes:dec.shapes,
     xaxis:sharedXaxis(),yaxis:{...GAX,title:{text:'Speed over ground (kt)',font:AXFONT},range:[0,11]},showlegend:false});
 }
 
 /* ═══ 8. event table — monolith ═══ */
 function renderTable(){
   const evs=[...D.events].sort((a,b)=>evT(a)-evT(b));
-  let h='<table class="logtable"><thead><tr><th style="width:78px">Time</th><th style="width:60px">Cat</th><th style="width:200px">Event</th><th style="width:44px">nm</th><th>Note</th></tr></thead><tbody>';
+  let h='<table class="logtable"><thead><tr><th style="width:78px">Time</th><th style="width:88px">Cat</th><th style="width:172px">Event</th><th style="width:44px">nm</th><th>Note</th></tr></thead><tbody>';
   for(const e of evs){ const t=evT(e);
     h+=`<tr><td style="white-space:nowrap">${fmt(t)}</td><td style="color:${EVCAT[e.cat].c}">${EVCAT[e.cat].label}</td><td style="white-space:normal">${e.label}</td><td style="text-align:right">${Math.round(ragDTFat(t))}</td><td style="white-space:normal;line-height:1.45">${e.txt}</td></tr>`; }
   h+='</tbody></table>';

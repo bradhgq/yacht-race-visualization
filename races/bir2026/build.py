@@ -17,7 +17,7 @@ Steps:
 The FROZEN payload is authoritative — nothing here recomputes race numbers. The
 split is byte-lossless: core ∪ more ∪ fleet reconstructs the oracle exactly.
 """
-import argparse, hashlib, json, os, re, shutil, subprocess, sys, time
+import argparse, csv, hashlib, json, os, re, shutil, subprocess, sys, time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -28,7 +28,7 @@ QUICK_GRPS = {'hero', 'class6'}
 # names shown as chips beyond the quick groups (keep in sync with CHIP_EXTRA in app.js)
 CHIP_EXTRA = {'Young American', 'Max', 'Loki', 'Banter', 'Touch of Grey', 'Full Tilt'}
 # boats selected by default in app.js (S.boats) — their tracks MUST ship in core
-DEFAULT_BOATS = {'Ragana', 'Christopher Dragon XII', 'In Theory', 'Groupe 5'}
+DEFAULT_BOATS = {'Ragana', 'Christopher Dragon XII', 'In Theory', 'Groupe 5', 'Max'}
 # top-level payload keys the app reads (besides boats/fleet), kept whole in core
 KEEP = ['events', 'stats', 'start', 'fin', 'meta', 'mil']
 TRACK_KEYS = ('t', 'lat', 'lon', 'dtf', 'xte', 'sog')
@@ -51,43 +51,61 @@ def run_tests():
 def compact(obj):
     return json.dumps(obj, ensure_ascii=False, separators=(',', ':'))
 
+def class_map(data):
+    """Display name -> official class name ('Class 6 ORC'), for map hover labels.
+    Matched by sail number (exact) with a case-insensitive name fallback — this is
+    presentation metadata straight from official results, not race math; boats
+    with no match simply hover without a class."""
+    by_sail, by_name = {}, {}
+    with open(ROOT / 'raw' / 'results.csv') as f:
+        for row in csv.DictReader(f):
+            cls = (row.get('class_name') or '').strip()
+            if not cls:
+                continue
+            sail = (row.get('sail_number') or '').replace(' ', '').upper()
+            if sail:
+                by_sail[sail] = cls
+            by_name[(row.get('boat_name') or '').strip().lower()] = cls
+    out = {}
+    for nm, boat in data['boats'].items():
+        sail = (boat['meta'].get('sail') or '').replace(' ', '').upper()
+        cls = by_sail.get(sail) or by_name.get(nm.strip().lower())
+        if cls:
+            out[nm] = cls
+    return out
+
 # ── CP-5 publication gate ──────────────────────────────────────────────────
 # A public build ships ONLY the events whose label is listed in
-# publish_allowlist.txt (one per line, '#' comments allowed).
-#
-# Some events are NEVER publishable (prime rule 4: firsthand-confirmed third-party
-# incidents not in the public record). Their labels are not stored in this public
-# tree — they load from an optional, gitignored private/never_public.txt (one
-# label per line). Absent that file, NEVER_PUBLIC is empty; the committed
-# events.yaml here already excludes them, so nothing is at risk in this repo.
-def _load_never_public(root):
-    f = root / 'private' / 'never_public.txt'
-    if not f.exists():
-        return set()
-    return {ln.split('#', 1)[0].strip() for ln in f.read_text().splitlines()
-            if ln.split('#', 1)[0].strip()}
+# publish_allowlist.txt (one per line, '#' comments allowed). The two groundings
+# are NEVER publishable — prime rule 4, firsthand-confirmed third-party incidents
+# not in the public record — so they are hard-blocked here even if a future
+# allowlist names them. (The committed events.yaml in this public tree already
+# excludes them; they exist only in the private client record.)
+NEVER_PUBLIC = {
+    'Loki finishes — wins Class 8 — grounds later going home',
+    'Full Tilt finishes, then grounds ~0200 heading home',
+}
 
 def apply_publication(data, root):
     """Return (data, (kept, dropped)). For a public build, strip events per the
     allowlist. Two modes, driven by publish_allowlist.txt:
-      · a line `ALL_EXCEPT_NEVER_PUBLIC` → publish every event except the
-        never-public set (Brad's CP-5 choice: 'host exactly like nb2026').
+      · a line `ALL_EXCEPT_GROUNDINGS` → publish every event except NEVER_PUBLIC
+        (Brad's CP-5 choice: 'host exactly like nb2026', full narrative).
       · otherwise → publish only events whose exact label is listed (opt-in).
-    The never-public set (loaded privately) is hard-blocked in both modes."""
-    never_public = _load_never_public(root)
+    NEVER_PUBLIC is hard-blocked in both modes."""
     allow_file = root / 'publish_allowlist.txt'
     allow, all_except = set(), False
     if allow_file.exists():
         for line in allow_file.read_text().splitlines():
             line = line.split('#', 1)[0].strip()
-            if line == 'ALL_EXCEPT_NEVER_PUBLIC':
+            if line == 'ALL_EXCEPT_GROUNDINGS':
                 all_except = True
             elif line:
                 allow.add(line)
     kept, dropped = [], []
     for e in data.get('events', []):
         label = e.get('label', '')
-        publishable = label not in never_public and (all_except or label in allow)
+        publishable = label not in NEVER_PUBLIC and (all_except or label in allow)
         (kept if publishable else dropped).append(label)
     data = {**data, 'events': [e for e in data.get('events', []) if e.get('label', '') in kept]}
     return data, (len(kept), dropped)
@@ -97,7 +115,7 @@ def main():
     ap.add_argument('--skip-tests', action='store_true')
     ap.add_argument('--public', action='store_true',
                     help='CP-5 public build: strip every event not in publish_allowlist.txt '
-                         '(never-public events withheld). Default is the full private client build.')
+                         '(groundings never published). Default is the full private client build.')
     args = ap.parse_args()
     if not args.skip_tests:
         run_tests()
@@ -110,6 +128,7 @@ def main():
         print('PRIVATE client build — all events included (not for public hosting).')
 
     core = {k: data[k] for k in KEEP if k in data}
+    core['classes'] = class_map(data)   # derived presentation metadata (results.csv)
     core['boats'] = {}
     more = {}
     assert DEFAULT_BOATS <= set(data['boats']), DEFAULT_BOATS - set(data['boats'])
@@ -157,6 +176,7 @@ def main():
     # ── standalone single-file fallback (file:// friendly; no fetches) ──
     html = stamp((SRC / 'index.html').read_text())
     embedded = compact({**{k: data[k] for k in KEEP if k in data},
+                        'classes': core['classes'],
                         'boats': data['boats'], 'fleet': data['fleet']}).replace('</', '<\\/')
     html, n = re.subn(r'<!-- DATA:FETCH.*?/DATA:FETCH -->',
                       lambda _: '<script>window.__DATA_EMBEDDED__=' + embedded + '</script>',

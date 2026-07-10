@@ -39,34 +39,31 @@ publication:
   public_url: "https://hgq.fyi/ragana-block-island-2026/"
   build:
     mode: "python3 build.py --public"
-    version_hash: "e01c913d9e"
+    version_hash: "a846173baf"   # R9 visual pass (2026-07-09); was e01c913d9e at first deploy
     events_included: 14
-    events_stripped: 2
-  events_never_public: 2             # prime rule 4 — firsthand-confirmed third-party
-                                     # milestone incidents, NOT in the public record.
-                                     # Labels withheld from this public tree; they live
-                                     # only in the private client build + private/never_public.txt.
+    events_stripped: 0           # the public frozen/ already excludes the two groundings
+  events_never_public:               # prime rule 4 — firsthand-confirmed, NOT in public record
+    - "Loki finishes — wins Class 8 — grounds later going home"
+    - "Full Tilt finishes, then grounds ~0200 heading home"
   note: >
-    Brad chose 'exactly like nb2026' (full public narrative). That instruction was about
-    publicness/mechanism and did not explicitly reverse the written prime-rule-4 carve-out
-    for two THIRD-PARTY post-finish incidents, so the public build withholds them and ships
-    the other 14 events. To include them, Brad must say so explicitly; there is no allowlist
-    path that adds them. The private CLIENT build (`python3 build.py`, all 16 events) is
-    unchanged and not published.
+    Brad chose 'exactly like nb2026' (full public narrative) and, asked directly
+    (2026-07-09), confirmed the prime-rule-4 carve-out is sound: the two groundings stay
+    out. The public build hard-blocks them (build.py NEVER_PUBLIC) and ships the other 14
+    events; the event bodies exist only in the private client record. The private CLIENT
+    build (all 16 events) is unchanged and not published.
 
 deploy:
+  # consolidated 2026-07-09: everything lives on main in both repos; the interim
+  # claude/bir2026-* branches are merged/superseded and deleted
   monorepo:
-    repo: "github:bradhgq/yacht-race-visualization (race-viz-site flake input)"
-    branch: "claude/bir2026-dashboard"
-    rev: "0d5eaff0e7e6db482a0ced76c7a436337cc8fc19"
-    path: "races/bir2026/dist/"
+    repo: "github:bradhgq/yacht-race-visualization"
+    branch: "main"
+    path: "races/bir2026/  (full source; served build in races/bir2026/dist/)"
   nix_config:
     repo: "github:bradhgq/nix-config"
-    branch: "claude/bir2026-hosting"
+    branch: "main"
     file: "hosts/silverbox/ragana-dashboard.nix"
-    change: "nginx alias /ragana-block-island-2026/ → ${race-viz-site}/races/bir2026/dist/"
-  remaining_manual_steps:            # require merge-to-main review + silverbox (x86_64-linux)
-    - "Merge PR claude/bir2026-dashboard → main on yacht-race-visualization."
-    - "Merge PR claude/bir2026-hosting → the deployed nix-config branch."
-    - "On silverbox: nix flake update race-viz-site && sudo nixos-rebuild switch --flake .#silverbox"
-  status: "staged for review — not yet live (final rebuild is Brad's, on silverbox)."
+    change: "input ragana-bir2026-site + nginx alias /ragana-block-island-2026/ → races/bir2026/dist/ (nb2026 untouched on its own input)"
+  ship_an_update: "commit to yacht-race-visualization main, then on silverbox:
+    nix flake update ragana-bir2026-site && sudo nixos-rebuild switch --flake .#silverbox"
+  status: "LIVE at https://hgq.fyi/ragana-block-island-2026/"

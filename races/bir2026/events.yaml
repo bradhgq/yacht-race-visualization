@@ -87,9 +87,9 @@ events:
     broach event.'
   source: transcript
   visibility: private
-# NOTE: two private third-party milestone events (post-finish incidents affecting
+# NOTE: the two grounding events (Loki, Full Tilt — post-finish incidents affecting
 # other boats) are withheld from this public source under prime rule 4. They exist
-# only in the private client build. This is the sole difference from the full record.
+# only in the private client record. This is the sole difference from the full record.
 - t: 2026-05-24 02:04
   cat: milestone
   label: Finish — 9th of 9 Class 6 finishers

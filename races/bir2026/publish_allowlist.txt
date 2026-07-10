@@ -2,12 +2,14 @@
 # ---------------------------------------------------------------------------
 # Drives `python3 build.py --public`. Decides which events a PUBLIC build ships.
 #
-# Brad's CP-5 decision: host like nb2026 — the full narrative, public. The mode
-# below publishes every event EXCEPT any label listed in a private, gitignored
-# private/never_public.txt (prime rule 4: firsthand-confirmed third-party
-# incidents not in the public record). Those labels are not stored in this
-# public tree, and the committed events.yaml already excludes them.
-ALL_EXCEPT_NEVER_PUBLIC
+# Brad's CP-5 decision: host like nb2026 — the full narrative, public — so the
+# mode below publishes every event EXCEPT the two groundings, which are
+# hard-blocked in build.py (prime rule 4: firsthand-confirmed third-party
+# incidents not in the public record). The committed events.yaml here already
+# excludes them; they exist only in the private client record.
+ALL_EXCEPT_GROUNDINGS
 #
 # To instead opt in a specific subset, delete the line above and list exact
-# event labels, one per line.
+# event labels, one per line. The two groundings can never be added:
+#   Loki finishes — wins Class 8 — grounds later going home
+#   Full Tilt finishes, then grounds ~0200 heading home

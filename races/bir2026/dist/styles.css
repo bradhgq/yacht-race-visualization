@@ -65,6 +65,8 @@ footer li{margin:4px 0}
 
 /* keyboard focus (all controls are real <button>/<select> now) */
 button{font:inherit;color:inherit}
+/* controls header: title left, Hide/Done button pinned right (R9) */
+.ctl-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px}
 :focus-visible{outline:2px solid var(--magenta);outline-offset:2px;border-radius:4px}
 
 /* loading / error / noscript states */
@@ -105,8 +107,8 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
 
 /* chart heights (moved out of inline style; approved desktop values).
    A15: race + upwind-lane (xte) + sog are all 360px. */
-#map{height:min(300px,34vw)}
-#dtf{height:min(320px,72vw)}
+#map{height:min(380px,46vw)}
+#dtf{height:360px}
 #race{height:360px}
 #upwind{height:min(300px,64vw)}
 #finstrip{height:min(300px,70vw)}
@@ -141,12 +143,9 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
   #ctlCollapse{padding:9px 15px;min-height:40px}
   /* charts get more vertical room on a narrow viewport */
   #map{height:min(96vw,68vh)}
-  #dtf{height:82vw}
-  #race{height:100vw}
+  #dtf,#race,#xte,#sog{height:92vw}
   #upwind{height:96vw}
   #finstrip{height:92vw}
-  #xte{height:96vw}
-  #sog{height:82vw}
   .logtable{min-width:600px}
   #eventtable{max-height:none}
 }
