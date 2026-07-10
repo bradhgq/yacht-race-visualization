@@ -3,19 +3,17 @@
 Monorepo for race dashboards: `starter/` engine · `skills/race-viz/` process ·
 `docs/` specs+logs · `races/<race>/` per-race config, data, modules, dist.
 
-## Build & verify — always the full chain, in order
+## Build & verify — one command, always the full chain
 
 ```
-.venv/bin/python starter/pipeline/build_data.py races/<race>/config.yaml
-python3 starter/shell/build.py races/<race>          # runs the harness FIRST; refuses dist on red
-TZ=America/New_York node starter/tests/test_dashboard.js races/<race>
-TZ=UTC              node starter/tests/test_dashboard.js races/<race>
-.venv/bin/python starter/pipeline/compare_data.py races/<race>/out/dashboard_data.json \
-    races/<race>/frozen/dashboard_data.json --ties races/<race>/out/rounding_ties.json
+.venv/bin/python starter/build_race.py races/<race>
 ```
 
-Skipping a step invites the stale-standalone trap (dist embeds `out/`; tests read
-dist). Use the pinned `.venv` (pandas 2.2.3 / numpy 1.26.4).
+Runs in order: build_data → race postprocess (if any) → shell/build
+(harness-gated, TZ=America/New_York) → harness under TZ=UTC → compare vs the
+frozen oracle. Skipping or reordering steps invites the stale-standalone trap
+(dist embeds `out/`; tests read dist). Use the pinned `.venv` (pandas 2.2.3 /
+numpy 1.26.4).
 
 ## Hard rules — each one was paid for
 

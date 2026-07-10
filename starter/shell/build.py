@@ -242,6 +242,17 @@ def main():
                 'fleet.json': compact(data['fleet'])}
 
     # ── script list (order matters: helpers → tokens → core → charts → race) ──
+    # Modules/overlays resolve SHELL-FIRST (starter/shell/app/modules|overlays —
+    # the shared chart library, e.g. distspeed), then the race dir. Dist paths
+    # stay race/<kind>/<id>.js, so runtime layout and caching are unchanged.
+    def script_src(f):
+        parts = f.split('/')
+        if len(parts) == 3 and parts[0] == 'race' and parts[1] in ('modules', 'overlays'):
+            shared = SHELL / 'app' / parts[1] / parts[2]
+            if shared.exists():
+                return shared
+        return race_dir / f.replace('race/', '')
+
     race_scripts = (['race/presentation.js', 'race/copy.js']
                     + [f'race/modules/{m}.js' for m in cfg['modules']]
                     + [f'race/overlays/{o}.js' for o in cfg['overlays']])
@@ -252,7 +263,7 @@ def main():
     for f in APP_FILES:
         h.update((SHELL / f).read_bytes())
     for f in race_scripts:
-        h.update((race_dir / f.replace('race/', '')).read_bytes())
+        h.update(script_src(f).read_bytes())
     for f in ['tokens.css', 'styles.css', 'index.template.html']:
         h.update((SHELL / f).read_bytes())
     h.update(payloads['core.json'].encode())
@@ -303,10 +314,9 @@ def main():
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(stamp((SHELL / f).read_text()))
     for f in race_scripts:
-        src = race_dir / f.replace('race/', '')
         target = dist / f
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(stamp(src.read_text()))
+        target.write_text(stamp(script_src(f).read_text()))
 
     # ── standalone single-file fallback (file:// friendly; no fetches) ──
     page = stamp(html)
@@ -328,7 +338,7 @@ def main():
         tag = '<script src="%s?v=%s" defer></script>' % (s, version)
         assert tag in page, tag
         page = page.replace(tag, '')
-        src = (SHELL / s) if s.startswith('app/') else (race_dir / s.replace('race/', ''))
+        src = (SHELL / s) if s.startswith('app/') else script_src(s)
         tail += '<script>\n' + stamp(src.read_text()) + '\n</script>\n'
     page = page.replace('<script src="vendor/plotly-basic-2.35.2.min.js" id="plotlyjs" defer></script>', '')
     assert '</body>' in page

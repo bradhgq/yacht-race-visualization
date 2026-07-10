@@ -17,7 +17,7 @@
 <meta name="twitter:title" content="RAGANA · Newport Bermuda 2026 · Race Analysis">
 <meta name="twitter:description" content="A crew's-eye reconstruction of the 2026 Newport Bermuda Race from the YB tracker and the nav log.">
 <meta name="twitter:image" content="https://hgq.fyi/ragana-newport-bermuda-2026/og.png">
-<link rel="icon" href="favicon.svg?v=f84f6ab8fb" type="image/svg+xml">
+<link rel="icon" href="favicon.svg?v=8d11021c54" type="image/svg+xml">
 <style>
 /* Design tokens — the chart-paper / NOAA-chart identity (RETROSPECTIVE §3).
    Race-agnostic except --magenta, the HERO ACCENT: per-boat re-skin = change
@@ -162,7 +162,6 @@ select{font-family:var(--mono);font-size:12px;border:1px solid var(--grid);borde
 #map{height:min(640px,88vw)}
 #dtf{height:min(340px,80vw)}
 #race{height:min(540px,92vw)}
-#finstrip{height:min(300px,70vw)}
 #xte,#sog{height:420px}
 
 #eventtable,#recon,.tblwrap{overflow-x:auto}
@@ -228,7 +227,6 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
   #map{height:min(118vw,72vh)}
   #dtf{height:80vw}
   #race{height:96vw}
-  #finstrip{height:66vw}
   #xte,#sog{height:74vw}
   table{min-width:600px}
 }
@@ -405,7 +403,7 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
   <ul>
     <li>NOAA Gulf Stream overlay · GFS wind underlay · animated time scrubber · synced hover across charts.</li>
   </ul>
-  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-07</div>
+  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-10</div>
 </footer>
 
 </div>
@@ -561,7 +559,7 @@ const plotlyReady = new Promise(res => {
   else go();
 });
 
-function dataURL(name) { return 'data/' + name + '?v=f84f6ab8fb'; }
+function dataURL(name) { return 'data/' + name + '?v=8d11021c54'; }
 async function loadJSON(name) {
   const r = await fetch(dataURL(name));
   if (!r.ok) throw new Error(name + ': HTTP ' + r.status);
@@ -1631,7 +1629,7 @@ window.__COPY__ = {
   <ul>
     <li>NOAA Gulf Stream overlay · GFS wind underlay · animated time scrubber · synced hover across charts.</li>
   </ul>
-  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-07</div>`,
+  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-10</div>`,
 };
 
 </script>
@@ -1685,6 +1683,7 @@ registerModule({
   deps: ['boats'],
   section: {
     kind: 'plot',
+    height: 'min(300px, 66vw)',   // I15: module-declared (was shell CSS #finstrip)
     title: 'The finish — how tight the mid-pack really was',
     note: 'Every scored St. David’s Lighthouse boat by corrected time. Each dot is a boat; RAGANA is the magenta diamond. Thirteen boats finished within half an hour of her on corrected time — the densest stretch of the whole fleet. The dashed markers show what one and two hours of corrected time were worth: <b>one hour ≈ 16 places, two hours ≈ 29</b>. In a race this compressed, every one of the small losses in the story above carried real scoreboard weight.',
   },

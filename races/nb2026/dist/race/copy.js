@@ -68,5 +68,5 @@ window.__COPY__ = {
   <ul>
     <li>NOAA Gulf Stream overlay · GFS wind underlay · animated time scrubber · synced hover across charts.</li>
   </ul>
-  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-07</div>`,
+  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-10</div>`,
 };

@@ -9,6 +9,7 @@ registerModule({
   deps: ['boats'],
   section: {
     kind: 'plot',
+    height: 'min(300px, 66vw)',   // I15: module-declared (was shell CSS #finstrip)
     title: 'The finish — how tight the mid-pack really was',
     note: 'Every scored St. David’s Lighthouse boat by corrected time. Each dot is a boat; RAGANA is the magenta diamond. Thirteen boats finished within half an hour of her on corrected time — the densest stretch of the whole fleet. The dashed markers show what one and two hours of corrected time were worth: <b>one hour ≈ 16 places, two hours ≈ 29</b>. In a race this compressed, every one of the small losses in the story above carried real scoreboard weight.',
   },

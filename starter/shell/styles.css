@@ -121,7 +121,6 @@ select{font-family:var(--mono);font-size:12px;border:1px solid var(--grid);borde
 #map{height:min(640px,88vw)}
 #dtf{height:min(340px,80vw)}
 #race{height:min(540px,92vw)}
-#finstrip{height:min(300px,70vw)}
 #xte,#sog{height:420px}
 
 #eventtable,#recon,.tblwrap{overflow-x:auto}
@@ -187,7 +186,6 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
   #map{height:min(118vw,72vh)}
   #dtf{height:80vw}
   #race{height:96vw}
-  #finstrip{height:66vw}
   #xte,#sog{height:74vw}
   table{min-width:600px}
 }
