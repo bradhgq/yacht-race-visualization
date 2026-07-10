@@ -327,3 +327,17 @@ records what I *did* about it.
 - #32 OPEN: migrate #finstrip height to section.height (I15); one-command build
   chain wrapper (stale-standalone trap); promote distspeed + schema slots to
   skill docs (RETROSPECTIVE_ROUND2 §6 amendment list).
+
+## Relocation & archives (2026-07-10)
+
+- **Round-1 provenance rescued before decommissioning `~/Downloads/ragana-dashboard`**
+  (the last copy): the round-1 retrospective is now `docs/RETROSPECTIVE_ROUND1.md`
+  (verbatim; its line refs pin to the archived repo's commit `5df5a19`), and the
+  original repo's full git history is `docs/archives/ragana-dashboard.bundle`
+  (3.9 MB, `git bundle verify` clean). `~/Downloads/race-viz-starter` needed no
+  rescue — its 12 commits are this repo's base history verbatim.
+- **`races/nb2026/legacy/` restored** (export_json.py, the pre-shell monolith
+  template, the 9-assertion harness) from this repo's own history at `2b6a085`;
+  the monorepo restructure (`785536d`) had dropped it. REPO_SPEC v1.1's layout
+  and the GATE B adjudication both place these files there; byte-verified
+  against the originals.
