@@ -1,11 +1,82 @@
 {
-  "_comment": "Per-race frozen goldens — freeze at CP-2 (prime rule 3); values must agree with config.yaml goldens (shell/build.py cross-checks). The four I10 categories are fixed; every human-caught defect adds an assertion.",
-  "tz_probe": { "epoch": 0, "rendered": "YYYY-MM-DD HH:MM" },
-  "endpoints": { "ref": "", "corrected_min": 0.0, "elapsed_min": 0.0, "pace_min_per_100": 0.0 },
-  "module_canaries": {},
-  "names_present": [],
-  "names_absent": [],
-  "finstrip_count": 0,
-  "duration_roundtrip": { "str": "", "seconds": 0 },
-  "start_window": { "boat": "", "date": "YYYY-MM-DD", "hm_min": "00:00", "hm_max": "23:59" }
+  "_comment": "BIR2026 frozen goldens through the SHELL build (prime rule 3; monolith assertions ported — see tests/extra.cjs for the race-specific checks). endpoints match config.yaml goldens (consistency-checked); the runner asserts them at ±0.05 against the rendered traces (exact values 276.07 / 288.55). vmc.hero_mean_kt basis is DTF-AT-THE-GUN on the routed polyline (187.8 nm), NOT the official 186.0 — see DOC_GAPS #19. finstrip_bands moves the strip count assertions to extra.cjs (two divisions, never pooled).",
+  "expected_checks": 27,
+  "tz_probe": {
+    "epoch": 1779602689,
+    "rendered": "2026-05-24 02:04"
+  },
+  "endpoints": {
+    "ref": "Christopher Dragon XII",
+    "corrected_min": 276.07,
+    "elapsed_min": 288.55,
+    "pace_min_per_100": 148.42
+  },
+  "module_canaries": {
+    "upwind_excess": {
+      "boat": "Ragana",
+      "vs": "Christopher Dragon XII",
+      "nm": 4.7
+    }
+  },
+  "names_present": [
+    "Ragana",
+    "Christopher Dragon XII",
+    "In Theory",
+    "Groupe 5",
+    "Young American",
+    "Zélée"
+  ],
+  "names_meta_only": [
+    "Windfall"
+  ],
+  "names_absent": [
+    "MXM",
+    "Towhee"
+  ],
+  "finstrip_count": 33,
+  "finstrip_bands": {
+    "ORC": 33,
+    "PHRF": 23
+  },
+  "duration_roundtrip": {
+    "str": "37:29:49",
+    "seconds": 134989
+  },
+  "start_window": {
+    "boat": "Ragana",
+    "date": "2026-05-22",
+    "hm_min": "12:30",
+    "hm_max": "12:40"
+  },
+  "vmc": {
+    "hero_mean_kt": 5.02,
+    "tol": 0.06,
+    "y_range": [
+      -4,
+      11
+    ]
+  },
+  "vmc_caption": [
+    "never VMG",
+    "rounding"
+  ],
+  "distspeed": {
+    "dots": 56,
+    "hero": [
+      217.8,
+      5.81
+    ],
+    "rhumb_x": 186.0,
+    "iso_check_days": 1.6
+  },
+  "bir_bands": {
+    "width_counts": {
+      "0.02": 9,
+      "0.05": 21
+    }
+  },
+  "upwind": {
+    "hero_label": "+4.7 nm · fin 9th",
+    "ref_label": "reference · won class"
+  }
 }

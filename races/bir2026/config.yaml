@@ -143,8 +143,8 @@ goldens:
     rendered: 2026-05-24 02:04
   endpoints:
     ref: Christopher Dragon XII
-    corrected_min: 276.1
-    elapsed_min: 288.6
+    corrected_min: 276.07   # monolith G1 precision (was transcribed 276.1)
+    elapsed_min: 288.55     # monolith G2 precision (was transcribed 288.6)
   module_canaries:
     upwind_excess:
       boat: Ragana
@@ -166,5 +166,3 @@ goldens:
   - MXM
   - Towhee
   finstrip_count: 33
-template:
-  path: dashboard_template.html

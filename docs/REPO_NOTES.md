@@ -379,3 +379,35 @@ records what I *did* about it.
   course length (186.0) — Ragana official-window mean VMC 5.024 vs 5.008 kt,
   Δ0.016. I14's "course-length ÷ official elapsed" wording needs this
   clarification when the skill loop next opens (skills/ untouched this run).
+
+## BIR shell migration — M2 chart phase (2026-07-10)
+
+- **BIR2026 now builds through the shell**; the monolith (src/, build.py,
+  dashboard_template.html, jsdom test/) left main per the no-legacy policy
+  (tag + release bir2026-monolith-final). Full mapping table + fixture
+  dispositions: races/bir2026/docs/M2-monolith-mapping.md.
+- **Shell gains, all config-gated and default-off** (NB chain re-verified
+  green after every change): race.divisionScoped + crossCourse + startAnchor;
+  charts.sog.clipPreStart; charts.map.{ghostStyles,hoverCls,fitRange};
+  mapAnnotations passthrough; charts.xte.yTitle; dtf yRange optional;
+  groups.{chipExtras,chipRank}; division-labelled ref select; empty-category
+  event pills skipped (visible NB no-op: all six categories populated).
+  react() now no-ops for charts absent from a race's layout.
+- **ABI amendment (additive, per the v1.1 rule): overlay `bandAnnotations
+  (ctx, mode)`** — act bands carry titles on every band chart. BIR's acts and
+  arrows register as pill-less always-on overlays (pill.default true, not in
+  controls.pills).
+- **distspeed promotion exercised**: BIR lists the shared shell module and
+  configures its iso rays/toggle — zero module-code changes across races.
+- **Runner is now multi-race**: per-race `expected_checks`, fixture-presence
+  guards on the round-2 blocks, `vmc_caption` fixture (kept out of the
+  consistency-checked goldens), band-aware finstrip counting, and per-race
+  `tests/extra.cjs` extensions (BIR: 15 ported checks). DOM mock: innerHTML
+  assignment now clears children (real-DOM semantics; caught by the R9c port).
+- **Endpoint goldens restored to monolith-suite precision** (276.07/288.55
+  from G1/G2; config had a coarser transcription sitting exactly on the ±0.05
+  tolerance edge) — I16 note in the mapping doc.
+- Copy: monolith index.html blocks verbatim into copy.js/copy.md; new
+  microcopy slots (shell xte caption, VMC caption with the rounding-noise
+  note, filter row, more-panel) flagged for the STOP-2 review — no analysis
+  claims authored.

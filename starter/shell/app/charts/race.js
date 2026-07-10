@@ -11,7 +11,6 @@ const raceX = m => S.axis === 't'
 
 function buildRace() {
   document.getElementById('refname').textContent = S.ref;
-  document.getElementById('racenote').innerHTML = COPY.race.notes[S.raceMode];
   if (!hasTrack(S.ref)) {
     // reference's track still downloading — blank the chart rather than leave
     // the previous reference's traces under the new header (I13)
@@ -26,12 +25,21 @@ function buildRace() {
   const refT = ms.map(m => hitTime(ref, m));
   const refFin = S.raceMode === 'h' ? parseDur(ref.meta.corr) : parseDur(ref.meta.el);
   const pace = S.raceView === 'p';
+  // multi-division races: corrected times are NEVER compared across scoring
+  // divisions (race.divisionScoped), and boats scored on a different course
+  // variant (race.crossCourse) are never compared at all. Hidden boats are
+  // counted and disclosed in the note below the header.
+  const crossCourse = new Set(R.crossCourse || []);
+  let hidden = 0;
   const tr = [];
   for (const nm of ORDER) {
     if (!S.boats.has(nm) || !hasTrack(nm)) continue; const b = D.boats[nm];
     if (S.raceMode === 'h' && !b.meta.tcf) continue; if (!b.meta.el) continue;
+    if (crossCourse.has(nm)) { hidden++; continue; }
+    if (R.divisionScoped && S.raceMode === 'h' && b.meta.cls !== ref.meta.cls) { hidden++; continue; }
     const st = startS(b), tcf = b.meta.tcf || 1;
     const xs = [], ys = [];
+    if (R.startAnchor) { xs.push(raceX(R.startAnchor)); ys.push(0); }   // gap is 0 at the gun by construction
     ms.forEach((m, i) => {
       const t = hitTime(b, m); if (t === null || refT[i] === null) { xs.push(raceX(m)); ys.push(null); return; }
       const mine = t - st, theirs = refT[i] - refStart;
@@ -47,7 +55,7 @@ function buildRace() {
       hovertemplate: `${nm} · %{x}${S.axis === 't' ? '' : ' nm to go'} · %{y:.1f} ${pace ? 'min/100nm' : 'min'} vs ${S.ref}<extra></extra>` });
   }
   const shapes = [], ann = [];
-  const top = CFG.phases[0][0];
+  const top = CFG.phases.length ? CFG.phases[0][0] : 0;
   CFG.phases.forEach(([a, b, l], i) => {
     const x0 = raceX(a === top ? a - 1 : a), x1 = raceX(b === 0 ? 1 : b);
     shapes.push({ type: 'rect', xref: 'x', yref: 'paper', x0, x1, y0: 0, y1: 1, fillcolor: i % 2 ? 'rgba(23,41,58,0.028)' : 'rgba(0,0,0,0)', line: { width: 0 } });
@@ -55,6 +63,7 @@ function buildRace() {
       y: 1.03, xref: 'x', yref: 'paper', text: l, showarrow: false, font: { size: 9, color: '#4C6274', family: 'SF Mono, Menlo, monospace' } });
   });
   shapes.push(...overlayShapes());
+  ann.push(...overlayAnnotations());
   const evs = D.events.filter(e => S.ev.has(e.cat));
   for (const e of evs) shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: evX(e.t), x1: evX(e.t), y0: 0, y1: 1, line: { color: EVCAT[e.cat].c, width: 1, dash: 'dot' }, opacity: .45 });
   if (evs.length) tr.push({ x: evs.map(e => evX(e.t)), y: evs.map(() => R.eventRowY), yaxis: 'y2', mode: 'markers',
@@ -67,4 +76,11 @@ function buildRace() {
     xaxis: sharedXaxis(narrow() ? { title: undefined } : undefined),
     yaxis: { ...GAX, title: { text: yTitle, font: AXFONT } },
     yaxis2: { overlaying: 'y', side: 'right', range: [0, R.eventRowY + 1], visible: false, fixedrange: true } });
+  // the note is authored copy per mode; division-scoped races append the
+  // hidden-boat disclosure ({n}/{cls} slots in COPY.race.noteDivision)
+  let note = COPY.race.notes[S.raceMode];
+  if (hidden && COPY.race.noteDivision)
+    note += ' ' + COPY.race.noteDivision.replace('{n}', hidden)
+      .replace('{s}', hidden > 1 ? 's' : '').replace('{cls}', ref.meta.cls || '');
+  document.getElementById('racenote').innerHTML = note;
 }

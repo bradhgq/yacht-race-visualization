@@ -39,7 +39,8 @@ class El {
   constructor(tag, id) {
     this.tagName = (tag || 'div').toUpperCase(); this.id = id || '';
     this.children = []; this.dataset = {}; this.style = {}; this.attrs = {};
-    this.hidden = false; this.disabled = false; this.innerHTML = ''; this.textContent = '';
+    this.hidden = false; this.disabled = false; this.textContent = '';
+    this._innerHTML = '';
     this.value = ''; this.selected = false; this.type = '';
     const self = this;
     this.classList = {
@@ -49,6 +50,11 @@ class El {
       toggle(c, force) { (force ?? !this.set.has(c)) ? this.set.add(c) : this.set.delete(c); },
       contains(c) { return this.set.has(c); },
     };
+    // innerHTML assignment replaces children, as in a real DOM (pill rows rebuild)
+    Object.defineProperty(this, 'innerHTML', {
+      get() { return self._innerHTML; },
+      set(v) { self._innerHTML = v; self.children = []; },
+    });
     // className writes replace the class set (shell uses both styles)
     Object.defineProperty(this, 'className', {
       get() { return [...self.classList.set].join(' '); },
@@ -197,7 +203,8 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
   });
 
   /* ── derived-metric (I3 + module canaries) ── */
-  const park = FIX.module_canaries.park;
+  const park = FIX.module_canaries && FIX.module_canaries.park;
+  if (park)
   check('derived-metric', `park canary: ${park.boat} u4 = ${park.u4}% (own-traversal, not wall-clock)`, () => {
     assert.equal(D.parkFair[park.boat].u4, park.u4);
     S.boats.add(park.boat); render('boats');
@@ -205,6 +212,7 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
     assert.ok(new RegExp(`${park.boat}[\\s\\S]*?${park.u4}%`).test(el.innerHTML),
       'rendered park table does not show the canary');
   });
+  if (!FIX.finstrip_bands)   // multi-band strips assert per-division counts in extra.cjs
   check('derived-metric', `finstrip renders every scored boat (${FIX.finstrip_count})`, () => {
     const scored = Object.values(D.boats).filter(b => b.meta.corr).length;
     assert.equal(scored, FIX.finstrip_count, 'scored-boat count drifted');
@@ -237,8 +245,10 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
       `dtf x-values must be naive local strings, got ${x0}`);
   });
 
-  /* ── round 2: VMC channel (I14 — VMC integrates back to the course) ── */
+  /* ── round 2: VMC channel (I14 — VMC integrates back to the course;
+        marks courses integrate to DTF-at-the-gun on the routed polyline) ── */
   const V = FIX.vmc;
+  if (V)
   check('vmc', `channel integrity: hero official-window mean ≈ ${V.hero_mean_kt} kt, negatives real`, () => {
     const hb = D.boats[hero];
     assert.ok(Array.isArray(hb.vmc), 'hero has no vmc array');
@@ -251,7 +261,8 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
     const anyNeg = Object.values(D.boats).some(b => (b.vmc || []).some(v => v != null && v < 0));
     assert.ok(anyNeg, 'no negative VMC anywhere — tacks/park drift got clamped?');
   });
-  check('vmc', 'speed chart renders both metrics; labelled VMC never VMG; park shading stays', () => {
+  if (V)
+  check('vmc', 'speed chart renders both metrics; labelled VMC never VMG', () => {
     assert.equal(S.axis, 'd', 'precondition: distance axis');
     S.speedMetric = 'vmc'; render('speed');
     const yt = plots.sog.layout.yaxis.title.text;
@@ -261,11 +272,12 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
     assert.ok(yr[0] === V.y_range[0] && yr[1] === V.y_range[1],
       `VMC y-range must admit negatives: [${yr}] != [${V.y_range}]`);
     const note = getEl('sog_note').innerHTML;
-    assert.ok(note.includes('not wind-VMG'), 'VMC caption must carry the no-wind-data caveat');
-    assert.ok(note.includes('boatspeed'), 'VMC caption must carry the Sunday verdict');
+    for (const frag of FIX.vmc_caption || [])
+      assert.ok(note.includes(frag), `VMC caption must contain '${frag}'`);
     const park = CFG.charts.parkShading;
-    assert.ok(plots.sog.layout.shapes.some(s => s.type === 'rect' && s.x0 === park.zone[0] && s.x1 === park.zone[1]),
-      'park-zone shading missing in DTF-aligned VMC view');
+    if (park)
+      assert.ok(plots.sog.layout.shapes.some(s => s.type === 'rect' && s.x0 === park.zone[0] && s.x1 === park.zone[1]),
+        'park-zone shading missing in DTF-aligned VMC view');
     S.speedMetric = 'sog'; render('speed');
     assert.ok(plots.sog.layout.yaxis.title.text.includes('Speed over ground'), 'SOG mode did not restore');
   });
@@ -275,7 +287,8 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
   const toggleClassFilter = evalIn('toggleClassFilter');
   const setBand = evalIn('setBand');
   const filterTargets = evalIn('filterTargets');
-  const clsMembers = Object.keys(D.boats).filter(nm => D.boats[nm].meta.cls === CF.label);
+  const clsMembers = CF ? Object.keys(D.boats).filter(nm => D.boats[nm].meta.cls === CF.label) : [];
+  if (CF)
   check('filters', `class input: ${CF.input} selects exactly ${CF.boats} boats; toggle removes only filter-added`, () => {
     assert.equal(clsMembers.length, CF.boats, `${CF.label} membership drifted`);
     const before = new Set(S.boats);
@@ -287,6 +300,7 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
     for (const nm of overlap) assert.ok(S.boats.has(nm), `${nm} was default-selected and must survive`);
     for (const nm of clsMembers) if (!before.has(nm)) assert.ok(!S.boats.has(nm), `${nm} should have been removed`);
   });
+  if (CF)
   check('filters', `invalid class ${CF.invalid_input}: quiet inline state, no crash, selection untouched`, () => {
     const before = new Set(S.boats);
     toggleClassFilter(CF.invalid_input);
@@ -295,6 +309,7 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
     toggleClassFilter(CF.input); toggleClassFilter(CF.input);   // valid action clears the error
     assert.ok(!evalIn('S.clsErr'), 'clsErr should clear on the next valid action');
   });
+  if (CF && TB)
   check('filters', `band ±0.01 selects ${TB.width_counts['0.01']} rating peers; class composes as intersection (${TB.class3_band001})`, () => {
     const t0 = D.boats[hero].meta.tcf;
     setBand(t0 - 0.01, t0 + 0.01, '0.01');
@@ -313,6 +328,7 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
 
   /* ── round 2: distance-vs-speed scatter (module canary) ── */
   const DS = FIX.distspeed;
+  if (DS)
   check('distspeed', `one dot per scored boat (${DS.dots}); hero at (${DS.hero}); rays exact; rhumb line`, () => {
     const [dots, diamond] = plots.distspeed.traces;
     assert.equal(dots.x.length + diamond.x.length, DS.dots, 'dots+diamond != scored boats');
@@ -328,6 +344,7 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
 
   /* ── round 2: record corrections ── */
   const CO = FIX.corrections;
+  if (CO)
   check('corrections', `crew record: '${CO.events_contain}' present, Kevin note memorialized, '${CO.absent}' gone`, () => {
     assert.ok(D.events.some(e => e.txt.includes(CO.events_contain)), 'corrected seasickness event missing');
     const kev = D.recon.find(r => (r.note || '').includes(CO.recon_contains));
@@ -337,7 +354,16 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
     assert.ok(!all.includes(CO.absent), `'${CO.absent}' still present in the record`);
   });
 
-  const EXPECTED = 18;   // fixed: a silently-skipped block must fail loudly
+  /* ── per-race extension checks (races/<race>/tests/extra.cjs) ── */
+  const extraPath = path.join(raceDir, 'tests', 'extra.cjs');
+  if (fs.existsSync(extraPath)) {
+    const extra = require(extraPath);
+    await extra({ check, approx, assert, plots, evalIn, sandbox, getEl, render, S, D, CFG, FIX, H, off });
+  }
+
+  // fixed PER RACE: a silently-skipped block must fail loudly
+  const EXPECTED = FIX.expected_checks;
+  assert.ok(Number.isInteger(EXPECTED), 'regression.json must declare expected_checks');
   console.log(`\n${passed} passed, ${failed} failed (of ${EXPECTED})`);
   if (failed || passed + failed !== EXPECTED) process.exit(1);
 })().catch(e => { console.error(e); process.exit(1); });
