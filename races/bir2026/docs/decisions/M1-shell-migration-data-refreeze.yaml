@@ -1,0 +1,32 @@
+# M1 — shell-migration data phase: oracle re-freeze (I16 ledger)
+# Instruction: owner-directed BIR→NB feature-parity migration prompt (2026-07-10):
+# "New channels against BIR's existing frozen oracle = a ledgered re-freeze per
+# I16, every diff class enumerated."
+#
+# Pipeline: starter/pipeline/build_data.py (config-driven — the former
+# pipeline_changes/build_data.patch is now pipeline-native as
+# course.arrival_search_after_nm + privacy.build; postprocess steps 1/2/5 are
+# now config: groups.by_name/by_cls, exclude_boats,
+# official_results.untracked_meta_only) + reduced postprocess.py (up1bi, stats
+# reframe only). Invocation, from races/bir2026/:
+#   ../../.venv/bin/python ../../starter/pipeline/build_data.py config.yaml
+#   ../../.venv/bin/python postprocess.py
+#
+# Diff classes vs the R9 oracle — 171 total, zero unexplained:
+diff_classes:
+  - { count: 57, class: "boats.*.vmc added — routed-DTF derivative, all tracked boats (I14 verified: Ragana official-window mean 5.024 kt vs dtf-at-gun 187.8 nm / elapsed = 5.008 kt, delta 0.016)" }
+  - { count: 56, class: "boats.*.meta.sailedNm added — scored+tracked boats" }
+  - { count: 56, class: "boats.*.meta.avgKt added — scored+tracked boats" }
+  - { count: 1,  class: "boats.Inisharon.meta.cls '' -> 'ORC' — DNF rows now carry their results division (post-R2 pipeline; enables class-filter-includes-DNF, R2 decision 2). grp unchanged (fleet_dnf)" }
+  - { count: 1,  class: "meta.generated build date; now pinned via output.generated for reproducibility" }
+unchanged_verified:
+  - all t/lat/lon/dtf/xte/sog arrays byte-identical (57 tracked boats)
+  - boat key ORDER identical (I8 palette stability), Windfall meta-only last
+  - events (14), fleet (57), mil, stats (incl. postprocess reframe), parkFair, recon, watches
+  - goldens through the new payload — endpoints +276.07/+288.55 vs CD XII;
+    up1bi delta 4.7; ORC/PHRF pools 33/23 disjoint (Lucky excluded — Cows
+    finish); Daffodil/MXM/Towhee absent; Windfall meta-only PHRF; Zélée
+    display key; grp counts hero 1 / class6 8 / phrf 23 / orc_other 25 /
+    fleet_dnf 1; implied speed <= 25 kt
+confirmed_by: owner migration prompt (2026-07-10)
+date: 2026-07-10

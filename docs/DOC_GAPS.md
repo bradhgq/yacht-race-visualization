@@ -128,3 +128,11 @@ without guessing. (What I *did* about each is in `REPO_NOTES.md`.)
   historical archive — its internal inconsistencies stand as shipped and the
   archive is not to be edited; the repo README is authoritative for current
   layout and invocations.
+
+19. **I14's integral basis is ambiguous for marks courses** (found at the BIR
+    M1 data phase): "course-length ÷ official elapsed" reads as the OFFICIAL
+    length (BIR 186.0 nm), but VMC is the derivative of ROUTED DTF, so the
+    integral equals DTF-at-the-gun on the polyline (Ragana 187.8; polyline
+    188.7). With ±0.05 kt tolerance the two bases differ by more than the
+    tolerance (5.30 vs 5.01 kt at BIR's elapsed). Fixtures must pin the
+    dtf-at-gun basis; skill stage-2 amendment queued (skills/ frozen this run).

@@ -113,29 +113,55 @@ def main():
     disp_over = (cfg.get('name_overrides') or {}).get('display') or {}
     groups = cfg['groups']
 
-    def grp_for(rank, disp):
+    def grp_for(rank, disp, cls=None):
+        """Group precedence: hero > by_name lists > by_cls (scoring division) >
+        by_rank ranges > default. by_name/by_cls landed with BIR2026 (its
+        comparison set is a hand-picked class-6 list and a PHRF division, not
+        rank ranges)."""
         if disp == hero:
             return groups['hero_key']
+        for key, names in (groups.get('by_name') or {}).items():
+            if disp in names:
+                return key
+        for key, classes in (groups.get('by_cls') or {}).items():
+            if cls in classes:
+                return key
         for key, ranks in (groups.get('by_rank') or {}).items():
             if rank in ranks:
                 return key
         return groups['default_key']
 
     finish_statuses = set(cfg['official_results'].get('finish_statuses') or ['FIN'])
+    # exclude_boats: CP-0 removals (e.g. BIR2026's Daffodil — DNC, stationary at
+    # a mooring). Matched by normalized name against results AND fleet layers.
+    excl_keys = {canonical.norm_key(nm) for nm in (cfg.get('exclude_boats') or [])}
     entries = {}          # track name -> meta dict
     name_misses = []
+    meta_only_rows = []   # untracked finishers shipped meta-only (appended LAST — I8)
     for row in res_rows:
+        disp = disp_over.get(row['name']) or canonical.display_name(row['name'])
+        if canonical.norm_key(disp) in excl_keys or canonical.norm_key(row['name']) in excl_keys:
+            continue
         track_name = lookup.get(canonical.norm_key(row['name']))
         if not track_name:
-            name_misses.append(row['name'])
+            # official_results.untracked_meta_only: [names] ships listed track-less
+            # finishers so results-derived views (finish bands) stay complete — an
+            # EXPLICIT per-boat CP decision, never an inference (BIR2026: Windfall in,
+            # because it raced the same course; MXM out, Plum Island Course).
+            # Everything else stays skip-and-report.
+            allow = {canonical.norm_key(n)
+                     for n in cfg['official_results'].get('untracked_meta_only') or []}
+            if canonical.norm_key(disp) in allow and row['status'] in finish_statuses:
+                meta_only_rows.append(row)
+            else:
+                name_misses.append(row['name'])
             continue
-        disp = disp_over.get(row['name']) or canonical.display_name(row['name'])
         if row['status'] in finish_statuses:
             entries[track_name] = dict(
                 disp=disp, typ=row['type'], tcf=row['rating'],
                 cls=row['division'], clsPos=row['class_rank'], sdl=row['rank'],
                 corr=row['corrected'], el=row['elapsed'], fin=row['finish_local'],
-                grp=grp_for(row['rank'], disp), sail=row['sail'])
+                grp=grp_for(row['rank'], disp, row['division']), sail=row['sail'])
         else:
             entries[track_name] = dict(
                 disp=disp, typ=row['type'], tcf=None, cls=row['division'], clsPos=None, sdl=None,
@@ -179,7 +205,16 @@ def main():
         else:
             sub = sub[sub['ts'] >= race_start]
             d = geo.hav(sub['lat'], sub['lon'], *finish_pt)
-            arr = sub[d < finish_radius]
+            # out-and-back guard (course.arrival_search_after_nm, default 0 = off):
+            # start/finish lines can be adjacent, so only search for arrival AFTER
+            # the boat has first been that far out (BIR2026: pre-start milling
+            # within finish_radius truncated tracks)
+            far = course.get('arrival_search_after_nm', 0)
+            if far:
+                prog = (d.values > far).argmax() if (d.values > far).any() else len(sub)
+                arr = sub.iloc[prog:][d.values[prog:] < finish_radius]
+            else:
+                arr = sub[d < finish_radius]
             if len(arr):
                 sub = sub[sub['ts'] <= arr['ts'].iloc[0]]
         sub = sub.drop_duplicates('ts').reset_index(drop=True)
@@ -252,6 +287,18 @@ def main():
             vmc=[None if np.isnan(v) else tie.r(v, 2, f'boats.{disp}.vmc[{i}]')
                  for i, v in enumerate(vmc)])
 
+    # untracked meta-only finishers, appended AFTER every tracked boat so the
+    # palette's insertion-order rule (I8) leaves existing colors untouched
+    for row in meta_only_rows:
+        disp = disp_over.get(row['name']) or canonical.display_name(row['name'])
+        boats_out[disp] = dict(
+            t=[], lat=[], lon=[], dtf=[], xte=[], sog=[],
+            meta=dict(disp=disp, typ=row['type'], tcf=row['rating'], cls=row['division'],
+                      clsPos=row['class_rank'], sdl=row['rank'], corr=row['corrected'],
+                      el=row['elapsed'], fin=row['finish_local'],
+                      grp=grp_for(row['rank'], disp, row['division']), sail=row['sail'],
+                      note='untracked — official results only'))
+
     # ── milestone corrected-time series (scoring-function corrected, I2 feeds off official) ──
     mil_cfg = cfg['milestones']
     milestones = list(range(mil_cfg['start_nm'], -1, -mil_cfg['step_nm']))
@@ -276,11 +323,19 @@ def main():
     fleet = []
     for bid, sub in df.groupby('boat_id'):
         nm = sub['name'].iloc[0]
+        if canonical.norm_key(nm) in excl_keys:
+            continue
         sub = sub[sub['t_utc'] >= race_start].copy()
         if not len(sub):
             continue
         d = geo.hav(sub['lat'], sub['lon'], *finish_pt)
-        arr = sub[d.values < finish_radius]
+        # same out-and-back arrival guard as the per-boat series (see series_for)
+        far = course.get('arrival_search_after_nm', 0)
+        if far:
+            prog = (d.values > far).argmax() if (d.values > far).any() else len(sub)
+            arr = sub.iloc[prog:][d.values[prog:] < finish_radius]
+        else:
+            arr = sub[d.values < finish_radius]
         if len(arr):
             sub = sub[sub['t_utc'] <= arr['t_utc'].iloc[0]]
         sub = sub.set_index('t_utc').resample(fleet_cfg['resample']).first().dropna(subset=['lat'])
@@ -293,10 +348,14 @@ def main():
                           lon=[tie.r(v, 3, f'fleet[{fi}].lon[{i}]') for i, v in enumerate(sub['lon'])]))
 
     # ── narrative layer: events + watches (authored data, post privacy cut) ──
+    # privacy.build: 'private' includes private rows (the Tier-2 client artifact);
+    # default 'public' keeps the public-only cut for any public build.
     ev_doc = yaml.safe_load((race_dir / cfg['events']['path']).read_text())
     cat_z = {c: i for i, c in enumerate(cfg['event_categories'])}
+    build_vis = cfg.get('privacy', {}).get('build', 'public')
     events = [dict(t=ep(e['t']), cat=e['cat'], label=e['label'], txt=e['txt'])
-              for e in ev_doc['events'] if e.get('visibility', 'private') == 'public']
+              for e in ev_doc['events']
+              if build_vis == 'private' or e.get('visibility', 'private') == 'public']
     events.sort(key=lambda e: (e['t'], cat_z.get(e['cat'], 0)))
     watches = [[ep(a), ep(b)] for a, b in ev_doc.get('watches') or []]
 

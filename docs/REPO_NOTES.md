@@ -355,3 +355,27 @@ records what I *did* about it.
   committed — closes RETROSPECTIVE_ROUND2 §6's "no KICKOFF_TEMPLATE in the
   repo" note. Source: the step-1 handoff copy (~/Downloads/files/), since the
   parity prompt's "attached file" was not re-delivered with the message.
+
+## BIR shell migration — M1 data phase (2026-07-10)
+
+- **pipeline_changes/ folded into the starter pipeline, config-gated and
+  default-off** (NB2026 GATE A re-verified IDENTICAL after every edit):
+  `course.arrival_search_after_nm` (out-and-back arrival guard, BIR: 20),
+  `privacy.build: private|public` (Tier-2 event cut), `groups.by_name`/`by_cls`
+  (BIR's class-6 list + PHRF division grouping), `exclude_boats` (Daffodil),
+  `official_results.untracked_meta_only: [names]`. The last is an EXPLICIT
+  list, not a rule — the generic "inject every untracked finisher" draft
+  wrongly swept in MXM, which raced the Plum Island Course; Windfall (same
+  course, needed for the PHRF band of 23) is the only listed boat.
+  postprocess.py reduced to the genuinely race-specific steps (up1bi, stats
+  reframe); pipeline_changes/ removed (preserved at bir2026-monolith-final).
+- **Oracle re-frozen under I16**: 171 diffs in five enumerated classes
+  (57 vmc / 56 sailedNm / 56 avgKt / Inisharon cls ''→'ORC' / build date),
+  zero unexplained; ledger at
+  races/bir2026/docs/decisions/M1-shell-migration-data-refreeze.yaml. The
+  monolith's 34-test suite passes unchanged against the re-frozen oracle.
+- **I14 on a routed course, first exercise**: the integral basis is
+  **DTF-at-the-gun (routed polyline, Ragana 187.8 nm)**, NOT the official
+  course length (186.0) — Ragana official-window mean VMC 5.024 vs 5.008 kt,
+  Δ0.016. I14's "course-length ÷ official elapsed" wording needs this
+  clarification when the skill loop next opens (skills/ untouched this run).

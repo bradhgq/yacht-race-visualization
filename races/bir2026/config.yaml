@@ -22,6 +22,11 @@ official_results:
     status: finish_status
   finish_statuses:
   - AOK
+  # Windfall: untracked PHRF finisher on the SAME course, ships meta-only —
+  # required for the PHRF finish-band count of 23 (was postprocess step 5, now
+  # pipeline-native). Explicit list, not a rule: MXM/Towhee are also untracked
+  # in results but raced the Plum Island Course / retired — they stay out.
+  untracked_meta_only: [Windfall]
 entries:
   path: raw/scratch.csv
 course:
@@ -44,6 +49,9 @@ course:
   - - 41.221
     - -72.057
   mark_radius_nm: 1.0
+  # start/finish lines are adjacent: only search for arrival after the boat has
+  # first been 20 nm out (was pipeline_changes/build_data.patch, now pipeline-native)
+  arrival_search_after_nm: 20
 time:
   official_tz: America/New_York
   utc_offset: -4
@@ -80,11 +88,17 @@ name_overrides:
     SLEEPER: Sleeper
     FULL TILT: Full Tilt
     Midnight Rider - PMP Strategy: Midnight Rider
-groups:
-  hero_key: hero
+groups:                # was postprocess step 1, now pipeline-native (grp_for precedence:
+  hero_key: hero       # hero > by_name > by_cls > by_rank > default; DNF rows -> dnf_key)
+  by_name:
+    class6: [Christopher Dragon XII, In Theory, Groupe 5, SqueeZeplay, Save the Sound,
+             Zélée, Sleeper, Blue Skies]
+  by_cls:
+    phrf: [PHRF]
   by_rank: {}
-  default_key: fleet_other
+  default_key: orc_other
   dnf_key: fleet_dnf
+exclude_boats: [Daffodil]   # CP-0: DNC, stationary at mooring (was postprocess step 2)
 extra_boats: []
 grid:
   minutes: 15
@@ -122,6 +136,7 @@ privacy:
   build: private
 output:
   dir: out/
+  generated: '2026-07-10'   # pinned at the M1 re-freeze for byte reproducibility
 goldens:
   tz_probe:
     epoch: 1779602689
