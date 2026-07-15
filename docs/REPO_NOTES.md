@@ -411,3 +411,11 @@ records what I *did* about it.
   microcopy slots (shell xte caption, VMC caption with the rounding-noise
   note, filter row, more-panel) flagged for the STOP-2 review — no analysis
   claims authored.
+
+- **Production defect (2026-07-10, caught at first BIR shell deploy): new dist
+  paths are gitignored.** `git add -A` at M2 committed the modified tracked
+  dist files but silently skipped the NEW app/ and race/ directories (the
+  global `dist/` ignore; historical dist files were force-added). The live
+  page served the new index.html with every script 404ing. Fix: force-added
+  the 17 missing files; `build_race.py` now detects ignored-untracked dist
+  files and prints the `git add -f` fix; CLAUDE.md carries the rule.

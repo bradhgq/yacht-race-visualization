@@ -58,6 +58,16 @@ def main():
     else:
         print('\n══ 5/5 compare — no frozen oracle yet ══')
 
+    # the global dist/ gitignore silently skips NEW dist paths on `git add -A`
+    # (found in production: BIR's first shell deploy shipped index.html without
+    # its app/ and race/ script dirs) — warn loudly when files need a force-add
+    ig = subprocess.run(['git', 'status', '--porcelain', '--ignored', str(race_dir / 'dist')],
+                        cwd=REPO, capture_output=True, text=True).stdout
+    missing = [l[3:] for l in ig.splitlines() if l.startswith('!!') and not l.rstrip('/').endswith('dist')]
+    if missing:
+        print(f'\n*** {len(missing)} dist file(s) are gitignored and NOT tracked — the deploy '
+              f'would ship a broken page. Run:  git add -f races/{race_dir.name}/dist')
+
     print(f'\nCHAIN GREEN for {race_dir.name}.')
     print('Committed dist/ is production (nix serves the git tree): '
           f'`git checkout -- races/{race_dir.name}/dist` unless deploying is the point.')

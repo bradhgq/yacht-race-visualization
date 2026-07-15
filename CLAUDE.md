@@ -22,7 +22,9 @@ numpy 1.26.4).
   never re-derived from the pipeline you are testing.
 - **Committed `dist/` is production** (nix flake input serves the git tree).
   After a verification rebuild, `git checkout -- races/*/dist` unless deploying
-  is the point.
+  is the point. When deploying NEW dist paths, `git add -f` them — the global
+  `dist/` ignore silently drops them from `git add -A` (BIR's first shell
+  deploy shipped without its script dirs this way).
 - **No `legacy/` on the active main branch** — tag + GitHub release zip, then
   remove; git history retains everything.
 - **Run the harness under BOTH `TZ=America/New_York` and `TZ=UTC`.** Chart
