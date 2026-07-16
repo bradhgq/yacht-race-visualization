@@ -20,7 +20,7 @@ window.__COPY__ = {
     map: { title: 'The course',
       note: "Every selected boat's track around the 186-nm Block Island Course — out of Long Island Sound, around Block Island <b>leaving it to starboard</b> — up the north side, down the east side past Southeast Light, and back (the arrows on each track show direction of travel). Back to Stamford. Positions are exact but the aspect isn't to scale. Ghost tracks are the whole fleet, tinted <b>and dashed</b> by division: <span style=\"color:#7E97A6\">━ ORC</span> / <span style=\"color:#B49A7E\">┅ PHRF</span>. Hover — or tap — anything." },
     dtf: { title: 'The race',
-      note: 'The whole race at a glance — distance still to sail, one line per boat, divided into the three phases used throughout. Steeper is faster. The flat spot late Saturday night on <span class="mag">Ragana</span>\'s line is the broach.' },
+      note: 'The whole race at a glance — distance still to sail, one line per boat, divided into the three acts used throughout. Steeper is faster. The flat spot late Saturday night on <span class="mag">Ragana</span>\'s line is the broach.' },
     race: { title: 'Where the race was won and lost — vs <span id="refname" style="color:var(--magenta)"></span>' },
     xte: { title: 'Offset from the course line',   // NEW (shell chart, microcopy): routed active-leg XTE
       note: 'Signed offset from the ACTIVE leg of the routed course line — the leg re-references at each mark, so a step at a rounding is expected and correct. Positive is the port side of the leg direction. Complements the upwind-lane chart above, which uses a fixed start → 1BI reference on a distance-sailed axis.' },
@@ -37,17 +37,28 @@ window.__COPY__ = {
     },
     // appended when division scoping hides selected boats ({n}/{s}/{cls} slots)
     noteDivision: '<b>{n} selected boat{s} hidden</b> — corrected times are never compared across scoring divisions ({cls} reference); switch to Elapsed for boat-for-boat.',
+    // appended when a cross-course boat is hidden (Lucky, Cows-finish variant)
+    noteCrossCourse: '<b>{n} selected boat{s} hidden</b> — scored on a different course variant (Cows finish), so its times are never compared here.',
   },
   sog: {},
-  controlsHint: 'Sets the x-axis on the offset and speed charts. <b>Distance</b> lines every boat up on the same water; <b>clock</b> shows what was happening when.',
+  // distspeed captions (shared shell module; slots authored per race — no
+  // analysis claims, mechanics only; course numbers are the KPI/footer facts)
+  distspeed: {
+    noteElapsed: 'Each dot is a scored boat — how far it actually sailed against how fast it went (distance sailed ÷ official elapsed time). The grey rays through the origin are lines of equal elapsed time: boats on the same ray covered their water in the same time, and up-and-left is faster on the water, before handicap. The dashed line is the official 186-nm course length; the routed course line measures 188.7 nm, so every track sails beyond it.',
+    noteCorrected: 'The same picture on <b>corrected</b> time — distance sailed ÷ each boat\'s official corrected time, so the grey rays are lines of equal <b>corrected result</b>. ORC and PHRF corrected times come from different rating systems and are never comparable to each other here — read each division against its own peers; Lucky (Cows-finish course variant) compares with nobody on this page.',
+    refLine: 'official course 186 nm',
+    vsRef: 'vs the official length',
+    xNote: 'right of the dashed line is distance beyond the official 186-nm length',
+  },
+  controlsHint: 'Sets the x-axis on the offset, speed, and won-and-lost charts. <b>Distance</b> lines every boat up on the same water; <b>clock</b> shows what was happening when.',
   pills: { ghosts: 'Ghosts', rhumb: 'Course line' },
   filters: {   // NEW (shell filter row, microcopy)
     bandChip: '±{w} ({n})', bandCustomLabel: 'custom', bandApply: 'set',
     bandTitle: 'ORC ToT band around Ragana (0.9425) — true rating peers. PHRF ratings live on a different scale and never match numerically.',
   },
   morePanel: {   // NEW (shell more-panel, microcopy)
-    note: 'Tap any boat to add or remove it. Ranked by overall corrected place; ORC and PHRF are scored separately.',
-    rankedHead: 'Finishers', dnfHead: 'Retired', otherHead: 'PHRF division',
+    note: 'Tap any boat to add or remove it. Ranks are within each division — ORC and PHRF are scored separately.',
+    rankedHead: 'ORC finishers', dnfHead: 'Retired', otherHead: 'PHRF division',
   },
   emptyStates: {
     events: 'Every event category is off. Turn one on under “Boats &amp; overlays” to fill this log back in.',
@@ -62,5 +73,5 @@ window.__COPY__ = {
     <li><b>Weather note:</b> a relayed report of ~35-kt gusts Saturday night could not be verified — the Long Island Sound wind buoys were inactive for the race window. The breeze and sea clearly built sharply; the specific speed is an unconfirmed second-hand figure and is not asserted here.</li>
     <li><b>Sources:</b> YB Tracking export (53,638 positions, 58 boats, ~1-min interval); official YachtScoring results; the 2026 Sailing Instructions; Storm Trysail Club's official race report. Speed is derived from position over a centered 30-min window; distance-to-finish is routed along the ordered course line. Race timing verified EDT against six boats' official finishes.</li>
   </ul>
-  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-15</div>`,
+  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-16</div>`,
 };

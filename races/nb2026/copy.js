@@ -39,7 +39,16 @@ window.__COPY__ = {
     axisHint: 'Distance to finish (nm) ⟵ (grey = park zone, red = dead core)',
     axisHintNarrow: 'nm to finish ⟵ (grey = park, red = dead core)',
   },
-  controlsHint: 'Sets the x-axis on the rhumb-offset and speed charts. <b>Distance</b> lines every boat up on the same water; <b>clock</b> shows what was happening when.',
+  // distspeed captions (moved verbatim from the shared module 2026-07-15 —
+  // the module is shell-shared and must not carry race narrative)
+  distspeed: {
+    noteElapsed: 'The prime directive of long-distance racing, drawn: every mile off the rhumb is an investment that must be repaid in boatspeed. Each dot is a scored St. David’s boat — how far it actually sailed (the vertical line is the 635 nm rhumb, the theoretical minimum) against how fast it went (distance sailed ÷ official elapsed, so the grey rays through the origin are lines of equal finish time — boats on the same ray finished the same water in the same time, and up-and-left wins). Distance right of the line is miles a boat chose, or was forced, to sail beyond the direct course; height above the ray it started on is speed that paid for them. RAGANA bought 52 extra miles; this chart shows who bought their miles cheaply and who paid for miles that never paid back. (Boudicca, a much larger Class-8 boat, is a genuine speed outlier and sits off the top of the elapsed scale — not a peer; switch to corrected to see the fleet on one scale.)',
+    noteCorrected: 'The same picture on <b>corrected</b> time — distance sailed ÷ each boat’s official corrected time, so the grey rays are lines of equal <b>corrected result</b> (the actual scoreboard). Handicap pulls the fleet together: the fast boats that ran away on elapsed time come back to the pack here, and up-and-left is a better finish. RAGANA’s 52 extra miles cost the same on either clock; what changes is who she’s measured against.',
+    refLine: 'rhumb 635.1 nm — minimum distance',
+    vsRef: 'vs rhumb',
+    xNote: 'right of the dashed line is miles beyond the rhumb',
+  },
+  controlsHint: 'Sets the x-axis on the rhumb-offset, speed, and won-and-lost charts. <b>Distance</b> lines every boat up on the same water; <b>clock</b> shows what was happening when.',
   pills: { ghosts: 'Ghosts', rhumb: 'Rhumb line' },
   filters: {
     noSuchClass: 'No class “{x}” in the record.',

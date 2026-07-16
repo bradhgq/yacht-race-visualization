@@ -29,7 +29,9 @@ function buildSOG() {
     });
   }
   const dec = eventDecor(c.eventTopY); if (dec.marker) tr.push(dec.marker);
-  const wl = watchLegend(); if (wl && S.axis === 't') tr.push(wl);
+  // watch bands render on BOTH axes (evX maps them onto distance), so the
+  // legend entry is unconditional — the same guard as the sibling xte/dtf
+  const wl = watchLegend(); if (wl) tr.push(wl);
   let shapes = [...overlayShapes(), ...dec.shapes];
   const park = CFG.charts.parkShading;
   if (park && S.axis === 'd') shapes = shapes.concat([

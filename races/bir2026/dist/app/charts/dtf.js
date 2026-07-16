@@ -21,7 +21,7 @@ function buildDTF() {
       t1 = (b === 0 ? Date.parse(D.boats[HERO].meta.fin.replace(' ', 'T') + offStr(CFG.time.utcOffset)) / 1000 : heroT(b));
     if (i > 0) shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: tzS(t0), x1: tzS(t0), y0: 0, y1: 1, line: { color: '#B9CBD4', width: 1 } });
     if (!narrow()) ann.push({ x: tzS((t0 + t1) / 2), y: 1.05, xref: 'x', yref: 'paper', text: l, showarrow: false,
-      font: { size: 8.5, color: '#4C6274', family: 'SF Mono, Menlo, monospace' } });
+      font: { ...AXFONT, size: 8.5 } });
   });
   react('dtf', tr, { ...BASE(), shapes, annotations: ann, margin: { ...BASE().margin, t: 22, b: 36 },
     xaxis: { ...GAX, tickformat: '%a %H:%M', type: 'date' },

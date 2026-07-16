@@ -17,7 +17,7 @@
 <meta name="twitter:title" content="RAGANA · Newport Bermuda 2026 · Race Analysis">
 <meta name="twitter:description" content="A crew's-eye reconstruction of the 2026 Newport Bermuda Race from the YB tracker and the nav log.">
 <meta name="twitter:image" content="https://hgq.fyi/ragana-newport-bermuda-2026/og.png">
-<link rel="icon" href="favicon.svg?v=cf27ee1ed0" type="image/svg+xml">
+<link rel="icon" href="favicon.svg?v=5055081eb8" type="image/svg+xml">
 <style>
 /* Design tokens — the chart-paper / NOAA-chart identity (RETROSPECTIVE §3).
    Race-agnostic except --magenta, the HERO ACCENT: per-boat re-skin = change
@@ -278,7 +278,7 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
 <section class="controls" id="controls" aria-label="Boat and overlay controls" hidden>
   <div class="ctl-head">
     <span class="ctl-title">Compare boats &amp; overlays</span>
-    <button class="ctl-collapse" id="ctlCollapse" aria-expanded="true">Hide controls ▲</button>
+    <button type="button" class="ctl-collapse" id="ctlCollapse" aria-expanded="true">Hide controls ▲</button>
   </div>
   <div id="ctlBody">
     <div class="ctl-row"><div class="ctl-label big">Groups</div><div class="chips big" id="grpbtns"></div></div>
@@ -290,10 +290,10 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
       <div class="ctl-label">Time axis</div>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <div class="axis-toggle" id="axisToggle">
-          <button data-ax="t">By clock time</button>
-          <button data-ax="d">By distance to finish</button>
+          <button type="button" data-ax="t">By clock time</button>
+          <button type="button" data-ax="d">By distance to finish</button>
         </div>
-        <span class="ctl-hint">Sets the x-axis on the rhumb-offset and speed charts. <b>Distance</b> lines every boat up on the same water; <b>clock</b> shows what was happening when.</span>
+        <span class="ctl-hint">Sets the x-axis on the rhumb-offset, speed, and won-and-lost charts. <b>Distance</b> lines every boat up on the same water; <b>clock</b> shows what was happening when.</span>
       </div>
     </div>
   </div>
@@ -315,7 +315,7 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
 </section>
 
 <section class="card">
-  <div class="hd"><h2>The race</h2><span class="tools" style="color:var(--ink2)">x-axis: clock time</span></div>
+  <div class="hd"><h2>The race</h2><span class="tools">x-axis: clock time</span></div>
   <div class="note" id="dtf_note">The whole race at a glance — distance still to sail, one line per boat, divided into the same phases used throughout. Steeper is faster; the Monday flattening is the light-air wall. The detailed story is in the next chart.</div>
   <div id="dtf" class="plot"></div>
   <div class="tapnote" id="tap_dtf"></div>
@@ -325,11 +325,11 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
   <div class="hd">
     <h2>Where the race was won and lost — vs <span id="refname" style="color:var(--magenta)"></span></h2>
     <span class="tools">
-      <button class="modebtn" id="mode_h">Corrected (handicap)</button>
-      <button class="modebtn" id="mode_e">Elapsed (boat-for-boat)</button>
+      <button type="button" class="modebtn" id="mode_h">Corrected (handicap)</button>
+      <button type="button" class="modebtn" id="mode_e">Elapsed (boat-for-boat)</button>
       &nbsp;·&nbsp;
-      <button class="modebtn" id="view_p">Pace (min/100nm)</button>
-      <button class="modebtn" id="view_t">Total (min)</button>
+      <button type="button" class="modebtn" id="view_p">Pace (min/100nm)</button>
+      <button type="button" class="modebtn" id="view_t">Total (min)</button>
       &nbsp;·&nbsp; <label for="refsel">Reference</label> <select id="refsel"></select>
     </span>
   </div>
@@ -346,7 +346,7 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
 </section>
 
 <section class="card" id="sec_distspeed" hidden>
-  <div class="hd"><h2></h2><span class="tools"><button class="modebtn" id="mtog_distspeed_e">Elapsed</button><button class="modebtn" id="mtog_distspeed_h">Corrected</button></span></div>
+  <div class="hd"><h2></h2><span class="tools"><button type="button" class="modebtn" id="mtog_distspeed_e">Elapsed</button><button type="button" class="modebtn" id="mtog_distspeed_h">Corrected</button></span></div>
   <div class="note"></div>
   <div id="distspeed" data-mount></div>
   <div class="tapnote" id="tap_distspeed"></div>
@@ -360,7 +360,7 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
   <div class="tapnote" id="tap_xte"></div>
 </section>
 <section class="card">
-  <div class="hd"><h2>Speed over ground</h2><span class="tools"><button class="modebtn" id="sogm_s">SOG</button><button class="modebtn" id="sogm_v">VMC (toward finish)</button>&nbsp;·&nbsp;<span id="sog_axnote"></span></span></div>
+  <div class="hd"><h2>Speed over ground</h2><span class="tools"><button type="button" class="modebtn" id="sogm_s">SOG</button><button type="button" class="modebtn" id="sogm_v">VMC (toward finish)</button>&nbsp;·&nbsp;<span id="sog_axnote"></span></span></div>
   <div class="note" id="sog_note">30-minute smoothed GPS speed. Switch the axis to <b>distance</b> to line every boat up on the same stretch of ocean — the fair way to compare the park. The speedo failure early Monday is invisible here because this speed is GPS-derived, which is exactly why steering to it worked when the paddlewheel quit.</div>
   <div id="sog" class="plot"></div>
   <div class="tapnote" id="tap_sog"></div>
@@ -404,7 +404,7 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
   <ul>
     <li>NOAA Gulf Stream overlay · GFS wind underlay · animated time scrubber · synced hover across charts.</li>
   </ul>
-  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-15</div>
+  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-16</div>
 </footer>
 
 </div>
@@ -560,7 +560,7 @@ const plotlyReady = new Promise(res => {
   else go();
 });
 
-function dataURL(name) { return 'data/' + name + '?v=cf27ee1ed0'; }
+function dataURL(name) { return 'data/' + name + '?v=5055081eb8'; }
 async function loadJSON(name) {
   const r = await fetch(dataURL(name));
   if (!r.ok) throw new Error(name + ': HTTP ' + r.status);
@@ -629,7 +629,7 @@ function eventDecor(topY, mode) {
   const shapes = evs.map(e => ({ type: 'line', xref: 'x', yref: 'paper', x0: X(e.t), x1: X(e.t), y0: 0, y1: 1,
     line: { color: EVCAT[e.cat].c, width: 1, dash: 'dot' }, opacity: .5 }));
   const marker = evs.length ? { x: evs.map(e => X(e.t)), y: evs.map(() => topY), mode: 'markers',
-    marker: { symbol: evs.map(e => EVCAT[e.cat].sym), size: evs.map(e => CFG.eventCategories[e.cat].big ? 12 : 9),
+    marker: { symbol: evs.map(e => EVCAT[e.cat].sym), size: evs.map(e => EVCAT[e.cat].big ? 12 : 9),
       color: evs.map(e => EVCAT[e.cat].c), line: { width: 1, color: '#fff' } },
     text: evs.map(e => wrapText(`${e.label} · ${fmtS(e.t)} ${CFG.time.tzLabel} · ${Math.round(heroDTFat(e.t))} nm to go — ${e.txt}`)),
     hoverinfo: 'text', showlegend: false } : null;
@@ -671,7 +671,7 @@ function seriesTraces(valueKey, widthFn) {
     for (let i = 0; i < b.t.length; i++) { xs.push(axVal(b, i)); ys.push(b[valueKey][i]); }
     tr.push({ x: xs, y: ys, mode: 'lines', name: nm, showlegend: valueKey === 'dtf',
       line: { color: boatColor[nm], width: widthFn(nm) }, opacity: nm === HERO ? 1 : .82,
-      hovertemplate: `${nm} · %{x}${S.axis === 't' ? '' : ' nm'} · %{y}${SERIES_UNIT[valueKey] ?? ''}<extra></extra>` });
+      hovertemplate: `${nm} · %{x}${S.axis === 't' ? '' : ' nm to go'} · %{y}${SERIES_UNIT[valueKey] ?? ''}<extra></extra>` });
   }
   return tr;
 }
@@ -680,6 +680,9 @@ function seriesTraces(valueKey, widthFn) {
 function makeCtx(el) {
   return {
     D, S, cfg: CFG, el,
+    copy: COPY,   // additive ABI field (2026-07-15): shared modules read their
+                  // per-race captions from COPY.<module id> — narrative never
+                  // lives in shared module code (found shipping NB copy on BIR)
     h: { tzStr: tzS, fmt: fmtS, parseDur, hitTime, startOf: startS, wrapText,
          axVal, evX, sharedXaxis, eventDecor, watchLegend,
          heroT, heroDTFat,
@@ -731,21 +734,24 @@ function flush() {
   for (const c of todo) {
     if (PLOTLY_CHARTS.has(c) && !chartsOK) continue;
     BUILDERS[c]();
-    if (PLOTLY_CHARTS.has(c)) attachTap(c);
+    if (PLOTLY_CHARTS.has(c)) { attachTap(c); tapAffordance(c); }
   }
 }
 
 /* tap-to-inspect: click equivalent of hover, for touch */
 const tapped = new Set();
+/* on touch widths, advertise the tap affordance until the first tap replaces
+   it — evaluated on every render (not just first attach) so crossing the
+   breakpoint desktop→mobile still advertises it */
+function tapAffordance(id) {
+  if (!narrow()) return;
+  const el = document.getElementById('tap_' + id);
+  if (el && !el.classList.contains('show')) { el.textContent = 'Tap any point for details.'; el.classList.add('show'); }
+}
 function attachTap(id) {
   if (tapped.has(id)) return; tapped.add(id);
   const gd = document.getElementById(id);
   if (!gd || !gd.on) return;
-  // on touch widths, advertise the tap affordance until the first tap replaces it
-  if (narrow()) {
-    const el = document.getElementById('tap_' + id);
-    if (el && !el.classList.contains('show')) { el.textContent = 'Tap any point for details.'; el.classList.add('show'); }
-  }
   gd.on('plotly_click', ev => {
     const p = ev.points && ev.points[0]; if (!p) return;
     let txt = p.hovertext || (typeof p.text === 'string' ? p.text : '');
@@ -857,6 +863,15 @@ function setBand(min, max, key) {
 }
 
 function buildControls() {
+  // an async render('boats') (e.g. a lazy track fetch settling) rebuilds this
+  // whole panel — carry in-progress filter input text and focus across it
+  const keepInputs = {};
+  for (const id of ['clsInput', 'bandMin', 'bandMax']) {
+    const el = document.getElementById(id);
+    if (el && (el.value || document.activeElement === el))
+      keepInputs[id] = { v: el.value, focus: document.activeElement === el,
+                         s: el.selectionStart, e: el.selectionEnd };
+  }
   const chips = document.getElementById('chips'); chips.innerHTML = '';
   // chip row = quick groups + hand-picked cross-division extras (groups.chipExtras);
   // the rank tag reads groups.chipRank ('sdl' overall, default | 'clsPos' in-class)
@@ -961,6 +976,12 @@ function buildControls() {
   // hide the whole Filter row if neither filter is configured
   const filterRow = document.getElementById('filterRow');
   if (filterRow) filterRow.style.display = (CFG.classFilter || CFG.ratingBands) ? '' : 'none';
+  for (const [id, k] of Object.entries(keepInputs)) {   // restore in-progress input
+    const el = document.getElementById(id);
+    if (!el) continue;
+    if (k.v && !el.value) el.value = k.v;
+    if (k.focus) { el.focus({ preventScroll: true }); try { el.setSelectionRange(k.s, k.e); } catch (e) { /* number inputs */ } }
+  }
 
   const ov = document.getElementById('overlays'); ov.innerHTML = '';
   const add = (label, color, get, set) => { ov.appendChild(makeChip(label, color, get(), () => { set(!get()); }, false, 'pill')); };
@@ -979,8 +1000,17 @@ function buildControls() {
   }
 
   const sel = document.getElementById('refsel'); sel.innerHTML = '';
+  // reference candidates: never a cross-course boat (its times are not
+  // comparable at all), and in division-scoped races never a boat outside the
+  // hero's division — another division's meta.tcf may not even be a ToT
+  // multiplier (BIR PHRF stores raw sec/mi), so corrected milestone math would
+  // render garbage against it (2026-07-15 review)
+  const crossRef = new Set(CFG.race.crossCourse || []);
+  const heroCls = D.boats[HERO].meta.cls;
   for (const nm of ORDER) {
     if (!D.boats[nm].meta.tcf) continue;
+    if (crossRef.has(nm)) continue;
+    if (CFG.race.divisionScoped && D.boats[nm].meta.cls !== heroCls) continue;
     const o = document.createElement('option'); o.value = nm;
     // division-scoped races label each candidate with its scoring division
     o.textContent = (CFG.race.divisionScoped && D.boats[nm].meta.cls)
@@ -988,9 +1018,12 @@ function buildControls() {
     if (nm === S.ref) o.selected = true; sel.appendChild(o);
   }
   sel.onchange = e => {
-    const prev = S.ref; S.ref = e.target.value;
+    // fall back to a reference that HAS a track — after two rapid changes the
+    // previous value may itself be a still-trackless boat (I13)
+    const prev = hasTrack(S.ref) ? S.ref : CFG.defaults.ref;
+    S.ref = e.target.value;
     if (!hasTrack(S.ref)) ensureTracks(S.ref).then(() => render('race'))
-      .catch(() => { S.ref = prev; render('race'); });   // fetch failed: fall back to the old reference (I13)
+      .catch(() => { S.ref = prev; render('race'); });   // fetch failed: revert (I13)
     render('race');
   };
   bindMode('mode_h', 'h', 'raceMode'); bindMode('mode_e', 'e', 'raceMode');
@@ -1064,7 +1097,12 @@ function buildMorePanel() {
       <span class="more-rank">${b.meta.sdl ? '#' + b.meta.sdl : '—'}</span><span class="more-name">${nm}</span>
       <span class="more-type">${b.meta.typ || ''}</span><span class="more-corr">${b.meta.corr || (b.meta.retireReason ? 'DNF' : '—')}</span></button>`;
   };
-  const ranked = ORDER.filter(nm => D.boats[nm].meta.sdl != null).sort((a, b) => D.boats[a].meta.sdl - D.boats[b].meta.sdl);
+  // the three buckets must be disjoint: BIR's PHRF boats carry BOTH a rank
+  // (meta.sdl) and grp === outsideKey, so rank alone would list them twice and
+  // interleave two divisions' rank scales in one "ranked" column
+  const ranked = ORDER.filter(nm => D.boats[nm].meta.sdl != null
+    && D.boats[nm].meta.grp !== CFG.groups.dnfKey
+    && D.boats[nm].meta.grp !== CFG.groups.outsideKey).sort((a, b) => D.boats[a].meta.sdl - D.boats[b].meta.sdl);
   const dnf = ORDER.filter(nm => D.boats[nm].meta.grp === CFG.groups.dnfKey);
   const others = ORDER.filter(nm => D.boats[nm].meta.grp === CFG.groups.outsideKey);
   panel.innerHTML = `${trackLoadErr ? `<div class="note" style="color:#A33;margin-bottom:6px">${trackLoadErr}</div>` : ''}
@@ -1303,9 +1341,9 @@ function buildMap() {
   }
   tr.push(...overlayMapTraces('top'));
   tr.push({ x: [D.start[1]], y: [D.start[0]], mode: 'markers+text', marker: { symbol: 'circle', size: 10, color: '#17293A' },
-    text: [course.startLabel], textposition: narrow() ? 'middle right' : 'top center', textfont: { size: 10, family: 'SF Mono, Menlo, monospace' }, showlegend: false, hoverinfo: 'skip' });
+    text: [course.startLabel], textposition: narrow() ? 'middle right' : 'top center', textfont: { family: AXFONT.family, size: 10 }, showlegend: false, hoverinfo: 'skip' });
   tr.push({ x: [D.fin[1]], y: [D.fin[0]], mode: 'markers+text', marker: { symbol: 'square', size: 10, color: '#17293A' },
-    text: [course.finishLabel], textposition: narrow() ? 'middle left' : 'bottom center', textfont: { size: 10, family: 'SF Mono, Menlo, monospace' }, showlegend: false, hoverinfo: 'skip' });
+    text: [course.finishLabel], textposition: narrow() ? 'middle left' : 'bottom center', textfont: { family: AXFONT.family, size: 10 }, showlegend: false, hoverinfo: 'skip' });
   // phase labels: thin leader lines from empty corners to the hero's track at each phase midpoint
   const posAtDTF = m => {
     for (let i = 0; i < rb.dtf.length; i++) { if (rb.dtf[i] <= m) return [rb.lon[i], rb.lat[i]]; }
@@ -1317,7 +1355,7 @@ function buildMap() {
     const [x, y] = posAtDTF(m);
     return { x, y, ax, ay, xref: 'x', yref: 'y', text: txt, showarrow: true, arrowhead: 0, arrowwidth: .7,
       arrowcolor: 'rgba(81,103,122,0.55)', standoff: 3,
-      font: { size: 8.5, color: '#4C6274', family: 'SF Mono, Menlo, monospace' }, align: 'left' };
+      font: { ...AXFONT, size: 8.5 }, align: 'left' };
   });
   mapAnn.push(...(CFG.mapAnnotations || []));   // raw authored annotations (geo labels etc.)
 
@@ -1374,7 +1412,7 @@ function buildDTF() {
       t1 = (b === 0 ? Date.parse(D.boats[HERO].meta.fin.replace(' ', 'T') + offStr(CFG.time.utcOffset)) / 1000 : heroT(b));
     if (i > 0) shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: tzS(t0), x1: tzS(t0), y0: 0, y1: 1, line: { color: '#B9CBD4', width: 1 } });
     if (!narrow()) ann.push({ x: tzS((t0 + t1) / 2), y: 1.05, xref: 'x', yref: 'paper', text: l, showarrow: false,
-      font: { size: 8.5, color: '#4C6274', family: 'SF Mono, Menlo, monospace' } });
+      font: { ...AXFONT, size: 8.5 } });
   });
   react('dtf', tr, { ...BASE(), shapes, annotations: ann, margin: { ...BASE().margin, t: 22, b: 36 },
     xaxis: { ...GAX, tickformat: '%a %H:%M', type: 'date' },
@@ -1396,13 +1434,16 @@ const raceX = m => S.axis === 't'
   : m;
 
 function buildRace() {
-  document.getElementById('refname').textContent = S.ref;
+  // #refname is authored into the section title by each race's copy — guard
+  // rather than assume the slot exists in every race's title string
+  const refnameEl = document.getElementById('refname');
+  if (refnameEl) refnameEl.textContent = S.ref;
   if (!hasTrack(S.ref)) {
     // reference's track still downloading — blank the chart rather than leave
     // the previous reference's traces under the new header (I13)
     react('race', [], { ...BASE(), xaxis: { ...GAX, visible: false }, yaxis: { ...GAX, visible: false },
       annotations: [{ text: 'loading ' + S.ref + '’s track…', xref: 'paper', yref: 'paper', x: .5, y: .5, showarrow: false,
-        font: { size: 12, color: '#4C6274', family: 'SF Mono, Menlo, monospace' } }] });
+        font: { ...AXFONT, size: 12 } }] });
     return;
   }
   const EVCAT = CFG.eventCategories, R = CFG.race, rhumb = CFG.course.rhumbNm;
@@ -1416,13 +1457,13 @@ function buildRace() {
   // variant (race.crossCourse) are never compared at all. Hidden boats are
   // counted and disclosed in the note below the header.
   const crossCourse = new Set(R.crossCourse || []);
-  let hidden = 0;
+  let hiddenDiv = 0, hiddenCross = 0;   // disclosed separately — different reasons
   const tr = [];
   for (const nm of ORDER) {
     if (!S.boats.has(nm) || !hasTrack(nm)) continue; const b = D.boats[nm];
     if (S.raceMode === 'h' && !b.meta.tcf) continue; if (!b.meta.el) continue;
-    if (crossCourse.has(nm)) { hidden++; continue; }
-    if (R.divisionScoped && S.raceMode === 'h' && b.meta.cls !== ref.meta.cls) { hidden++; continue; }
+    if (crossCourse.has(nm)) { hiddenCross++; continue; }
+    if (R.divisionScoped && S.raceMode === 'h' && b.meta.cls !== ref.meta.cls) { hiddenDiv++; continue; }
     const st = startS(b), tcf = b.meta.tcf || 1;
     const xs = [], ys = [];
     if (R.startAnchor) { xs.push(raceX(R.startAnchor)); ys.push(0); }   // gap is 0 at the gun by construction
@@ -1436,17 +1477,24 @@ function buildRace() {
     let fin = ((S.raceMode === 'h' ? parseDur(b.meta.corr) : parseDur(b.meta.el)) - refFin) / 60;
     if (pace) fin = fin / rhumb * 100;
     xs.push(raceX(0)); ys.push(fin);
-    tr.push({ x: xs, y: ys, mode: 'lines+markers', name: nm, connectgaps: false, marker: { size: xs.map((x, i) => i === xs.length - 1 ? 7 : 0) },
+    // the start anchor gets a visible dot: in pace view the paceMinDone guard
+    // nulls the points right after it, so a size-0 anchor is invisible and the
+    // "gap is 0 at the gun" anchor (R9e) never reads
+    tr.push({ x: xs, y: ys, mode: 'lines+markers', name: nm, connectgaps: false,
+      marker: { size: xs.map((x, i) => i === xs.length - 1 ? 7 : (R.startAnchor && i === 0 ? 4 : 0)) },
       line: { color: boatColor[nm], width: nm === HERO ? 3 : 1.5 }, opacity: nm === HERO ? 1 : .8,
       hovertemplate: `${nm} · %{x}${S.axis === 't' ? '' : ' nm to go'} · %{y:.1f} ${pace ? 'min/100nm' : 'min'} vs ${S.ref}<extra></extra>` });
   }
   const shapes = [], ann = [];
   const top = CFG.phases.length ? CFG.phases[0][0] : 0;
+  // final phase's right edge on the time axis = the hero's OFFICIAL finish
+  // (same convention as the DTF chart), not an arbitrary near-finish milestone
+  const heroFinE = Date.parse(D.boats[HERO].meta.fin.replace(' ', 'T') + offStr(CFG.time.utcOffset)) / 1000;
   CFG.phases.forEach(([a, b, l], i) => {
     const x0 = raceX(a === top ? a - 1 : a), x1 = raceX(b === 0 ? 1 : b);
     shapes.push({ type: 'rect', xref: 'x', yref: 'paper', x0, x1, y0: 0, y1: 1, fillcolor: i % 2 ? 'rgba(23,41,58,0.028)' : 'rgba(0,0,0,0)', line: { width: 0 } });
-    if (!narrow()) ann.push({ x: S.axis === 't' ? tzS((heroT(a === top ? a - 1 : a) + heroT(b === 0 ? 2 * R.milestoneStep : b)) / 2) : (a + b) / 2,
-      y: 1.03, xref: 'x', yref: 'paper', text: l, showarrow: false, font: { size: 9, color: '#4C6274', family: 'SF Mono, Menlo, monospace' } });
+    if (!narrow()) ann.push({ x: S.axis === 't' ? tzS((heroT(a === top ? a - 1 : a) + (b === 0 ? heroFinE : heroT(b))) / 2) : (a + b) / 2,
+      y: 1.03, xref: 'x', yref: 'paper', text: l, showarrow: false, font: { ...AXFONT, size: 9 } });
   });
   shapes.push(...overlayShapes());
   ann.push(...overlayAnnotations());
@@ -1462,12 +1510,16 @@ function buildRace() {
     xaxis: sharedXaxis(narrow() ? { title: undefined } : undefined),
     yaxis: { ...GAX, title: { text: yTitle, font: AXFONT } },
     yaxis2: { overlaying: 'y', side: 'right', range: [0, R.eventRowY + 1], visible: false, fixedrange: true } });
-  // the note is authored copy per mode; division-scoped races append the
-  // hidden-boat disclosure ({n}/{cls} slots in COPY.race.noteDivision)
+  // the note is authored copy per mode; each hide reason gets its own
+  // disclosure ({n}/{s}/{cls} slots) — folding cross-course hides into the
+  // division sentence would misstate why the boat is missing
   let note = COPY.race.notes[S.raceMode];
-  if (hidden && COPY.race.noteDivision)
-    note += ' ' + COPY.race.noteDivision.replace('{n}', hidden)
-      .replace('{s}', hidden > 1 ? 's' : '').replace('{cls}', ref.meta.cls || '');
+  if (hiddenDiv && COPY.race.noteDivision)
+    note += ' ' + COPY.race.noteDivision.replace('{n}', hiddenDiv)
+      .replace('{s}', hiddenDiv > 1 ? 's' : '').replace('{cls}', ref.meta.cls || '');
+  if (hiddenCross && COPY.race.noteCrossCourse)
+    note += ' ' + COPY.race.noteCrossCourse.replace('{n}', hiddenCross)
+      .replace('{s}', hiddenCross > 1 ? 's' : '');
   document.getElementById('racenote').innerHTML = note;
 }
 
@@ -1519,7 +1571,9 @@ function buildSOG() {
     });
   }
   const dec = eventDecor(c.eventTopY); if (dec.marker) tr.push(dec.marker);
-  const wl = watchLegend(); if (wl && S.axis === 't') tr.push(wl);
+  // watch bands render on BOTH axes (evX maps them onto distance), so the
+  // legend entry is unconditional — the same guard as the sibling xte/dtf
+  const wl = watchLegend(); if (wl) tr.push(wl);
   let shapes = [...overlayShapes(), ...dec.shapes];
   const park = CFG.charts.parkShading;
   if (park && S.axis === 'd') shapes = shapes.concat([
@@ -1644,7 +1698,8 @@ window.__RACE_CONFIG__ = {
     isoDays: [3.5, 4.0, 4.5],                                        // ELAPSED-mode rays
     isoDaysCorr: [2.2, 2.5, 2.8],                                    // CORRECTED-mode rays (times compress under TCF)
     // elapsed|corrected y-metric toggle (module toggle: buttons in the card
-    // header, state S.distMode, read by modules/distspeed.js)
+    // header, state S.distMode, read by the SHARED shell module
+    // starter/shell/app/modules/distspeed.js; captions in COPY.distspeed)
     toggle: { key: 'distMode', default: 'h',
               states: [{ v: 'e', label: 'Elapsed' }, { v: 'h', label: 'Corrected' }] },
   },
@@ -1716,7 +1771,16 @@ window.__COPY__ = {
     axisHint: 'Distance to finish (nm) ⟵ (grey = park zone, red = dead core)',
     axisHintNarrow: 'nm to finish ⟵ (grey = park, red = dead core)',
   },
-  controlsHint: 'Sets the x-axis on the rhumb-offset and speed charts. <b>Distance</b> lines every boat up on the same water; <b>clock</b> shows what was happening when.',
+  // distspeed captions (moved verbatim from the shared module 2026-07-15 —
+  // the module is shell-shared and must not carry race narrative)
+  distspeed: {
+    noteElapsed: 'The prime directive of long-distance racing, drawn: every mile off the rhumb is an investment that must be repaid in boatspeed. Each dot is a scored St. David’s boat — how far it actually sailed (the vertical line is the 635 nm rhumb, the theoretical minimum) against how fast it went (distance sailed ÷ official elapsed, so the grey rays through the origin are lines of equal finish time — boats on the same ray finished the same water in the same time, and up-and-left wins). Distance right of the line is miles a boat chose, or was forced, to sail beyond the direct course; height above the ray it started on is speed that paid for them. RAGANA bought 52 extra miles; this chart shows who bought their miles cheaply and who paid for miles that never paid back. (Boudicca, a much larger Class-8 boat, is a genuine speed outlier and sits off the top of the elapsed scale — not a peer; switch to corrected to see the fleet on one scale.)',
+    noteCorrected: 'The same picture on <b>corrected</b> time — distance sailed ÷ each boat’s official corrected time, so the grey rays are lines of equal <b>corrected result</b> (the actual scoreboard). Handicap pulls the fleet together: the fast boats that ran away on elapsed time come back to the pack here, and up-and-left is a better finish. RAGANA’s 52 extra miles cost the same on either clock; what changes is who she’s measured against.',
+    refLine: 'rhumb 635.1 nm — minimum distance',
+    vsRef: 'vs rhumb',
+    xNote: 'right of the dashed line is miles beyond the rhumb',
+  },
+  controlsHint: 'Sets the x-axis on the rhumb-offset, speed, and won-and-lost charts. <b>Distance</b> lines every boat up on the same water; <b>clock</b> shows what was happening when.',
   pills: { ghosts: 'Ghosts', rhumb: 'Rhumb line' },
   filters: {
     noSuchClass: 'No class “{x}” in the record.',
@@ -1745,7 +1809,7 @@ window.__COPY__ = {
   <ul>
     <li>NOAA Gulf Stream overlay · GFS wind underlay · animated time scrubber · synced hover across charts.</li>
   </ul>
-  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-15</div>`,
+  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-16</div>`,
 };
 
 </script>
@@ -1828,7 +1892,8 @@ registerModule({
     const anchors = ['left', 'right'];
     const hyp = cfg.finstrip.whatIfHours.map((hh, i) => {
       const cut = rag.sec - hh * 3600, rank = 1 + rows.filter(r => r.sec < cut).length;
-      return { x: hrs(rag) - hh, anchor: anchors[i % 2], lbl: `−${hh} h → ~${rank}th` };
+      const ord = n => n + (n % 10 === 1 && n % 100 !== 11 ? 'st' : n % 10 === 2 && n % 100 !== 12 ? 'nd' : n % 10 === 3 && n % 100 !== 13 ? 'rd' : 'th');
+      return { x: hrs(rag) - hh, anchor: anchors[i % 2], lbl: `−${hh} h → ~${ord(rank)}` };
     });
     const shapes = hyp.map(o => ({ type: 'line', xref: 'x', yref: 'paper', x0: o.x, x1: o.x, y0: .10, y1: .86,
       line: { color: cfg.hero.color, width: 1, dash: 'dash' }, opacity: .6 }));
@@ -1857,8 +1922,15 @@ registerModule({
      elapsed   — y = meta.avgKt; rays = equal elapsed time (position on the water)
      corrected — y = sailedNm ÷ official corrected time; rays = equal corrected result
    One dot per scored boat; grey rays = equal finish time; vertical line = the
-   rhumb (theoretical minimum distance). kind:plot, so the layout rides the
-   shell's react() wrapper (I6 for free). */
+   race's reference length (cfg.course.rhumbNm). kind:plot, so the layout rides
+   the shell's react() wrapper (I6 for free).
+
+   This is a SHARED shell module: every caption and reference-line label is
+   authored per race in COPY.distspeed (ctx.copy) — narrative never lives here
+   (2026-07-15 review: the module was shipping NB2026 claims on the BIR page).
+   Slots: noteElapsed / noteCorrected (the card caption per mode),
+   refLine (the vertical-line annotation), vsRef (hover suffix for the
+   sailed-beyond-reference delta), xNote (wide-screen x-axis title tail). */
 "use strict";
 
 registerModule({
@@ -1873,6 +1945,7 @@ registerModule({
   },
   build(ctx) {
     const { D, S, h, cfg } = ctx, hero = cfg.hero.name;
+    const dsCopy = (ctx.copy && ctx.copy.distspeed) || {};
     const corrected = S.distMode === 'h';   // elapsed | corrected
     const rows = [];
     for (const nm of Object.keys(D.boats)) {
@@ -1883,15 +1956,16 @@ registerModule({
       const y = corrected ? m.sailedNm / (h.parseDur(m.corr) / 3600) : m.avgKt;
       rows.push({ nm, x: m.sailedNm, y: +y.toFixed(2), sdl: m.sdl, el: m.el, corr: m.corr });
     }
+    if (!rows.length) return null;
     const rhumb = cfg.course.rhumbNm;
     const xs = rows.map(r => r.x);
     const x0 = Math.min(rhumb, ...xs) - 10, x1 = Math.max(...xs) + 10;
 
-    // Mode-aware outlier clamp: a much-faster boat (Boudicca, a big Class-8
-    // boat) sits far above the pack on the ELAPSED axis and squashes everyone
-    // else; peel such points off the y-range and label them at the edge rather
-    // than let one dot flatten the comparison. Under CORRECTED time the fleet
-    // pulls together (handicap), so nothing peels.
+    // Mode-aware outlier clamp: a much-faster boat sits far above the pack on
+    // the ELAPSED axis and squashes everyone else; peel such points off the
+    // y-range and label them at the edge rather than let one dot flatten the
+    // comparison. Under CORRECTED time the fleet pulls together (handicap),
+    // so nothing peels.
     const sortedY = rows.map(r => r.y).sort((a, b) => a - b);
     let hiCut = sortedY[sortedY.length - 1];
     for (let i = sortedY.length - 1; i > 2; i--) {
@@ -1902,21 +1976,25 @@ registerModule({
     const inRange = rows.filter(r => r.y <= hiCut);
     const y0 = Math.min(...inRange.map(r => r.y)) - 0.35, y1 = hiCut + 0.35;
 
+    // a hero without scored meta (e.g. a DNF hero has no corr) simply has no
+    // dot — never dereference a missing row
     const rag = rows.find(r => r.nm === hero);
     const others = rows.filter(r => r.nm !== hero);
     const tbase = corrected ? 'corrected' : 'elapsed';
-    const hover = r => `#${r.sdl} ${r.nm} · ${r.x} nm sailed (+${(r.x - rhumb).toFixed(1)} vs rhumb) · ` +
-      `${r.y} kt (${tbase})${r.nm === S.ref ? ' · reference' : ''}`;
+    const vsRef = dsCopy.vsRef || 'vs minimum';
+    const hover = r => `#${r.sdl} ${r.nm} · ${r.x} nm sailed (+${(r.x - rhumb).toFixed(1)} ${vsRef}) · ` +
+      `${r.y} kts (${tbase})${r.nm === S.ref ? ' · reference' : ''}`;
     // all boats stay in the trace data (dots may clip above the clamped range);
     // Plotly clips display only, so the scored-boat count is unchanged (harness)
     const traces = [
       { x: others.map(r => r.x), y: others.map(r => r.y), mode: 'markers',
         marker: { size: 7, color: others.map(r => S.boats.has(r.nm) ? h.boatColor[r.nm] : 'rgba(110,139,152,0.45)'),
           line: { width: others.map(r => r.nm === S.ref ? 2 : 1), color: others.map(r => r.nm === S.ref ? '#17293A' : '#fff') } },
-        text: others.map(hover), hoverinfo: 'text', showlegend: false },
+        text: others.map(hover), hoverinfo: 'text', showlegend: false }];
+    if (rag) traces.push(
       { x: [rag.x], y: [rag.y], mode: 'markers',
         marker: { symbol: 'diamond', size: 13, color: cfg.hero.color, line: { width: 1.5, color: '#fff' } },
-        hovertext: [hover(rag)], hoverinfo: 'text', showlegend: false }];
+        hovertext: [hover(rag)], hoverinfo: 'text', showlegend: false });
 
     // iso rays through the origin: v = d / t. Boats on a ray finished in the
     // same (elapsed | corrected) time; the label sits where the ray leaves the view.
@@ -1931,36 +2009,36 @@ registerModule({
       if (ly >= y0 && ly <= y1)
         ann.push({ x: lx, y: ly, xref: 'x', yref: 'y', text: `${days} d ${tbase}`, showarrow: false,
           xanchor: 'right', yanchor: 'bottom', xshift: -3,
-          font: { size: 9, color: '#7A93A3', family: 'SF Mono, Menlo, monospace' } });
+          font: { ...h.AXFONT, size: 9, color: '#7A93A3' } });
     }
     shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: rhumb, x1: rhumb, y0: 0, y1: 1,
       line: { color: cfg.hero.color, width: 1, dash: 'dash' }, opacity: .6 });
-    ann.push({ x: rhumb, y: .98, xref: 'x', yref: 'paper', text: `rhumb ${rhumb} nm — minimum distance`,
+    ann.push({ x: rhumb, y: .98, xref: 'x', yref: 'paper',
+      text: dsCopy.refLine || `${rhumb} nm — minimum distance`,
       showarrow: false, xanchor: 'left', xshift: 5,
-      font: { size: 9, color: cfg.hero.color, family: 'SF Mono, Menlo, monospace' } });
-    ann.push({ x: rag.x, y: rag.y, xref: 'x', yref: 'y', ax: 0, ay: -42, text: `${hero}`, showarrow: true,
+      font: { ...h.AXFONT, size: 9, color: cfg.hero.color } });
+    if (rag) ann.push({ x: rag.x, y: rag.y, xref: 'x', yref: 'y', ax: 0, ay: -42, text: `${hero}`, showarrow: true,
       arrowhead: 0, arrowwidth: .7, arrowcolor: 'rgba(194,24,126,0.55)', standoff: 8,
-      font: { size: 10, color: cfg.hero.color, family: 'SF Mono, Menlo, monospace' } });
+      font: { ...h.AXFONT, size: 10, color: cfg.hero.color } });
     // peeled outliers: labelled at the top edge so the pack keeps the full axis
     for (const o of outliers)
-      ann.push({ x: o.x, y: y1, xref: 'x', yref: 'y', text: `↑ ${o.nm} ${o.y} kt (off scale)`, showarrow: false,
+      ann.push({ x: o.x, y: y1, xref: 'x', yref: 'y', text: `↑ ${o.nm} ${o.y} kts (off scale)`, showarrow: false,
         xanchor: 'right', yanchor: 'top', yshift: -2,
-        font: { size: 9, color: '#7A93A3', family: 'SF Mono, Menlo, monospace' } });
+        font: { ...h.AXFONT, size: 9, color: '#7A93A3' } });
 
-    // per-mode caption (swapped into the card's .note); guarded so the headless
-    // test harness (stub ctx.el, no closest()) is a no-op
+    // per-mode caption from the race's authored copy (swapped into the card's
+    // .note); guarded so the headless test harness (stub ctx.el) is a no-op
     const card = ctx.el && typeof ctx.el.closest === 'function' ? ctx.el.closest('.card') : null;
     const noteEl = card && card.querySelector('.note');
-    if (noteEl) noteEl.innerHTML = corrected
-      ? 'The same picture on <b>corrected</b> time — distance sailed ÷ each boat’s official corrected time, so the grey rays are lines of equal <b>corrected result</b> (the actual scoreboard). Handicap pulls the fleet together: the fast boats that ran away on elapsed time come back to the pack here, and up-and-left is a better finish. RAGANA’s 52 extra miles cost the same on either clock; what changes is who she’s measured against.'
-      : 'The prime directive of long-distance racing, drawn: every mile off the rhumb is an investment that must be repaid in boatspeed. Each dot is a scored St. David’s boat — how far it actually sailed (the vertical line is the 635 nm rhumb, the theoretical minimum) against how fast it went (distance sailed ÷ official elapsed, so the grey rays through the origin are lines of equal finish time — boats on the same ray finished the same water in the same time, and up-and-left wins). Distance right of the line is miles a boat chose, or was forced, to sail beyond the direct course; height above the ray it started on is speed that paid for them. RAGANA bought 52 extra miles; this chart shows who bought their miles cheaply and who paid for miles that never paid back. (Boudicca, a much larger Class-8 boat, is a genuine speed outlier and sits off the top of the elapsed scale — not a peer; switch to corrected to see the fleet on one scale.)';
+    const note = corrected ? dsCopy.noteCorrected : dsCopy.noteElapsed;
+    if (noteEl && note != null) noteEl.innerHTML = note;
 
     const layout = { ...h.BASE(), shapes, annotations: ann,
       margin: { ...h.BASE().margin, t: 16, b: 44 }, showlegend: false,
       xaxis: { ...h.GAX, range: [x0, x1],
-        title: { text: h.narrow() ? 'Distance sailed (nm)' : 'Distance sailed (nm) — right of the dashed line is miles beyond the rhumb', font: h.AXFONT } },
+        title: { text: h.narrow() || !dsCopy.xNote ? 'Distance sailed (nm)' : `Distance sailed (nm) — ${dsCopy.xNote}`, font: h.AXFONT } },
       yaxis: { ...h.GAX, range: [y0, y1],
-        title: { text: `Average speed (kt) — sailed ÷ official ${tbase}`, font: h.AXFONT } } };
+        title: { text: `Average speed (kts) — sailed ÷ official ${tbase}`, font: h.AXFONT } } };
     return { traces, layout };
   },
 });

@@ -37,7 +37,7 @@ time:
   official_tz: America/New_York
   utc_offset: -4
   tz_label: EDT
-  race_start_utc: '2026-06-19 17:40:00+00:00'   # data trim: 40 min before the first warning
+  race_start_utc: '2026-06-19T17:40:00Z'   # data trim: 40 min before the first warning
   tz_probe:                     # stage-0 verified: official finish vs the track on the line
     boat: RAGANA
     official_finish_local: '2026-06-23 15:54:52'
@@ -83,7 +83,7 @@ extra_boats:                    # tracked but outside the scored division
   - { track_name: BLACK JACK 100, display: Black Jack 100, type: 100ft Maxi · line honors, group: maxi }
   - { track_name: OC 86, display: OC 86, type: Offshore multihull · outside SDL, group: maxi }
 
-grid: { minutes: 15, end_utc: '2026-06-25 12:00:00+00:00', interpolate_limit: 4 }
+grid: { minutes: 15, end_utc: '2026-06-25T12:00:00Z', interpolate_limit: 4 }
 sog: { half_window_s: 900, min_span_s: 600 }        # centered 30-min SOG window
 fleet: { resample: 1h, min_points: 5 }              # hourly ghost layer
 milestones: { start_nm: 600, step_nm: 20 }

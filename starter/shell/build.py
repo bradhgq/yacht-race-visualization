@@ -30,8 +30,8 @@ import sys
 import time
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[1]
-SHELL = REPO / 'shell'
+STARTER = Path(__file__).resolve().parents[1]   # the starter/ dir (NOT the repo root)
+SHELL = STARTER / 'shell'
 
 APP_FILES = ['app/helpers.js', 'app/tokens.js', 'app/core.js',
              'app/charts/map.js', 'app/charts/dtf.js', 'app/charts/race.js',
@@ -40,12 +40,12 @@ KEEP = ['events', 'watches', 'recon', 'parkFair', 'stats', 'start', 'fin', 'meta
 
 
 def run_tests(race_dir):
-    harness = REPO / 'tests' / 'test_dashboard.js'
+    harness = STARTER / 'tests' / 'test_dashboard.js'
     goldens = race_dir / 'tests' / 'regression.json'
     if not harness.exists():
         sys.exit(f'{harness} missing — the regression harness is a build gate (or pass --skip-tests)')
     try:
-        subprocess.run(['node', str(harness), str(race_dir), str(goldens)], cwd=REPO, check=True,
+        subprocess.run(['node', str(harness), str(race_dir), str(goldens)], cwd=STARTER, check=True,
                        env={'TZ': 'America/New_York', 'PATH': __import__('os').environ['PATH']})
     except FileNotFoundError:
         sys.exit('node not found — regression tests are a build gate (or pass --skip-tests)')
@@ -121,11 +121,14 @@ def park_copy_lint(race_dir, cfg, data):
     u4s = [pf[b]['u4'] for b in sel]
     rank_from_slow = sorted(sel, key=lambda b: -pf[b]['hrs']).index(cfg['hero']['name']) + 1
     ordinal = {1: 'slowest', 2: 'second-slowest', 3: 'third-slowest', 4: 'fourth-slowest'}
-    note = subprocess.run(
+    proc = subprocess.run(
         ['node', '-e', 'let out;const registerModule=m=>out=m,registerOverlay=()=>{};'
          f'eval(require("fs").readFileSync({str(race_dir / "modules/parkfair.js")!r},"utf8"));'
          'process.stdout.write(out.section.note)'],
-        capture_output=True, text=True).stdout
+        capture_output=True, text=True)
+    if proc.returncode != 0:   # a node failure is NOT copy/payload divergence
+        sys.exit(f'park_copy_lint: node failed reading modules/parkfair.js:\n{proc.stderr}')
+    note = proc.stdout
     kpi = next((k['sub'] for k in cfg['kpis'] if 'fastest shown' in k.get('sub', '')), '')
     errs = []
     if f'{hrs[0]}' not in kpi:
@@ -157,7 +160,7 @@ def section_html(cfg, copy):
         # buttons in the card header (state + wiring handled generically in core.js)
         tog = (cfg.get(mid) or {}).get('toggle')
         if tog:
-            btns = ''.join(f'<button class="modebtn" id="mtog_{mid}_{s["v"]}">{s["label"]}</button>'
+            btns = ''.join(f'<button type="button" class="modebtn" id="mtog_{mid}_{s["v"]}">{s["label"]}</button>'
                            for s in tog['states'])
             head = f'<div class="hd"><h2></h2><span class="tools">{btns}</span></div>'
         else:
@@ -174,14 +177,14 @@ def section_html(cfg, copy):
             return card_plot('map')
         if tok == 'dtf':
             return card_plot('dtf', f'<div class="hd"><h2>{sec["dtf"]["title"]}</h2>'
-                                    '<span class="tools" style="color:var(--ink2)">x-axis: clock time</span></div>')
+                                    '<span class="tools">x-axis: clock time</span></div>')
         if tok == 'race':
             hd = (f'<div class="hd">\n    <h2>{sec["race"]["title"]}</h2>\n    <span class="tools">\n'
-                  '      <button class="modebtn" id="mode_h">Corrected (handicap)</button>\n'
-                  '      <button class="modebtn" id="mode_e">Elapsed (boat-for-boat)</button>\n'
+                  '      <button type="button" class="modebtn" id="mode_h">Corrected (handicap)</button>\n'
+                  '      <button type="button" class="modebtn" id="mode_e">Elapsed (boat-for-boat)</button>\n'
                   '      &nbsp;·&nbsp;\n'
-                  '      <button class="modebtn" id="view_p">Pace (min/100nm)</button>\n'
-                  '      <button class="modebtn" id="view_t">Total (min)</button>\n'
+                  '      <button type="button" class="modebtn" id="view_p">Pace (min/100nm)</button>\n'
+                  '      <button type="button" class="modebtn" id="view_t">Total (min)</button>\n'
                   '      &nbsp;·&nbsp; <label for="refsel">Reference</label> <select id="refsel"></select>\n'
                   '    </span>\n  </div>')
             return (f'<section class="card">\n  {hd}\n  <div class="note" id="racenote"></div>\n'
@@ -192,8 +195,8 @@ def section_html(cfg, copy):
                 metrics = (cfg.get('charts', {}).get('sog') or {}).get('metrics')
                 if metrics:
                     tools = ('<span class="tools">'
-                             f'<button class="modebtn" id="sogm_s">{metrics["s"]}</button>'
-                             f'<button class="modebtn" id="sogm_v">{metrics["v"]}</button>'
+                             f'<button type="button" class="modebtn" id="sogm_s">{metrics["s"]}</button>'
+                             f'<button type="button" class="modebtn" id="sogm_v">{metrics["v"]}</button>'
                              '&nbsp;·&nbsp;<span id="sog_axnote"></span></span>')
             return card_plot(tok, f'<div class="hd"><h2>{sec[tok]["title"]}</h2>{tools}</div>')
         if tok == 'events':
@@ -266,7 +269,8 @@ def main():
         h.update(script_src(f).read_bytes())
     for f in ['tokens.css', 'styles.css', 'index.template.html']:
         h.update((SHELL / f).read_bytes())
-    h.update(payloads['core.json'].encode())
+    for name in ('core.json', 'more.json', 'fleet.json'):   # all three fetch with ?v=
+        h.update(payloads[name].encode())
     version = h.hexdigest()[:10]
     built = time.strftime('%Y-%m-%d')
     stamp = lambda s: s.replace('__V__', version).replace('__BUILT__', built)
@@ -340,7 +344,9 @@ def main():
         page = page.replace(tag, '')
         src = (SHELL / s) if s.startswith('app/') else script_src(s)
         tail += '<script>\n' + stamp(src.read_text()) + '\n</script>\n'
-    page = page.replace('<script src="vendor/plotly-basic-2.35.2.min.js" id="plotlyjs" defer></script>', '')
+    plotly_tag = '<script src="vendor/plotly-basic-2.35.2.min.js" id="plotlyjs" defer></script>'
+    assert plotly_tag in page, 'template drift: plotly script tag not found for the standalone strip'
+    page = page.replace(plotly_tag, '')
     assert '</body>' in page
     page = page.replace('</body>', tail + '</body>')
     (dist / 'standalone.html').write_text(page)

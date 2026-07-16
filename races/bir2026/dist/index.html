@@ -17,28 +17,28 @@
 <meta name="twitter:title" content="Ragana · Block Island Race 2026 · Race Analysis">
 <meta name="twitter:description" content="A crew's-eye reconstruction of the 79th Block Island Race from the YB tracker and official results.">
 <meta name="twitter:image" content="https://hgq.fyi/ragana-block-island-2026/og.png">
-<link rel="icon" href="favicon.svg?v=bec7c96a20" type="image/svg+xml">
-<link rel="stylesheet" href="tokens.css?v=bec7c96a20">
-<link rel="stylesheet" href="styles.css?v=bec7c96a20">
+<link rel="icon" href="favicon.svg?v=698715450f" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css?v=698715450f">
+<link rel="stylesheet" href="styles.css?v=698715450f">
 <!-- DATA:FETCH — start the core payload download before the deferred scripts arrive -->
-<script>window.__CORE_FETCH=fetch('data/core.json?v=bec7c96a20').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});</script>
+<script>window.__CORE_FETCH=fetch('data/core.json?v=698715450f').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});</script>
 <!-- /DATA:FETCH -->
-<script src="app/helpers.js?v=bec7c96a20" defer></script>
-<script src="app/tokens.js?v=bec7c96a20" defer></script>
-<script src="app/core.js?v=bec7c96a20" defer></script>
-<script src="app/charts/map.js?v=bec7c96a20" defer></script>
-<script src="app/charts/dtf.js?v=bec7c96a20" defer></script>
-<script src="app/charts/race.js?v=bec7c96a20" defer></script>
-<script src="app/charts/xte.js?v=bec7c96a20" defer></script>
-<script src="app/charts/sog.js?v=bec7c96a20" defer></script>
-<script src="race/presentation.js?v=bec7c96a20" defer></script>
-<script src="race/copy.js?v=bec7c96a20" defer></script>
-<script src="race/modules/upwind.js?v=bec7c96a20" defer></script>
-<script src="race/modules/finstrip.js?v=bec7c96a20" defer></script>
-<script src="race/modules/lane.js?v=bec7c96a20" defer></script>
-<script src="race/modules/distspeed.js?v=bec7c96a20" defer></script>
-<script src="race/overlays/acts.js?v=bec7c96a20" defer></script>
-<script src="race/overlays/arrows.js?v=bec7c96a20" defer></script>
+<script src="app/helpers.js?v=698715450f" defer></script>
+<script src="app/tokens.js?v=698715450f" defer></script>
+<script src="app/core.js?v=698715450f" defer></script>
+<script src="app/charts/map.js?v=698715450f" defer></script>
+<script src="app/charts/dtf.js?v=698715450f" defer></script>
+<script src="app/charts/race.js?v=698715450f" defer></script>
+<script src="app/charts/xte.js?v=698715450f" defer></script>
+<script src="app/charts/sog.js?v=698715450f" defer></script>
+<script src="race/presentation.js?v=698715450f" defer></script>
+<script src="race/copy.js?v=698715450f" defer></script>
+<script src="race/modules/upwind.js?v=698715450f" defer></script>
+<script src="race/modules/finstrip.js?v=698715450f" defer></script>
+<script src="race/modules/lane.js?v=698715450f" defer></script>
+<script src="race/modules/distspeed.js?v=698715450f" defer></script>
+<script src="race/overlays/acts.js?v=698715450f" defer></script>
+<script src="race/overlays/arrows.js?v=698715450f" defer></script>
 <script src="vendor/plotly-basic-2.35.2.min.js" id="plotlyjs" defer></script>
 </head>
 <body>
@@ -63,7 +63,7 @@
 <section class="controls" id="controls" aria-label="Boat and overlay controls" hidden>
   <div class="ctl-head">
     <span class="ctl-title">Compare boats &amp; overlays</span>
-    <button class="ctl-collapse" id="ctlCollapse" aria-expanded="true">Hide controls ▲</button>
+    <button type="button" class="ctl-collapse" id="ctlCollapse" aria-expanded="true">Hide controls ▲</button>
   </div>
   <div id="ctlBody">
     <div class="ctl-row"><div class="ctl-label big">Groups</div><div class="chips big" id="grpbtns"></div></div>
@@ -75,10 +75,10 @@
       <div class="ctl-label">Time axis</div>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <div class="axis-toggle" id="axisToggle">
-          <button data-ax="t">By clock time</button>
-          <button data-ax="d">By distance to finish</button>
+          <button type="button" data-ax="t">By clock time</button>
+          <button type="button" data-ax="d">By distance to finish</button>
         </div>
-        <span class="ctl-hint">Sets the x-axis on the offset and speed charts. <b>Distance</b> lines every boat up on the same water; <b>clock</b> shows what was happening when.</span>
+        <span class="ctl-hint">Sets the x-axis on the offset, speed, and won-and-lost charts. <b>Distance</b> lines every boat up on the same water; <b>clock</b> shows what was happening when.</span>
       </div>
     </div>
   </div>
@@ -100,8 +100,8 @@
 </section>
 
 <section class="card">
-  <div class="hd"><h2>The race</h2><span class="tools" style="color:var(--ink2)">x-axis: clock time</span></div>
-  <div class="note" id="dtf_note">The whole race at a glance — distance still to sail, one line per boat, divided into the three phases used throughout. Steeper is faster. The flat spot late Saturday night on <span class="mag">Ragana</span>'s line is the broach.</div>
+  <div class="hd"><h2>The race</h2><span class="tools">x-axis: clock time</span></div>
+  <div class="note" id="dtf_note">The whole race at a glance — distance still to sail, one line per boat, divided into the three acts used throughout. Steeper is faster. The flat spot late Saturday night on <span class="mag">Ragana</span>'s line is the broach.</div>
   <div id="dtf" class="plot"></div>
   <div class="tapnote" id="tap_dtf"></div>
 </section>
@@ -110,11 +110,11 @@
   <div class="hd">
     <h2>Where the race was won and lost — vs <span id="refname" style="color:var(--magenta)"></span></h2>
     <span class="tools">
-      <button class="modebtn" id="mode_h">Corrected (handicap)</button>
-      <button class="modebtn" id="mode_e">Elapsed (boat-for-boat)</button>
+      <button type="button" class="modebtn" id="mode_h">Corrected (handicap)</button>
+      <button type="button" class="modebtn" id="mode_e">Elapsed (boat-for-boat)</button>
       &nbsp;·&nbsp;
-      <button class="modebtn" id="view_p">Pace (min/100nm)</button>
-      <button class="modebtn" id="view_t">Total (min)</button>
+      <button type="button" class="modebtn" id="view_p">Pace (min/100nm)</button>
+      <button type="button" class="modebtn" id="view_t">Total (min)</button>
       &nbsp;·&nbsp; <label for="refsel">Reference</label> <select id="refsel"></select>
     </span>
   </div>
@@ -145,7 +145,7 @@
 </section>
 
 <section class="card" id="sec_distspeed" hidden>
-  <div class="hd"><h2></h2><span class="tools"><button class="modebtn" id="mtog_distspeed_e">Elapsed</button><button class="modebtn" id="mtog_distspeed_h">Corrected</button></span></div>
+  <div class="hd"><h2></h2><span class="tools"><button type="button" class="modebtn" id="mtog_distspeed_e">Elapsed</button><button type="button" class="modebtn" id="mtog_distspeed_h">Corrected</button></span></div>
   <div class="note"></div>
   <div id="distspeed" data-mount></div>
   <div class="tapnote" id="tap_distspeed"></div>
@@ -159,7 +159,7 @@
 </section>
 
 <section class="card">
-  <div class="hd"><h2>Speed over ground</h2><span class="tools"><button class="modebtn" id="sogm_s">SOG</button><button class="modebtn" id="sogm_v">VMC (toward finish)</button>&nbsp;·&nbsp;<span id="sog_axnote"></span></span></div>
+  <div class="hd"><h2>Speed over ground</h2><span class="tools"><button type="button" class="modebtn" id="sogm_s">SOG</button><button type="button" class="modebtn" id="sogm_v">VMC (toward finish)</button>&nbsp;·&nbsp;<span id="sog_axnote"></span></span></div>
   <div class="note" id="sog_note">30-minute smoothed GPS speed. Switch the axis to <b>distance</b> to line every boat up on the same stretch of water. The sharp collapse to under a knot late Saturday night on <span class="mag">Ragana</span>'s line — from 8.5 knots to 0.7 in five minutes — is the broach and emergency douse; it took about fifteen minutes to rebuild speed.</div>
   <div id="sog" class="plot"></div>
   <div class="tapnote" id="tap_sog"></div>
@@ -184,7 +184,7 @@
     <li><b>Weather note:</b> a relayed report of ~35-kt gusts Saturday night could not be verified — the Long Island Sound wind buoys were inactive for the race window. The breeze and sea clearly built sharply; the specific speed is an unconfirmed second-hand figure and is not asserted here.</li>
     <li><b>Sources:</b> YB Tracking export (53,638 positions, 58 boats, ~1-min interval); official YachtScoring results; the 2026 Sailing Instructions; Storm Trysail Club's official race report. Speed is derived from position over a centered 30-min window; distance-to-finish is routed along the ordered course line. Race timing verified EDT against six boats' official finishes.</li>
   </ul>
-  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-15</div>
+  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the 2026 race record · times EDT (UTC−4) · build 2026-07-16</div>
 </footer>
 
 </div>

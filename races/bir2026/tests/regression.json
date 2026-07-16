@@ -1,6 +1,6 @@
 {
-  "_comment": "BIR2026 frozen goldens through the SHELL build (prime rule 3; monolith assertions ported — see tests/extra.cjs for the race-specific checks). endpoints match config.yaml goldens (consistency-checked); the runner asserts them at ±0.05 against the rendered traces (exact values 276.07 / 288.55). vmc.hero_mean_kt basis is DTF-AT-THE-GUN on the routed polyline (187.8 nm), NOT the official 186.0 — see DOC_GAPS #19. finstrip_bands moves the strip count assertions to extra.cjs (two divisions, never pooled).",
-  "expected_checks": 27,
+  "_comment": "BIR2026 frozen goldens through the SHELL build (prime rule 3; monolith assertions ported — see tests/extra.cjs for the race-specific checks). endpoints match config.yaml goldens (consistency-checked); the runner asserts them at ±0.05 against the rendered traces (exact values 276.07 / 288.55). vmc.hero_mean_kt basis is DTF-AT-THE-GUN on the routed polyline (187.8 nm), NOT the official 186.0 — see DOC_GAPS #19. finstrip_bands moves the strip count assertions to extra.cjs (two divisions, never pooled). bir_bands.width_counts['0.01']=3 added 2026-07-15 (review: every configured chip width gets a golden), counted from the frozen oracle, same derivation as the R-round 0.02/0.05 values.",
+  "expected_checks": 29,
   "tz_probe": {
     "epoch": 1779602689,
     "rendered": "2026-05-24 02:04"
@@ -71,6 +71,7 @@
   },
   "bir_bands": {
     "width_counts": {
+      "0.01": 3,
       "0.02": 9,
       "0.05": 21
     }

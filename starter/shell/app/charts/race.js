@@ -10,13 +10,16 @@ const raceX = m => S.axis === 't'
   : m;
 
 function buildRace() {
-  document.getElementById('refname').textContent = S.ref;
+  // #refname is authored into the section title by each race's copy — guard
+  // rather than assume the slot exists in every race's title string
+  const refnameEl = document.getElementById('refname');
+  if (refnameEl) refnameEl.textContent = S.ref;
   if (!hasTrack(S.ref)) {
     // reference's track still downloading — blank the chart rather than leave
     // the previous reference's traces under the new header (I13)
     react('race', [], { ...BASE(), xaxis: { ...GAX, visible: false }, yaxis: { ...GAX, visible: false },
       annotations: [{ text: 'loading ' + S.ref + '’s track…', xref: 'paper', yref: 'paper', x: .5, y: .5, showarrow: false,
-        font: { size: 12, color: '#4C6274', family: 'SF Mono, Menlo, monospace' } }] });
+        font: { ...AXFONT, size: 12 } }] });
     return;
   }
   const EVCAT = CFG.eventCategories, R = CFG.race, rhumb = CFG.course.rhumbNm;
@@ -30,13 +33,13 @@ function buildRace() {
   // variant (race.crossCourse) are never compared at all. Hidden boats are
   // counted and disclosed in the note below the header.
   const crossCourse = new Set(R.crossCourse || []);
-  let hidden = 0;
+  let hiddenDiv = 0, hiddenCross = 0;   // disclosed separately — different reasons
   const tr = [];
   for (const nm of ORDER) {
     if (!S.boats.has(nm) || !hasTrack(nm)) continue; const b = D.boats[nm];
     if (S.raceMode === 'h' && !b.meta.tcf) continue; if (!b.meta.el) continue;
-    if (crossCourse.has(nm)) { hidden++; continue; }
-    if (R.divisionScoped && S.raceMode === 'h' && b.meta.cls !== ref.meta.cls) { hidden++; continue; }
+    if (crossCourse.has(nm)) { hiddenCross++; continue; }
+    if (R.divisionScoped && S.raceMode === 'h' && b.meta.cls !== ref.meta.cls) { hiddenDiv++; continue; }
     const st = startS(b), tcf = b.meta.tcf || 1;
     const xs = [], ys = [];
     if (R.startAnchor) { xs.push(raceX(R.startAnchor)); ys.push(0); }   // gap is 0 at the gun by construction
@@ -50,17 +53,24 @@ function buildRace() {
     let fin = ((S.raceMode === 'h' ? parseDur(b.meta.corr) : parseDur(b.meta.el)) - refFin) / 60;
     if (pace) fin = fin / rhumb * 100;
     xs.push(raceX(0)); ys.push(fin);
-    tr.push({ x: xs, y: ys, mode: 'lines+markers', name: nm, connectgaps: false, marker: { size: xs.map((x, i) => i === xs.length - 1 ? 7 : 0) },
+    // the start anchor gets a visible dot: in pace view the paceMinDone guard
+    // nulls the points right after it, so a size-0 anchor is invisible and the
+    // "gap is 0 at the gun" anchor (R9e) never reads
+    tr.push({ x: xs, y: ys, mode: 'lines+markers', name: nm, connectgaps: false,
+      marker: { size: xs.map((x, i) => i === xs.length - 1 ? 7 : (R.startAnchor && i === 0 ? 4 : 0)) },
       line: { color: boatColor[nm], width: nm === HERO ? 3 : 1.5 }, opacity: nm === HERO ? 1 : .8,
       hovertemplate: `${nm} · %{x}${S.axis === 't' ? '' : ' nm to go'} · %{y:.1f} ${pace ? 'min/100nm' : 'min'} vs ${S.ref}<extra></extra>` });
   }
   const shapes = [], ann = [];
   const top = CFG.phases.length ? CFG.phases[0][0] : 0;
+  // final phase's right edge on the time axis = the hero's OFFICIAL finish
+  // (same convention as the DTF chart), not an arbitrary near-finish milestone
+  const heroFinE = Date.parse(D.boats[HERO].meta.fin.replace(' ', 'T') + offStr(CFG.time.utcOffset)) / 1000;
   CFG.phases.forEach(([a, b, l], i) => {
     const x0 = raceX(a === top ? a - 1 : a), x1 = raceX(b === 0 ? 1 : b);
     shapes.push({ type: 'rect', xref: 'x', yref: 'paper', x0, x1, y0: 0, y1: 1, fillcolor: i % 2 ? 'rgba(23,41,58,0.028)' : 'rgba(0,0,0,0)', line: { width: 0 } });
-    if (!narrow()) ann.push({ x: S.axis === 't' ? tzS((heroT(a === top ? a - 1 : a) + heroT(b === 0 ? 2 * R.milestoneStep : b)) / 2) : (a + b) / 2,
-      y: 1.03, xref: 'x', yref: 'paper', text: l, showarrow: false, font: { size: 9, color: '#4C6274', family: 'SF Mono, Menlo, monospace' } });
+    if (!narrow()) ann.push({ x: S.axis === 't' ? tzS((heroT(a === top ? a - 1 : a) + (b === 0 ? heroFinE : heroT(b))) / 2) : (a + b) / 2,
+      y: 1.03, xref: 'x', yref: 'paper', text: l, showarrow: false, font: { ...AXFONT, size: 9 } });
   });
   shapes.push(...overlayShapes());
   ann.push(...overlayAnnotations());
@@ -76,11 +86,15 @@ function buildRace() {
     xaxis: sharedXaxis(narrow() ? { title: undefined } : undefined),
     yaxis: { ...GAX, title: { text: yTitle, font: AXFONT } },
     yaxis2: { overlaying: 'y', side: 'right', range: [0, R.eventRowY + 1], visible: false, fixedrange: true } });
-  // the note is authored copy per mode; division-scoped races append the
-  // hidden-boat disclosure ({n}/{cls} slots in COPY.race.noteDivision)
+  // the note is authored copy per mode; each hide reason gets its own
+  // disclosure ({n}/{s}/{cls} slots) — folding cross-course hides into the
+  // division sentence would misstate why the boat is missing
   let note = COPY.race.notes[S.raceMode];
-  if (hidden && COPY.race.noteDivision)
-    note += ' ' + COPY.race.noteDivision.replace('{n}', hidden)
-      .replace('{s}', hidden > 1 ? 's' : '').replace('{cls}', ref.meta.cls || '');
+  if (hiddenDiv && COPY.race.noteDivision)
+    note += ' ' + COPY.race.noteDivision.replace('{n}', hiddenDiv)
+      .replace('{s}', hiddenDiv > 1 ? 's' : '').replace('{cls}', ref.meta.cls || '');
+  if (hiddenCross && COPY.race.noteCrossCourse)
+    note += ' ' + COPY.race.noteCrossCourse.replace('{n}', hiddenCross)
+      .replace('{s}', hiddenCross > 1 ? 's' : '');
   document.getElementById('racenote').innerHTML = note;
 }

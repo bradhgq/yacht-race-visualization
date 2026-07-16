@@ -87,9 +87,9 @@ function buildMap() {
   }
   tr.push(...overlayMapTraces('top'));
   tr.push({ x: [D.start[1]], y: [D.start[0]], mode: 'markers+text', marker: { symbol: 'circle', size: 10, color: '#17293A' },
-    text: [course.startLabel], textposition: narrow() ? 'middle right' : 'top center', textfont: { size: 10, family: 'SF Mono, Menlo, monospace' }, showlegend: false, hoverinfo: 'skip' });
+    text: [course.startLabel], textposition: narrow() ? 'middle right' : 'top center', textfont: { family: AXFONT.family, size: 10 }, showlegend: false, hoverinfo: 'skip' });
   tr.push({ x: [D.fin[1]], y: [D.fin[0]], mode: 'markers+text', marker: { symbol: 'square', size: 10, color: '#17293A' },
-    text: [course.finishLabel], textposition: narrow() ? 'middle left' : 'bottom center', textfont: { size: 10, family: 'SF Mono, Menlo, monospace' }, showlegend: false, hoverinfo: 'skip' });
+    text: [course.finishLabel], textposition: narrow() ? 'middle left' : 'bottom center', textfont: { family: AXFONT.family, size: 10 }, showlegend: false, hoverinfo: 'skip' });
   // phase labels: thin leader lines from empty corners to the hero's track at each phase midpoint
   const posAtDTF = m => {
     for (let i = 0; i < rb.dtf.length; i++) { if (rb.dtf[i] <= m) return [rb.lon[i], rb.lat[i]]; }
@@ -101,7 +101,7 @@ function buildMap() {
     const [x, y] = posAtDTF(m);
     return { x, y, ax, ay, xref: 'x', yref: 'y', text: txt, showarrow: true, arrowhead: 0, arrowwidth: .7,
       arrowcolor: 'rgba(81,103,122,0.55)', standoff: 3,
-      font: { size: 8.5, color: '#4C6274', family: 'SF Mono, Menlo, monospace' }, align: 'left' };
+      font: { ...AXFONT, size: 8.5 }, align: 'left' };
   });
   mapAnn.push(...(CFG.mapAnnotations || []));   // raw authored annotations (geo labels etc.)
 

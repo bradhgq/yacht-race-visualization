@@ -38,7 +38,8 @@ registerModule({
     const anchors = ['left', 'right'];
     const hyp = cfg.finstrip.whatIfHours.map((hh, i) => {
       const cut = rag.sec - hh * 3600, rank = 1 + rows.filter(r => r.sec < cut).length;
-      return { x: hrs(rag) - hh, anchor: anchors[i % 2], lbl: `−${hh} h → ~${rank}th` };
+      const ord = n => n + (n % 10 === 1 && n % 100 !== 11 ? 'st' : n % 10 === 2 && n % 100 !== 12 ? 'nd' : n % 10 === 3 && n % 100 !== 13 ? 'rd' : 'th');
+      return { x: hrs(rag) - hh, anchor: anchors[i % 2], lbl: `−${hh} h → ~${ord(rank)}` };
     });
     const shapes = hyp.map(o => ({ type: 'line', xref: 'x', yref: 'paper', x0: o.x, x1: o.x, y0: .10, y1: .86,
       line: { color: cfg.hero.color, width: 1, dash: 'dash' }, opacity: .6 }));

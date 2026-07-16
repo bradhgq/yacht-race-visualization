@@ -83,3 +83,18 @@ Sets the x-axis on the rhumb-offset and speed charts. **Distance** lines every b
 
 ### build line
 Built from the 2026 race record · times EDT (UTC−4) · build `__BUILT__`
+
+## round-3 amendments (2026-07-15 review; structural — no new claims)
+
+- **distspeed captions moved, verbatim**, from the shared shell module
+  (`starter/shell/app/modules/distspeed.js`, which had carried them since the
+  round-2 promotion and was wrongly displaying them on BIR2026 too) into this
+  race's `copy.js` under `distspeed.{noteElapsed,noteCorrected,refLine,vsRef,
+  xNote}`. The elapsed-mode text is the §distspeed block above; the
+  corrected-mode text is the round-2 toggle caption ("The same picture on
+  corrected time…"), previously only in module code.
+- **controls hint** corrected: the axis toggle also switches the won-and-lost
+  chart between milestones and clock time — the old text named only the
+  rhumb-offset and speed charts.
+- **distspeed hover/labels** now write the unit as `kts` (page convention;
+  they read `kt`).

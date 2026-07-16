@@ -99,7 +99,8 @@ window.__RACE_CONFIG__ = {
     isoDays: [3.5, 4.0, 4.5],                                        // ELAPSED-mode rays
     isoDaysCorr: [2.2, 2.5, 2.8],                                    // CORRECTED-mode rays (times compress under TCF)
     // elapsed|corrected y-metric toggle (module toggle: buttons in the card
-    // header, state S.distMode, read by modules/distspeed.js)
+    // header, state S.distMode, read by the SHARED shell module
+    // starter/shell/app/modules/distspeed.js; captions in COPY.distspeed)
     toggle: { key: 'distMode', default: 'h',
               states: [{ v: 'e', label: 'Elapsed' }, { v: 'h', label: 'Corrected' }] },
   },

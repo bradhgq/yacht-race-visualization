@@ -33,8 +33,12 @@ def run(desc, cmd, **kw):
 def main():
     if len(sys.argv) != 2:
         sys.exit(__doc__)
-    race_dir = (REPO / sys.argv[1]).resolve() if not Path(sys.argv[1]).is_absolute() \
-        else Path(sys.argv[1])
+    # resolve races/<race> against the CALLER'S cwd first, repo root second —
+    # the same rule the chain's inner scripts follow, so one documented
+    # invocation behaves identically from anywhere
+    arg = Path(sys.argv[1])
+    race_dir = arg.resolve() if (arg.is_absolute() or (arg / 'config.yaml').exists()) \
+        else (REPO / arg).resolve()
     if not (race_dir / 'config.yaml').exists():
         sys.exit(f'{race_dir}/config.yaml not found')
 
@@ -60,10 +64,14 @@ def main():
 
     # the global dist/ gitignore silently skips NEW dist paths on `git add -A`
     # (found in production: BIR's first shell deploy shipped index.html without
-    # its app/ and race/ script dirs) — warn loudly when files need a force-add
-    ig = subprocess.run(['git', 'status', '--porcelain', '--ignored', str(race_dir / 'dist')],
+    # its app/ and race/ script dirs) — warn loudly when files need a force-add.
+    # ls-files enumerates ignored files INDIVIDUALLY, so a brand-new race whose
+    # ENTIRE dist/ is untracked (the worst case — the exact first-deploy trap)
+    # is caught too; `git status --ignored` collapses it to one 'dist/' line.
+    ig = subprocess.run(['git', 'ls-files', '--others', '--ignored', '--exclude-standard',
+                         '--', str(race_dir / 'dist')],
                         cwd=REPO, capture_output=True, text=True).stdout
-    missing = [l[3:] for l in ig.splitlines() if l.startswith('!!') and not l.rstrip('/').endswith('dist')]
+    missing = [l for l in ig.splitlines() if l.strip()]
     if missing:
         print(f'\n*** {len(missing)} dist file(s) are gitignored and NOT tracked — the deploy '
               f'would ship a broken page. Run:  git add -f races/{race_dir.name}/dist')

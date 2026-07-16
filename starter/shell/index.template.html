@@ -48,7 +48,7 @@
 <section class="controls" id="controls" aria-label="Boat and overlay controls" hidden>
   <div class="ctl-head">
     <span class="ctl-title">Compare boats &amp; overlays</span>
-    <button class="ctl-collapse" id="ctlCollapse" aria-expanded="true">Hide controls ▲</button>
+    <button type="button" class="ctl-collapse" id="ctlCollapse" aria-expanded="true">Hide controls ▲</button>
   </div>
   <div id="ctlBody">
     <div class="ctl-row"><div class="ctl-label big">Groups</div><div class="chips big" id="grpbtns"></div></div>
@@ -60,8 +60,8 @@
       <div class="ctl-label">Time axis</div>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <div class="axis-toggle" id="axisToggle">
-          <button data-ax="t">By clock time</button>
-          <button data-ax="d">By distance to finish</button>
+          <button type="button" data-ax="t">By clock time</button>
+          <button type="button" data-ax="d">By distance to finish</button>
         </div>
         <span class="ctl-hint">{{CONTROLS_HINT}}</span>
       </div>

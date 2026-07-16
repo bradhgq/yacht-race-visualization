@@ -45,12 +45,13 @@ window.__RACE_CONFIG__ = {
       orc_other:   { label: 'ORC', colors: ['#4A6B7A', '#6E8B98', '#5C7D8C', '#3F5C69', '#547182', '#6B87A0'] },
       phrf:        { label: 'PHRF', colors: ['#A9885F', '#B79B77', '#8F7048', '#C2A67F', '#9C8258'] },
       fleet_dnf:   { label: 'Retired', colors: ['#9AA5AC'] },
-      fleet_other: { label: 'Fleet', colors: ['#4A6B7A', '#6E8B98', '#8DA5AF', '#5C7D8C'] },
     },
     quick: ['hero', 'class6'],
     chipExtras: ['Young American', 'Max', 'Loki', 'Banter', 'Touch of Grey', 'Full Tilt'],   // app.js:66
     chipRank: 'clsPos',                  // chips tag the in-class finish, not overall
-    dnfKey: 'fleet_dnf', outsideKey: 'phrf', fallbackKey: 'fleet_other',
+    // fallbackKey matches config.yaml's default_key (the group the pipeline
+    // actually assigns) — 'fleet_other' named a group no boat ever carried
+    dnfKey: 'fleet_dnf', outsideKey: 'phrf', fallbackKey: 'orc_other',
     by_name_class6: ['Christopher Dragon XII', 'In Theory', 'Groupe 5', 'SqueeZeplay',
                      'Save the Sound', 'Zélée', 'Sleeper', 'Blue Skies'],
     buttons: {                           // static lists generated from the frozen oracle
@@ -91,7 +92,9 @@ window.__RACE_CONFIG__ = {
     startAnchor: 188.7,                                          // R9e: gap is 0 at the gun
     divisionScoped: true,                                        // A2: corrected never crosses divisions
     crossCourse: ['Lucky'],                                      // Cows-finish variant: never compared
-    eventRowY: 19, ratingLabel: 'TCF',
+    // 'rating' not 'TCF': the one label serves both divisions' chip tooltips,
+    // and PHRF ratings are sec/mi, not a ToT factor (band UI says 'ORC ToT')
+    eventRowY: 19, ratingLabel: 'rating',
   },
   charts: {
     dtf: { eventTopY: 183 },                                     // no yRange -> rangemode tozero
@@ -120,11 +123,13 @@ window.__RACE_CONFIG__ = {
     from: [41.0005, -73.5238], to: [41.262, -71.587], ringCenter: [41.168, -71.578],
   },
   ratingBands: { widths: [0.01, 0.02, 0.05] },   // hero-centred ORC ToT (0.9425); PHRF never matches numerically
-  kpis: [                                // app.js renderKPIs, monolith order
-    { label: 'Upwind vs CD XII', value: '+4.7 nm', sub: 'extra distance to Block Island' },
+  kpis: [                                // app.js renderKPIs, monolith order;
+    // units ride <span class="u"> and read 'kts' — the NB convention for the
+    // identical shell component (2026-07-15 consistency review)
+    { label: 'Upwind vs CD XII', value: '+4.7<span class="u"> nm</span>', sub: 'extra distance to Block Island' },
     { label: 'Corrected vs winner', value: '+4:36:04', sub: 'Christopher Dragon XII' },
-    { label: 'Ragana sailed', value: '{stats.sailed_ragana} nm', sub: 'course line 188.7 nm' },
-    { label: 'Average speed', value: '{stats.avg_sog} kt', sub: 'max {stats.max_sog} kt' },
+    { label: 'Ragana sailed', value: '{stats.sailed_ragana}<span class="u"> nm</span>', sub: 'course line 188.7 nm' },
+    { label: 'Average speed', value: '{stats.avg_sog}<span class="u"> kts</span>', sub: 'max {stats.max_sog} kts' },
     { label: 'Class 6 ORC', value: '9 / 9', sub: '31 / 33 ORC division' },
   ],
   mapLabels: [],

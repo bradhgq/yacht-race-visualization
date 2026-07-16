@@ -426,3 +426,28 @@ records what I *did* about it.
   before the distspeed check. BIR map: config-gated `charts.map.heightScale`
   (0.75 = the requested ~25% less vertical space; NB untouched at scale 1,
   declared at `:root` in shell styles.css).
+
+- **2026-07-15 multi-agent review round** (owner-directed; 55 raw findings, 49
+  adversarially confirmed, all applied). Production bugs: the shared distspeed
+  module carried NB2026 narrative verbatim onto the BIR page → captions moved
+  to per-race `COPY.distspeed` slots via the additive `ctx.copy` ABI field
+  (INVARIANTS.md); BIR More-panel listed all 23 PHRF boats twice (rank/group
+  buckets weren't disjoint); the reference dropdown offered PHRF boats whose
+  `meta.tcf` is raw sec/mi — corrected milestone math against such a reference
+  rendered garbage at 10³–10⁶ min — and cross-course Lucky (refsel now
+  excludes crossCourse boats and, in division-scoped races, other divisions;
+  CP-0's "PHRF reference, elapsed-only" capability is superseded by this
+  guard). Robustness: filter inputs survive async re-renders; ref-revert falls
+  back to a tracked boat; tap affordance re-evaluates on breakpoint cross;
+  distspeed guards a hero without scored meta; park_copy_lint surfaces node
+  failures; cache-bust hash now covers more/fleet payloads; the ignored-dist
+  warning catches a fully-untracked dist. Consistency: kts everywhere; KPI
+  units in <span class="u"> both races; AXFONT token replaces 14 hand-rolled
+  font/color literals; watch-legend gate unified; `STARTER` names the starter
+  dir (REPO was two meanings); NB config timestamps use the T…Z idiom; BIR
+  fallbackKey matches the pipeline's actual default group; BIR 'acts' naming
+  unified; controls hint names the race chart. Tests: NB 18→19, BIR 27→29
+  (react layout guard; meta-only names fixture now consumed; finstrip
+  never-pooled asserted on RENDERED strips; Crew-pill positive control; every
+  band width asserted — ±0.01 golden added from the frozen oracle, same
+  derivation as the R-round values). Oracles untouched and IDENTICAL.

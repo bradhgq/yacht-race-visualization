@@ -47,3 +47,15 @@
 
 ---
 
+
+## ctx ABI amendments (additive only; REPO_NOTES has each round's entry)
+
+- `overlay.mapLayer` ('under'|'over'|'top') — BIR M2: overlay map traces pick
+  their paint layer.
+- `overlay.bandAnnotations(ctx, mode)` — BIR M2: labelled x-bands (act titles)
+  on the same charts that consume `bands()`.
+- `ctx.copy` (2026-07-15 review) — the race's `window.__COPY__`. Shared shell
+  modules read their per-race captions from `COPY.<module id>` slots (e.g.
+  `COPY.distspeed.noteElapsed/noteCorrected/refLine/vsRef/xNote`); narrative
+  never lives in shared module code. Found shipping NB2026 claims on the BIR
+  page.

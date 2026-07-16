@@ -29,7 +29,7 @@ const plotlyReady = new Promise(res => {
   else go();
 });
 
-function dataURL(name) { return 'data/' + name + '?v=cf27ee1ed0'; }
+function dataURL(name) { return 'data/' + name + '?v=5055081eb8'; }
 async function loadJSON(name) {
   const r = await fetch(dataURL(name));
   if (!r.ok) throw new Error(name + ': HTTP ' + r.status);
@@ -98,7 +98,7 @@ function eventDecor(topY, mode) {
   const shapes = evs.map(e => ({ type: 'line', xref: 'x', yref: 'paper', x0: X(e.t), x1: X(e.t), y0: 0, y1: 1,
     line: { color: EVCAT[e.cat].c, width: 1, dash: 'dot' }, opacity: .5 }));
   const marker = evs.length ? { x: evs.map(e => X(e.t)), y: evs.map(() => topY), mode: 'markers',
-    marker: { symbol: evs.map(e => EVCAT[e.cat].sym), size: evs.map(e => CFG.eventCategories[e.cat].big ? 12 : 9),
+    marker: { symbol: evs.map(e => EVCAT[e.cat].sym), size: evs.map(e => EVCAT[e.cat].big ? 12 : 9),
       color: evs.map(e => EVCAT[e.cat].c), line: { width: 1, color: '#fff' } },
     text: evs.map(e => wrapText(`${e.label} · ${fmtS(e.t)} ${CFG.time.tzLabel} · ${Math.round(heroDTFat(e.t))} nm to go — ${e.txt}`)),
     hoverinfo: 'text', showlegend: false } : null;
@@ -140,7 +140,7 @@ function seriesTraces(valueKey, widthFn) {
     for (let i = 0; i < b.t.length; i++) { xs.push(axVal(b, i)); ys.push(b[valueKey][i]); }
     tr.push({ x: xs, y: ys, mode: 'lines', name: nm, showlegend: valueKey === 'dtf',
       line: { color: boatColor[nm], width: widthFn(nm) }, opacity: nm === HERO ? 1 : .82,
-      hovertemplate: `${nm} · %{x}${S.axis === 't' ? '' : ' nm'} · %{y}${SERIES_UNIT[valueKey] ?? ''}<extra></extra>` });
+      hovertemplate: `${nm} · %{x}${S.axis === 't' ? '' : ' nm to go'} · %{y}${SERIES_UNIT[valueKey] ?? ''}<extra></extra>` });
   }
   return tr;
 }
@@ -149,6 +149,9 @@ function seriesTraces(valueKey, widthFn) {
 function makeCtx(el) {
   return {
     D, S, cfg: CFG, el,
+    copy: COPY,   // additive ABI field (2026-07-15): shared modules read their
+                  // per-race captions from COPY.<module id> — narrative never
+                  // lives in shared module code (found shipping NB copy on BIR)
     h: { tzStr: tzS, fmt: fmtS, parseDur, hitTime, startOf: startS, wrapText,
          axVal, evX, sharedXaxis, eventDecor, watchLegend,
          heroT, heroDTFat,
@@ -200,21 +203,24 @@ function flush() {
   for (const c of todo) {
     if (PLOTLY_CHARTS.has(c) && !chartsOK) continue;
     BUILDERS[c]();
-    if (PLOTLY_CHARTS.has(c)) attachTap(c);
+    if (PLOTLY_CHARTS.has(c)) { attachTap(c); tapAffordance(c); }
   }
 }
 
 /* tap-to-inspect: click equivalent of hover, for touch */
 const tapped = new Set();
+/* on touch widths, advertise the tap affordance until the first tap replaces
+   it — evaluated on every render (not just first attach) so crossing the
+   breakpoint desktop→mobile still advertises it */
+function tapAffordance(id) {
+  if (!narrow()) return;
+  const el = document.getElementById('tap_' + id);
+  if (el && !el.classList.contains('show')) { el.textContent = 'Tap any point for details.'; el.classList.add('show'); }
+}
 function attachTap(id) {
   if (tapped.has(id)) return; tapped.add(id);
   const gd = document.getElementById(id);
   if (!gd || !gd.on) return;
-  // on touch widths, advertise the tap affordance until the first tap replaces it
-  if (narrow()) {
-    const el = document.getElementById('tap_' + id);
-    if (el && !el.classList.contains('show')) { el.textContent = 'Tap any point for details.'; el.classList.add('show'); }
-  }
   gd.on('plotly_click', ev => {
     const p = ev.points && ev.points[0]; if (!p) return;
     let txt = p.hovertext || (typeof p.text === 'string' ? p.text : '');
@@ -326,6 +332,15 @@ function setBand(min, max, key) {
 }
 
 function buildControls() {
+  // an async render('boats') (e.g. a lazy track fetch settling) rebuilds this
+  // whole panel — carry in-progress filter input text and focus across it
+  const keepInputs = {};
+  for (const id of ['clsInput', 'bandMin', 'bandMax']) {
+    const el = document.getElementById(id);
+    if (el && (el.value || document.activeElement === el))
+      keepInputs[id] = { v: el.value, focus: document.activeElement === el,
+                         s: el.selectionStart, e: el.selectionEnd };
+  }
   const chips = document.getElementById('chips'); chips.innerHTML = '';
   // chip row = quick groups + hand-picked cross-division extras (groups.chipExtras);
   // the rank tag reads groups.chipRank ('sdl' overall, default | 'clsPos' in-class)
@@ -430,6 +445,12 @@ function buildControls() {
   // hide the whole Filter row if neither filter is configured
   const filterRow = document.getElementById('filterRow');
   if (filterRow) filterRow.style.display = (CFG.classFilter || CFG.ratingBands) ? '' : 'none';
+  for (const [id, k] of Object.entries(keepInputs)) {   // restore in-progress input
+    const el = document.getElementById(id);
+    if (!el) continue;
+    if (k.v && !el.value) el.value = k.v;
+    if (k.focus) { el.focus({ preventScroll: true }); try { el.setSelectionRange(k.s, k.e); } catch (e) { /* number inputs */ } }
+  }
 
   const ov = document.getElementById('overlays'); ov.innerHTML = '';
   const add = (label, color, get, set) => { ov.appendChild(makeChip(label, color, get(), () => { set(!get()); }, false, 'pill')); };
@@ -448,8 +469,17 @@ function buildControls() {
   }
 
   const sel = document.getElementById('refsel'); sel.innerHTML = '';
+  // reference candidates: never a cross-course boat (its times are not
+  // comparable at all), and in division-scoped races never a boat outside the
+  // hero's division — another division's meta.tcf may not even be a ToT
+  // multiplier (BIR PHRF stores raw sec/mi), so corrected milestone math would
+  // render garbage against it (2026-07-15 review)
+  const crossRef = new Set(CFG.race.crossCourse || []);
+  const heroCls = D.boats[HERO].meta.cls;
   for (const nm of ORDER) {
     if (!D.boats[nm].meta.tcf) continue;
+    if (crossRef.has(nm)) continue;
+    if (CFG.race.divisionScoped && D.boats[nm].meta.cls !== heroCls) continue;
     const o = document.createElement('option'); o.value = nm;
     // division-scoped races label each candidate with its scoring division
     o.textContent = (CFG.race.divisionScoped && D.boats[nm].meta.cls)
@@ -457,9 +487,12 @@ function buildControls() {
     if (nm === S.ref) o.selected = true; sel.appendChild(o);
   }
   sel.onchange = e => {
-    const prev = S.ref; S.ref = e.target.value;
+    // fall back to a reference that HAS a track — after two rapid changes the
+    // previous value may itself be a still-trackless boat (I13)
+    const prev = hasTrack(S.ref) ? S.ref : CFG.defaults.ref;
+    S.ref = e.target.value;
     if (!hasTrack(S.ref)) ensureTracks(S.ref).then(() => render('race'))
-      .catch(() => { S.ref = prev; render('race'); });   // fetch failed: fall back to the old reference (I13)
+      .catch(() => { S.ref = prev; render('race'); });   // fetch failed: revert (I13)
     render('race');
   };
   bindMode('mode_h', 'h', 'raceMode'); bindMode('mode_e', 'e', 'raceMode');
@@ -533,7 +566,12 @@ function buildMorePanel() {
       <span class="more-rank">${b.meta.sdl ? '#' + b.meta.sdl : '—'}</span><span class="more-name">${nm}</span>
       <span class="more-type">${b.meta.typ || ''}</span><span class="more-corr">${b.meta.corr || (b.meta.retireReason ? 'DNF' : '—')}</span></button>`;
   };
-  const ranked = ORDER.filter(nm => D.boats[nm].meta.sdl != null).sort((a, b) => D.boats[a].meta.sdl - D.boats[b].meta.sdl);
+  // the three buckets must be disjoint: BIR's PHRF boats carry BOTH a rank
+  // (meta.sdl) and grp === outsideKey, so rank alone would list them twice and
+  // interleave two divisions' rank scales in one "ranked" column
+  const ranked = ORDER.filter(nm => D.boats[nm].meta.sdl != null
+    && D.boats[nm].meta.grp !== CFG.groups.dnfKey
+    && D.boats[nm].meta.grp !== CFG.groups.outsideKey).sort((a, b) => D.boats[a].meta.sdl - D.boats[b].meta.sdl);
   const dnf = ORDER.filter(nm => D.boats[nm].meta.grp === CFG.groups.dnfKey);
   const others = ORDER.filter(nm => D.boats[nm].meta.grp === CFG.groups.outsideKey);
   panel.innerHTML = `${trackLoadErr ? `<div class="note" style="color:#A33;margin-bottom:6px">${trackLoadErr}</div>` : ''}

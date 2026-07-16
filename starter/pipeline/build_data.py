@@ -424,7 +424,11 @@ def main():
         versions=dict(python=sys.version.split()[0], pandas=pd.__version__, numpy=np.__version__),
         inputs={cfg['tracker']['path']: sha(tracker_path),
                 cfg['official_results']['path']: sha(race_dir / cfg['official_results']['path']),
-                cfg['events']['path']: sha(race_dir / cfg['events']['path'])},
+                cfg['events']['path']: sha(race_dir / cfg['events']['path']),
+                # the reconcile step reads the paper log when present — its
+                # bytes are provenance too (prime rule 1)
+                **({'navlog.yaml': sha(race_dir / 'navlog.yaml')}
+                   if (race_dir / 'navlog.yaml').exists() else {})},
         adapter=adapter.ADAPTER, canonical=vreport,
         course=dict(type=course.get('type', 'point_to_point'),
                     official_length_nm=course_len,

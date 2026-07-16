@@ -73,6 +73,10 @@ class El {
 }
 const byId = new Map();
 function getEl(id) {
+  // ids under the reserved __absent prefix stay null so the shell's layout
+  // guards (react() early-return, boot's missing-section skip) are testable —
+  // auto-creating EVERY id would make those guards dead code in the harness
+  if (id.startsWith('__absent')) return null;
   if (!byId.has(id)) byId.set(id, new El('div', id));
   return byId.get(id);
 }
@@ -236,6 +240,21 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
     for (const [where, names] of surfaces)
       for (const nm of names)
         assert.ok(D.boats[nm], `${where}: '${nm}' not in data keys (the Zélée class of bug)`);
+  });
+  check('name-hygiene', 'layout guard: react() no-ops for a chart id absent from the page', () => {
+    const before = Object.keys(plots).length;
+    evalIn(`react('__absent_chart', [], {})`);
+    assert.ok(!plots.__absent_chart, 'react() rendered into a nonexistent element');
+    assert.equal(Object.keys(plots).length, before, 'a phantom chart appeared');
+  });
+  if (FIX.names_meta_only && FIX.names_meta_only.length)
+  check('name-hygiene', `meta-only boats ship scored but trackless (${FIX.names_meta_only.join(', ')})`, () => {
+    for (const nm of FIX.names_meta_only) {
+      const b = D.boats[nm];
+      assert.ok(b, `${nm} missing from the payload`);
+      assert.ok(b.meta && b.meta.corr && b.meta.el, `${nm} must carry official times`);
+      assert.ok(!b.t || b.t.length === 0, `${nm} must not ship a track`);
+    }
   });
   check('name-hygiene', 'DTF chart stays clock-based under the distance toggle (no distance on both axes)', () => {
     S.axis = 'd'; render('axis'); render('ev');   // ev scope rebuilds dtf

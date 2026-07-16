@@ -28,7 +28,13 @@ module.exports = async ({ check, approx, assert, plots, evalIn, getEl, render, S
       && D.boats[nm].meta.cls === cls && D.boats[nm].meta.corr && D.boats[nm].meta.el);
     assert.equal(pool('ORC').length, FIX.finstrip_bands.ORC);
     assert.equal(pool('PHRF').length, FIX.finstrip_bands.PHRF);
-    assert.equal(pool('ORC').filter(nm => pool('PHRF').includes(nm)).length, 0, 'divisions pooled');
+    // never-pooled, asserted on the RENDERED strips: every multi-dot marker
+    // trace must draw boats of exactly one division (the old disjointness
+    // check on the filter itself was true by construction)
+    for (const t of plots.finstrip.traces.filter(t => t.mode === 'markers' && t.x.length > 1)) {
+      const clsSet = new Set(t.text.map(nm => D.boats[nm].meta.cls));
+      assert.equal(clsSet.size, 1, `a rendered strip mixes divisions: ${[...clsSet]}`);
+    }
     const anns = plots.finstrip.layout.annotations.map(a => a.text);
     assert.ok(anns.some(t => new RegExp(`ORC .* ${FIX.finstrip_bands.ORC} finishers`).test(t)), 'ORC band label');
     assert.ok(anns.some(t => new RegExp(`PHRF .* ${FIX.finstrip_bands.PHRF} finishers`).test(t)), 'PHRF band label');
@@ -129,6 +135,11 @@ module.exports = async ({ check, approx, assert, plots, evalIn, getEl, render, S
 
   /* x11 · R9c — a category with no events gets no pill */
   check('bir', 'overlay pills: empty category loses its pill; Ghosts + Course line stay', () => {
+    // positive control first: with crew events present the Crew pill exists,
+    // so the negative half below can't pass vacuously on a renamed label
+    render('ev');
+    const before = getEl('overlays').children.map(c => c.innerHTML);
+    assert.ok(before.some(l => /Crew$/.test(l)), 'positive control: Crew pill missing with crew events present');
     evalIn('window.__SAVED_EV = D.events; D.events = D.events.filter(e => e.cat !== "crew");');
     render('ev');
     const labels = getEl('overlays').children.map(c => c.innerHTML);
@@ -154,6 +165,14 @@ module.exports = async ({ check, approx, assert, plots, evalIn, getEl, render, S
     setBand(t0 - 0.02, t0 + 0.02, '0.02');   // same key toggles off
     for (const nm of CFG.defaults.boats) assert.ok(S.boats.has(nm), `${nm} default eaten by the filter (I17)`);
     for (const nm of added) assert.ok(!S.boats.has(nm), `${nm} lingered after band-off`);
+    // every configured chip width has a golden and gets asserted (the ±0.05
+    // golden previously shipped unconsumed; ±0.01 had no golden at all)
+    for (const [w, n] of Object.entries(FIX.bir_bands.width_counts)) {
+      setBand(t0 - +w, t0 + +w, w);
+      assert.equal(filterTargets().length, n, `±${w} band count drifted`);
+      setBand(t0 - +w, t0 + +w, w);   // same key toggles off
+    }
+    assert.equal(filterTargets(), null, 'band filters did not clear');
   });
 
   /* x13 · R9f — SOG on the distance axis starts each boat at its own gun */
