@@ -71,7 +71,7 @@ output:
   # generated: 'YYYY-MM-DD'     # pin only to reproduce a frozen build byte-for-byte
 goldens:                        # frozen at CP-2; changing one requires a recorded instruction (I16)
   tz_probe: { epoch: 0, rendered: "YYYY-MM-DD HH:MM" }
-  endpoints: { ref: "", corrected_min: 0.0, elapsed_min: 0.0, pace_min_per_100: 0.0 }
+  endpoints: { ref: "", corrected_min: 0.0, elapsed_min: 0.0 }
   module_canaries: {}           # e.g. { park: { boat: "Gemini II", u4: 31 } } — numbers, not "31%"
   names_present: []             # I4 name-hygiene fixtures (dupes disambiguated, normalization)
   names_absent: []
@@ -81,7 +81,11 @@ goldens:                        # frozen at CP-2; changing one requires a record
 `races/_template/config.yaml` is the fill-me copy of this schema, kept in
 lockstep: when the pipeline grows a key, the template and this block move
 together (DOC_GAPS #6 — the first cold-start had to reverse-engineer a dozen
-keys from pipeline code).
+keys from pipeline code). The pace endpoint golden
+(`endpoints.pace_min_per_100`) is deliberately NOT a config.yaml key: it lives
+in `tests/regression.json` only, asserted from the rendered traces by the
+harness; `shell/build.py`'s consistency check cross-checks just
+ref/corrected_min/elapsed_min between config and fixtures.
 
 **Presentation config is a separate file** — `races/<race>/presentation.js`
 (`window.__RACE_CONFIG__`): layout/section order, palette + group presentation,

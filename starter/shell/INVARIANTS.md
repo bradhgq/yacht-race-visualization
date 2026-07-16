@@ -51,8 +51,9 @@
   derivative of distance-remaining; its official-window time-mean must equal
   **DTF-at-the-gun ÷ official elapsed**, on the same DTF function the channel
   differentiates — the routed polyline for marks courses, NOT the official
-  length (BIR: 187.8 nm routed vs 186.0 official is more than the ±0.05 kt
-  fixture tolerance apart; DOC_GAPS #19). Guarded per-race via `goldens.vmc`.
+  length (BIR: the routed basis measures 5.02 kt where the official length
+  predicts 4.96 — wider than the fixture’s ±0.06 kt tolerance; DOC_GAPS #19).
+  Guarded per-race by the frozen `vmc` fixture in `tests/regression.json`.
   Negatives are real — never clamp (35 NB2026 boats have them).
 - **I15 — Modules own their geometry.** A `kind:plot` module declares
   `section.height`; the shell applies it at scaffold fill. Nothing about a

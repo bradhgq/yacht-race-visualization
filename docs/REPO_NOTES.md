@@ -483,3 +483,14 @@ records what I *did* about it.
   (NB 19/19, BIR 29/29, both oracles IDENTICAL); dist churn reset per the
   committed-dist rule.
 
+
+- **Skill-consolidation review round (2026-07-16):** 10 confirmed findings
+  applied — schemas.md's config block dropped the fixture-only
+  `pace_min_per_100` key (and now says where the pace golden actually lives);
+  stage-2/INVARIANTS I14 corrected to the real BIR fixture tolerance (±0.06 kt,
+  5.02 vs 4.96 basis gap) and to the fixture's real home (tests/regression.json,
+  not `goldens.vmc`); stage-2 recon vocabulary aligned to the payload enum
+  (`match | warn`); the races/_template header edit was reverted as out of
+  branch scope. QUEUED for a races/-scope follow-up: the template header's
+  `skill/race-viz` path typo (should be `skills/`) and its stale "+ repo
+  additions" clause.
