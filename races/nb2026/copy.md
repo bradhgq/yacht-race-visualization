@@ -98,3 +98,21 @@ Built from the 2026 race record · times EDT (UTC−4) · build `__BUILT__`
   rhumb-offset and speed charts.
 - **distspeed hover/labels** now write the unit as `kts` (page convention;
   they read `kt`).
+
+## round-3 opinion layer (owner-directed 2026-07-15 — tier-1 elevation)
+
+Three authored panels were added; **every claim is an existing synthesized
+conclusion** (the five insight events in `events.yaml` + the frozen section
+copy above). No new analysis number was authored; the harness machine-checks
+the sourcing (verdict cards ↔ insight events; lesson cites ↔ log timestamps;
+decomposition bars ↔ official margins).
+
+- **verdict** — "The verdict — where we think the race was won and lost":
+  five cards restating the five insight events, each linking to its evidence
+  chart. Slots in `copy.js` under `verdict.{title,note,items}`.
+- **phasegap** — "Where the minutes went — phase by phase": caption for the
+  decomposition waterfall (runtime slots {ref}/{mode}/{margin}; the numbers
+  are derived from the payload at render time, never written into copy).
+- **lessons** — "What we'd do differently — the lessons, as logged": the
+  journal's own lessons grouped as a next-race checklist, each item citing its
+  log timestamp. Slots under `lessons.{title,note,groups}`.
