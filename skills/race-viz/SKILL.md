@@ -11,7 +11,7 @@ Produces one of three tiers, each a strict superset of the previous:
 - **Tier 2 — Boat-annotated debrief** (client logs): Tier 1 plus the client boat highlighted, log events pinned to the track, log↔tracker reconciliation, benchmark comparisons, and a private debrief document.
 - **Tier 3 — Story site**: Tier 2 plus a narrative post with embedded visualizations, productionized via Claude Code.
 
-Worked example: RAGANA / Newport Bermuda 2026, kept in the monorepo under `races/nb2026/`. Its numbers are settled golden fixtures — never re-derive or "correct" them.
+Worked examples, kept in the monorepo: RAGANA / Newport Bermuda 2026 (`races/nb2026/` — point-to-point, the original) and Ragana / Block Island Race 2026 (`races/bir2026/` — marks course with routed distance-remaining, division-scoped scoring, race postprocess). Their numbers are settled golden fixtures — never re-derive or "correct" them.
 
 ## Operating environments
 
@@ -65,6 +65,6 @@ Soft doctrines: **show the arithmetic** (every derived number traceable in-docum
 
 ## Contracts
 
-All formats live in `references/schemas.md`: `config.yaml`, `events.yaml`, `dashboard_data.json`, decision-record templates CP-0…CP-5, the findings-memo format, the discrepancy-register format, and the Claude Code `PROMPT.md` skeleton. Build commands and code live in the starter repo — this skill defines process and judgment; the repo defines code; `config.yaml` defines the race.
+All formats live in `references/schemas.md`: `config.yaml`, `events.yaml`, `dashboard_data.json`, decision-record templates CP-0…CP-5, the findings-memo format, the discrepancy-register format, and the Claude Code `PROMPT.md` skeleton. Build commands and code live in the starter repo — one command, always the full chain: `.venv/bin/python starter/build_race.py races/<race>` (build_data → postprocess → harness-gated shell build → harness under the second TZ → frozen-oracle compare). This skill defines process and judgment; the repo defines code; `config.yaml` defines the race.
 
-Monorepo: `github:bradhgq/yacht-race-visualization` (public). Layout: `starter/` holds the engine code (shell, pipeline, adapters, acquisition, tests); `skills/race-viz/` is this skill (the authoritative source of truth); `docs/` holds the spec and build logs; `races/<race>/` holds each race's config + data + committed `dist/`. Acquisition scripts: `starter/acquisition/`; the worked example: `races/nb2026/`.
+Monorepo: `github:bradhgq/yacht-race-visualization` (public). Layout: `starter/` holds the engine code (shell, pipeline, adapters, acquisition, tests); `skills/race-viz/` is this skill (the authoritative source of truth); `docs/` holds the spec and build logs; `races/<race>/` holds each race's config + data + committed `dist/`. Acquisition scripts: `starter/acquisition/`; worked examples: `races/nb2026/`, `races/bir2026/`; kickoff prompt template: `docs/KICKOFF_TEMPLATE.md`.
