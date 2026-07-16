@@ -235,6 +235,7 @@ Golden values; dashboard_data.json semantics; module math.
 Mobile breakpoints; lazy-loading; performance budget; hosting; accessibility.
 
 ## Protocol
-Run `TZ=America/New_York node tests/test_dashboard.js <built.html>` BEFORE starting and
-AFTER finishing — all green both times. Any newly human-caught defect becomes a new assertion.
+Run the full chain — `.venv/bin/python starter/build_race.py races/<race>` (harness under both
+TZ=America/New_York and TZ=UTC, then the frozen-oracle compare) — BEFORE starting and AFTER
+finishing: all green both times. Any newly human-caught defect becomes a new assertion.
 ```
