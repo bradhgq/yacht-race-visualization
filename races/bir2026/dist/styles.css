@@ -118,7 +118,8 @@ select{font-family:var(--mono);font-size:12px;border:1px solid var(--grid);borde
 .tapnote b{color:var(--ink)}
 
 /* chart heights (Plotly needs explicit heights; tuned per breakpoint below) */
-#map{height:min(640px,88vw)}
+:root{--map-scale:1}
+#map{height:calc(min(640px,88vw)*var(--map-scale))}
 #dtf{height:min(340px,80vw)}
 #race{height:min(540px,92vw)}
 #xte,#sog{height:420px}
@@ -183,7 +184,7 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
   .more-row{padding:12px 8px}
   .more-list{max-height:38vh}
   select{padding:10px 8px}
-  #map{height:min(118vw,72vh)}
+  #map{height:calc(min(118vw,72vh)*var(--map-scale))}
   #dtf{height:80vw}
   #race{height:96vw}
   #xte,#sog{height:74vw}

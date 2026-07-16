@@ -419,3 +419,10 @@ records what I *did* about it.
   page served the new index.html with every script 404ing. Fix: force-added
   the 17 missing files; `build_race.py` now detects ignored-untracked dist
   files and prints the `git add -f` fix; CLAUDE.md carries the rule.
+
+- **Owner (2026-07-15): default states are corrected + VMC.** Both races boot
+  `speedMetric: 'vmc'`, `distMode: 'h'` (race chart was already corrected).
+  Fixture values stay elapsed-mode — the shared runner now pins explicit state
+  before the distspeed check. BIR map: config-gated `charts.map.heightScale`
+  (0.75 = the requested ~25% less vertical space; NB untouched at scale 1,
+  declared at `:root` in shell styles.css).

@@ -8,7 +8,8 @@
      charts.map.hoverCls      — boat hover carries division + per-point DTF
      charts.map.fitRange      — range fitted to the visible tracks (lat p1–p99 +
                                 pads + floors) instead of a fixed course.mapRange
-     mapAnnotations           — raw Plotly annotations (geo labels, SI notes) */
+     mapAnnotations           — raw Plotly annotations (geo labels, SI notes)
+     charts.map.heightScale   — multiplies the CSS map height (--map-scale) */
 "use strict";
 
 function overlayMapTraces(layer) {
@@ -31,6 +32,12 @@ function fleetCls(nm) {
 
 function buildMap() {
   const EVCAT = CFG.eventCategories, course = CFG.course, mc = CFG.charts.map || {};
+  if (mc.heightScale && typeof document !== 'undefined') {
+    // config-gated map height (styles.css: --map-scale, default 1); guarded for
+    // the harness DOM mock, whose elements carry no style object
+    const el = document.getElementById('map');
+    if (el && el.style && el.style.setProperty) el.style.setProperty('--map-scale', mc.heightScale);
+  }
   const tr = [];
   if (S.fleet && FLEET) {
     if (mc.ghostStyles) {

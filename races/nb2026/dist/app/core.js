@@ -29,7 +29,7 @@ const plotlyReady = new Promise(res => {
   else go();
 });
 
-function dataURL(name) { return 'data/' + name + '?v=8d11021c54'; }
+function dataURL(name) { return 'data/' + name + '?v=cf27ee1ed0'; }
 async function loadJSON(name) {
   const r = await fetch(dataURL(name));
   if (!r.ok) throw new Error(name + ': HTTP ' + r.status);
@@ -72,6 +72,7 @@ const evX = t => S.axis === 't' ? tzS(t) : heroDTFat(t);
    scroll the PAGE, not zoom the plot — freeze the axes and kill dragmode (I6);
    tap-to-inspect and tap-hover still work. Desktop keeps drag-zoom + hover. */
 function react(id, traces, layout) {
+  if (!document.getElementById(id)) return;   // chart not in this race's layout
   if (narrow()) {
     layout.dragmode = false;
     for (const k of Object.keys(layout))
@@ -112,6 +113,16 @@ function overlayShapes(mode) {
     shapes.push(...o.bands(makeCtx(), mode));
   }
   return shapes;
+}
+/* optional overlay band LABELS (additive ABI field bandAnnotations — BIR act
+   bands carry titles; consumed by the same charts that consume overlayShapes) */
+function overlayAnnotations(mode) {
+  const ann = [];
+  for (const o of OVERLAYS) {
+    if (!S.ov[o.id] || !o.bandAnnotations) continue;
+    ann.push(...o.bandAnnotations(makeCtx(), mode));
+  }
+  return ann;
 }
 /* optional overlay legend entries (null-trace); watches only when its pill is on */
 function watchLegend() {
@@ -316,10 +327,14 @@ function setBand(min, max, key) {
 
 function buildControls() {
   const chips = document.getElementById('chips'); chips.innerHTML = '';
-  const quick = ORDER.filter(nm => CFG.groups.quick.includes(D.boats[nm].meta.grp));
+  // chip row = quick groups + hand-picked cross-division extras (groups.chipExtras);
+  // the rank tag reads groups.chipRank ('sdl' overall, default | 'clsPos' in-class)
+  const extras = CFG.groups.chipExtras || [];
+  const rankKey = CFG.groups.chipRank || 'sdl';
+  const quick = ORDER.filter(nm => CFG.groups.quick.includes(D.boats[nm].meta.grp) || extras.includes(nm));
   for (const nm of quick) {
     const b = D.boats[nm];
-    const el = makeChip(`${nm}<span style="opacity:.6;font-size:10px">${b.meta.sdl ? ' #' + b.meta.sdl : ''}</span>`,
+    const el = makeChip(`${nm}<span style="opacity:.6;font-size:10px">${b.meta[rankKey] ? ' #' + b.meta[rankKey] : ''}</span>`,
       boatColor[nm], S.boats.has(nm),
       () => toggleBoat(nm), nm === HERO);
     el.title = `${b.meta.typ} · ${CFG.race.ratingLabel} ${b.meta.tcf ?? '—'} · corrected ${b.meta.corr ?? '—'}`;
@@ -418,8 +433,10 @@ function buildControls() {
 
   const ov = document.getElementById('overlays'); ov.innerHTML = '';
   const add = (label, color, get, set) => { ov.appendChild(makeChip(label, color, get(), () => { set(!get()); }, false, 'pill')); };
-  for (const [k, v] of Object.entries(CFG.eventCategories))
+  for (const [k, v] of Object.entries(CFG.eventCategories)) {
+    if (!D.events.some(e => e.cat === k)) continue;   // a category with no events gets no pill (BIR R9c)
     add(v.short || v.label, v.c, () => S.ev.has(k), x => { x ? S.ev.add(k) : S.ev.delete(k); render('ev'); });
+  }
   for (const p of CFG.controls.pills) {
     if (p === '@ghosts') add(COPY.pills.ghosts, '#7A93A3', () => S.fleet, x => { S.fleet = x; render('map'); if (x) loadFleet(); });
     else if (p === '@rhumb') add(COPY.pills.rhumb, CFG.hero.color, () => S.rhumb, x => { S.rhumb = x; render('map'); });
@@ -433,7 +450,11 @@ function buildControls() {
   const sel = document.getElementById('refsel'); sel.innerHTML = '';
   for (const nm of ORDER) {
     if (!D.boats[nm].meta.tcf) continue;
-    const o = document.createElement('option'); o.value = nm; o.textContent = nm; if (nm === S.ref) o.selected = true; sel.appendChild(o);
+    const o = document.createElement('option'); o.value = nm;
+    // division-scoped races label each candidate with its scoring division
+    o.textContent = (CFG.race.divisionScoped && D.boats[nm].meta.cls)
+      ? `${nm} (${D.boats[nm].meta.cls})` : nm;
+    if (nm === S.ref) o.selected = true; sel.appendChild(o);
   }
   sel.onchange = e => {
     const prev = S.ref; S.ref = e.target.value;

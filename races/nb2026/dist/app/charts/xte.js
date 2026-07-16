@@ -7,6 +7,6 @@ function buildXTE() {
   const wl = watchLegend(); if (wl) tr.push(wl);
   const shapes = [...overlayShapes(), ...dec.shapes,
     { type: 'line', xref: 'paper', yref: 'y', x0: 0, x1: 1, y0: 0, y1: 0, line: { color: CFG.hero.color, width: 1, dash: 'dash' } }];
-  react('xte', tr, { ...BASE(), shapes, xaxis: sharedXaxis(),
-    yaxis: { ...GAX, title: { text: 'nm east (+) / west (−) of rhumb', font: AXFONT } } });
+  react('xte', tr, { ...BASE(), shapes, annotations: overlayAnnotations(), xaxis: sharedXaxis(),
+    yaxis: { ...GAX, title: { text: CFG.charts.xte.yTitle || 'nm east (+) / west (−) of rhumb', font: AXFONT } } });
 }

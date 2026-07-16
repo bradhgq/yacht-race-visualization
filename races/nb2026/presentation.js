@@ -68,7 +68,7 @@ window.__RACE_CONFIG__ = {
     ref: 'Christopher Dragon',
     fleet: true, rhumb: true,
     overlays: { gulfstream: true, watches: false, navlog: true },
-    raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'sog',
+    raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'vmc',
   },
   race: {                                                            // app.js:445,452,464
     milestoneTop: 620, milestoneBottom: 30, milestoneStep: 10,
@@ -100,7 +100,7 @@ window.__RACE_CONFIG__ = {
     isoDaysCorr: [2.2, 2.5, 2.8],                                    // CORRECTED-mode rays (times compress under TCF)
     // elapsed|corrected y-metric toggle (module toggle: buttons in the card
     // header, state S.distMode, read by modules/distspeed.js)
-    toggle: { key: 'distMode', default: 'e',
+    toggle: { key: 'distMode', default: 'h',
               states: [{ v: 'e', label: 'Elapsed' }, { v: 'h', label: 'Corrected' }] },
   },
   kpis: [                                                            // app.js:361-368; {stats.*} resolve from data.stats

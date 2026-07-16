@@ -14,8 +14,8 @@ function buildDTF() {
   const dec = eventDecor(CFG.charts.dtf.eventTopY, 'time'); if (dec.marker) tr.push(dec.marker);
   const wl = watchLegend(); if (wl) tr.push(wl);
   // phase divides at the hero's boundary times, same labels as the won/lost chart
-  const shapes = [...overlayShapes('time'), ...dec.shapes], ann = [];
-  const top = CFG.phases[0][0];
+  const shapes = [...overlayShapes('time'), ...dec.shapes], ann = [...overlayAnnotations('time')];
+  const top = CFG.phases.length ? CFG.phases[0][0] : 0;
   CFG.phases.forEach(([a, b, l], i) => {
     const t0 = heroT(a === top ? a - 1 : a),
       t1 = (b === 0 ? Date.parse(D.boats[HERO].meta.fin.replace(' ', 'T') + offStr(CFG.time.utcOffset)) / 1000 : heroT(b));
@@ -25,5 +25,6 @@ function buildDTF() {
   });
   react('dtf', tr, { ...BASE(), shapes, annotations: ann, margin: { ...BASE().margin, t: 22, b: 36 },
     xaxis: { ...GAX, tickformat: '%a %H:%M', type: 'date' },
-    yaxis: { ...GAX, title: { text: 'nm to finish', font: AXFONT }, range: CFG.charts.dtf.yRange } });
+    yaxis: { ...GAX, title: { text: 'nm to finish', font: AXFONT },
+             ...(CFG.charts.dtf.yRange ? { range: CFG.charts.dtf.yRange } : { rangemode: 'tozero' }) } });
 }

@@ -2,9 +2,10 @@
    the Honey-rule chart. x = total distance sailed from the raw pings
    (meta.sailedNm, same basis as the published 687.6 nm); y = sailed distance ÷
    a time base, so the iso rays v = d/t are exact by construction. A y-metric
-   toggle (cfg.distspeed.toggle → S.distMode) switches the time base:
-     elapsed  (default) — y = meta.avgKt; rays = equal elapsed time (position on the water)
-     corrected          — y = sailedNm ÷ official corrected time; rays = equal corrected result
+   toggle (cfg.distspeed.toggle → S.distMode; default from config — both races
+   boot corrected, owner 2026-07-15) switches the time base:
+     elapsed   — y = meta.avgKt; rays = equal elapsed time (position on the water)
+     corrected — y = sailedNm ÷ official corrected time; rays = equal corrected result
    One dot per scored boat; grey rays = equal finish time; vertical line = the
    rhumb (theoretical minimum distance). kind:plot, so the layout rides the
    shell's react() wrapper (I6 for free). */
@@ -17,12 +18,12 @@ registerModule({
     kind: 'plot',
     height: 'min(470px, 92vw)',
     title: 'Distance sailed vs speed — minimum distance at maximum speed',
-    // note is swapped per mode in build(); this is the elapsed-mode default
+    // placeholder — build() swaps the per-mode caption in on every render
     note: '',
   },
   build(ctx) {
     const { D, S, h, cfg } = ctx, hero = cfg.hero.name;
-    const corrected = S.distMode === 'h';   // elapsed (default) | corrected
+    const corrected = S.distMode === 'h';   // elapsed | corrected
     const rows = [];
     for (const nm of Object.keys(D.boats)) {
       const m = D.boats[nm].meta;

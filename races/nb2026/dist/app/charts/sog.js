@@ -14,7 +14,20 @@ function buildSOG() {
   const c = CFG.charts.sog;
   const vmcMode = c.metrics && S.speedMetric === 'vmc';
   const key = vmcMode ? 'vmc' : 'sog';
-  const tr = seriesTraces(key, nm => nm === HERO ? 2.4 : 1.1).map(t => ({ ...t, showlegend: false, opacity: t.name === HERO ? 1 : .7 }));
+  let tr = seriesTraces(key, nm => nm === HERO ? 2.4 : 1.1).map(t => ({ ...t, showlegend: false, opacity: t.name === HERO ? 1 : .7 }));
+  // clipPreStart (BIR R9f): on the distance axis, pre-start milling interleaves
+  // x back and forth around the start's DTF and scribbles the right edge —
+  // start each boat's series at its own gun (a local-time fallback covers DNF
+  // boats with no official start); the clock axis keeps the honest record.
+  if (c.clipPreStart && S.axis === 'd') {
+    const fallback = Date.parse(c.clipPreStart.replace(' ', 'T') + offStr(CFG.time.utcOffset)) / 1000;
+    tr = tr.map(t => {
+      const b = D.boats[t.name]; if (!b || !b.t) return t;
+      const cut = (b.meta.el && b.meta.fin) ? startS(b) : fallback;
+      let i0 = 0; while (i0 < b.t.length && b.t[i0] < cut) i0++;
+      return { ...t, x: t.x.slice(i0), y: t.y.slice(i0) };
+    });
+  }
   const dec = eventDecor(c.eventTopY); if (dec.marker) tr.push(dec.marker);
   const wl = watchLegend(); if (wl && S.axis === 't') tr.push(wl);
   let shapes = [...overlayShapes(), ...dec.shapes];
@@ -31,7 +44,7 @@ function buildSOG() {
   const note = document.getElementById('sog_note');
   if (note && COPY.sections.sog.noteVmc)
     note.innerHTML = vmcMode ? COPY.sections.sog.noteVmc : COPY.sections.sog.note;
-  react('sog', tr, { ...BASE(), shapes,
+  react('sog', tr, { ...BASE(), shapes, annotations: overlayAnnotations(),
     xaxis: sharedXaxis(axisHint),
     yaxis: { ...GAX,
       title: { text: vmcMode ? 'VMC toward the finish (kts)' : 'Speed over ground (kts)', font: AXFONT },

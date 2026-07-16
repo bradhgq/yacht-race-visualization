@@ -2,16 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "nb2026",
+      "name": "race-viz-dist",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-u", "-m", "http.server", "8113", "--bind", "127.0.0.1", "-d", "races/nb2026/dist"],
-      "port": 8113
-    },
-    {
-      "name": "bir2026",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-u", "-m", "http.server", "8114", "--bind", "127.0.0.1", "-d", "races/bir2026/dist"],
-      "port": 8114
+      "runtimeArgs": ["-m", "http.server", "8642"],
+      "port": 8642
     }
   ]
 }

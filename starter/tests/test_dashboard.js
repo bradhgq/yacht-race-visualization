@@ -330,6 +330,9 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
   const DS = FIX.distspeed;
   if (DS)
   check('distspeed', `one dot per scored boat (${DS.dots}); hero at (${DS.hero}); rays exact; rhumb line`, () => {
+    // fixture values are elapsed-mode; pin state explicitly (the default is a
+    // presentation choice — owner set it to corrected on 2026-07-15)
+    S.distMode = 'e'; render('distspeed');
     const [dots, diamond] = plots.distspeed.traces;
     assert.equal(dots.x.length + diamond.x.length, DS.dots, 'dots+diamond != scored boats');
     approx(diamond.x[0], DS.hero[0], 0.05, 'hero sailed distance');

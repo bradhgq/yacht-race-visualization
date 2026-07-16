@@ -83,7 +83,7 @@ window.__RACE_CONFIG__ = {
     ref: 'Christopher Dragon XII',
     fleet: true, rhumb: true,
     overlays: { acts: true, arrows: true },
-    raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'sog',
+    raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'vmc',
   },
   race: {
     milestoneTop: 180, milestoneBottom: 10, milestoneStep: 10,   // app.js:487
@@ -103,6 +103,7 @@ window.__RACE_CONFIG__ = {
            yTitle: 'nm port (+) / starboard (−) of the active leg' },
     map: {
       hoverCls: true, hideLegend: true,
+      heightScale: 0.75,                 // owner (2026-07-15): course chart ~25% less vertical space
       ghostStyles: { ORC: { color: '#C0CDD6' }, PHRF: { color: '#C9BCA9', dash: 'dot' },
                      default: { color: '#C0CDD6' } },
       ghostDefaultCls: 'ORC',
@@ -112,7 +113,7 @@ window.__RACE_CONFIG__ = {
   distspeed: {                           // promoted shell module; iso rays v = d/t
     isoDays: [1.4, 1.6, 1.8],            // elapsed 33.6 / 38.4 / 43.2 h
     isoDaysCorr: [1.3, 1.5, 1.7],        // corrected times compress under ToT
-    toggle: { key: 'distMode', default: 'e',
+    toggle: { key: 'distMode', default: 'h',
               states: [{ v: 'e', label: 'Elapsed' }, { v: 'h', label: 'Corrected' }] },
   },
   lane: {                                // modules/lane.js geometry (app.js:617)
