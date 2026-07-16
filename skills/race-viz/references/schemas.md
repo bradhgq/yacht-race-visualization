@@ -224,7 +224,7 @@ Verdicts: confirmed / contradicted / partial / unresolvable.
 - Timezone-naive rendering: chart x-values are naive local strings; never Date objects.
 - Chart endpoints are exact official-results values.
 - State-model conventions: <one state object, pure build*() re-renders, axis helpers>.
-- The shell invariant list (shell/INVARIANTS.md, I1–I13) — I5–I13 govern productionization work.
+- The shell invariant list (shell/INVARIANTS.md, I1–I18) — I5–I13 and I15–I18 govern productionization work.
 - Golden values (frozen): <paste the config goldens block>.
 - <anything added during CP-4 rounds>
 
