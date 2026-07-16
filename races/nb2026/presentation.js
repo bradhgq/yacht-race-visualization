@@ -127,7 +127,9 @@ window.__RACE_CONFIG__ = {
   // round 3 (tier-1 opinion layer, owner 2026-07-15): verdict leads the page,
   // the phase decomposition rides directly under the won/lost chart it cuts,
   // lessons close the story after the log
-  layout: ['@verdict', 'map', 'dtf', 'race', '@phasegap', '@finstrip', '@distspeed', 'two:xte,sog', '@parkfair', 'events', '@lessons', '@navlog'],
-  modules: ['verdict', 'phasegap', 'parkfair', 'finstrip', 'distspeed', 'navlog', 'lessons'],
+  layout: ['@verdict', 'map', 'dtf', 'race', '@phasegap', '@finstrip', '@distspeed', 'two:xte,sog', '@parkfair', 'events', '@lessons',
+           '@twhelm', '@twreef', '@twnight', '@tweast', '@twpark', '@navlog'],
+  modules: ['verdict', 'phasegap', 'parkfair', 'finstrip', 'distspeed', 'navlog', 'lessons',
+            'twhelm', 'twreef', 'twnight', 'tweast', 'twpark'],
   overlays: ['gulfstream', 'watches'],
 };

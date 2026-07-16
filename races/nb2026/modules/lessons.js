@@ -21,7 +21,14 @@ registerModule({
       const h2 = card.querySelector('h2'); if (h2) h2.innerHTML = L.title;
       const note = card.querySelector('.note'); if (note) note.innerHTML = L.note;
     }
-    ctx.el.innerHTML =
+    // Sebastian's five, as jump links to their paired charts (below this card)
+    const five = !L.fiveUp ? '' :
+      `<ol style="margin:12px 0 2px;padding-left:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:4px 24px">` +
+      L.fiveUp.map(f =>
+        `<li style="font-size:13px;line-height:1.55"><a href="${f.href}" style="color:var(--ink);text-decoration:none;font-weight:600">${f.txt}</a>
+           <a href="${f.href}" style="font-family:var(--mono);font-size:10px;color:var(--magenta);text-decoration:none;white-space:nowrap"> chart ↓</a></li>`).join('') +
+      `</ol><div style="border-bottom:1px solid var(--grid);margin:12px 0 2px"></div>`;
+    ctx.el.innerHTML = five +
       `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:10px">` +
       L.groups.map(g =>
         `<div>
