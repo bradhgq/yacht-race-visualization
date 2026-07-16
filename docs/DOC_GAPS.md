@@ -143,3 +143,15 @@ without guessing. (What I *did* about each is in `REPO_NOTES.md`.)
   BIR numbers as the cautionary example. The BIR fixture comment
   (`races/bir2026/tests/regression.json`) had already recorded the basis; the
   skill now matches it.
+
+- **#4 CLOSED** (skill-consolidation round, 2026-07-16): schemas.md's payload
+  contract now matches the frozen payload it documents — the recon matched-time
+  key is config-driven (`reconcile.matched_key`; template default
+  `matched_local`, NB2026 ships `matched_edt` per REPO_NOTES #6), verdicts are
+  `match|warn`, and `parkFair` u4/u2 (and the module-canary golden example) are
+  numbers, never `"31%"` strings.
+
+- **#9 CLOSED** (same round): the derived epoch (1782244492) has been recorded
+  in `races/nb2026/config.yaml time.tz_probe.track_epoch_utc` since Phase 1
+  (REPO_NOTES #13); nothing further to fix.
+

@@ -43,7 +43,7 @@ paths: { out_dir: out/ }
 goldens:                        # frozen at CP-2; changing one requires a recorded user instruction
   tz_probe: { epoch: 0, rendered: "YYYY-MM-DD HH:MM" }
   endpoints: { ref: "", corrected_min: 0.0, elapsed_min: 0.0, pace_min_per_100: 0.0 }
-  module_canaries: {}           # e.g. { park: { boat: "Gemini II", u4: "31%" } }
+  module_canaries: {}           # e.g. { park: { boat: "Gemini II", u4: 31 } } — numbers, not "31%"
   finstrip_count: 0
 # ── selection filters (std since R2; division/class structure varies by race
 #    and scoring system, so both are per-race config, not shell constants) ──
@@ -84,12 +84,17 @@ rating_bands: { widths: [0.01, 0.02] }   # hero-centred rating-band chips (meta.
   fleet: [ { name, lat:[], lon:[] } ],           // hourly ghost layer, all boats
   events: [ { t, cat, label, txt } ],            // from events.yaml, post privacy cut
   watches: [ [t0,t1], ... ],
-  parkFair: { <name>: { enter, hrs, mean, u4, u2, xte } },
-  recon: [ { t, matched_local, log:[lat,lon], trk:[lat,lon], d, speed, course, wind,
-             temp, verdict: ok|warn|error, note } ],
+  parkFair: { <name>: { enter, hrs, mean, u4, u2, xte } },  // u4/u2 are NUMBERS (whole pct
+                                                 // points, e.g. 31) — never "31%" strings
+  recon: [ { t, <matched_key>, log:[lat,lon], trk:[lat,lon], d, speed, course, wind,
+             temp, verdict: match|warn, note } ], // matched-time key is named by config
+                                                 // reconcile.matched_key (template default
+                                                 // matched_local; the NB2026 frozen payload
+                                                 // ships matched_edt — parity won)
   mil: { milestones:[...], series:{...} },
   stats: { dist_sailed, rhumb, extra, avg_sog, max_sog, pct_under3, pct_under5,
-           max_xte_e, max_xte_w }
+           max_xte_e, max_xte_w },
+  meta: { generated: "YYYY-MM-DD", tz: "EDT (UTC-4)" }
 }
 ```
 
