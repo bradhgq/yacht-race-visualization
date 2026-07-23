@@ -24,7 +24,7 @@ registerOverlay({
   bandAnnotations(ctx, mode) {
     const timeAxis = mode === 'time' || (mode === undefined && ctx.S.axis === 't');
     if (!timeAxis || ctx.h.narrow()) return [];
-    return [{ x: '2025-07-25 16:55', y: 1.045, xref: 'x', yref: 'paper', showarrow: false,
+    return [{ x: '2025-07-25 16:55', y: 0.96, xref: 'x', yref: 'paper', showarrow: false,   // inside the plot: the y>1 row belongs to phase labels
       text: 'SQUALL LINE · 24–32 kt gusts, west→east', xanchor: 'center',
       font: { size: 9, color: '#A34E14', family: 'SF Mono, Menlo, monospace' } }];
   },

@@ -163,6 +163,14 @@ function makeCtx(el) {
 /* ═══ scoped re-rendering, batched through rAF ═══ */
 let PLOTLY_CHARTS, BUILDERS, SCOPES;
 function initRegistry() {
+  // charts.<id>.height (additive, config-gated — ALIR stage-5 review): a race
+  // may override a shell chart's CSS height with any CSS size string; absent
+  // key = stylesheet default (nb/bir unaffected). Same licence as map heightScale.
+  for (const id of ['dtf', 'race', 'xte', 'sog']) {
+    const h = CFG.charts && CFG.charts[id] && CFG.charts[id].height;
+    const el = h && document.getElementById(id);
+    if (el && el.style) el.style.height = h;
+  }
   PLOTLY_CHARTS = new Set(['map', 'dtf', 'race', 'xte', 'sog']);
   BUILDERS = { controls: buildControls, map: buildMap, dtf: buildDTF, race: buildRace,
                xte: buildXTE, sog: buildSOG, events: buildEventTable };

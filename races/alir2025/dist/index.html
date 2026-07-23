@@ -17,26 +17,26 @@
 <meta name="twitter:title" content="ALIR 2025 — Around Long Island Regatta">
 <meta name="twitter:description" content="ALIR 2025: the reach, the squall, the park — 43 finishers around Long Island.">
 <meta name="twitter:image" content="og.png">
-<link rel="icon" href="favicon.svg?v=3de5c5cecc" type="image/svg+xml">
-<link rel="stylesheet" href="tokens.css?v=3de5c5cecc">
-<link rel="stylesheet" href="styles.css?v=3de5c5cecc">
+<link rel="icon" href="favicon.svg?v=c6b083e274" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css?v=c6b083e274">
+<link rel="stylesheet" href="styles.css?v=c6b083e274">
 <!-- DATA:FETCH — start the core payload download before the deferred scripts arrive -->
-<script>window.__CORE_FETCH=fetch('data/core.json?v=3de5c5cecc').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});</script>
+<script>window.__CORE_FETCH=fetch('data/core.json?v=c6b083e274').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});</script>
 <!-- /DATA:FETCH -->
-<script src="app/helpers.js?v=3de5c5cecc" defer></script>
-<script src="app/tokens.js?v=3de5c5cecc" defer></script>
-<script src="app/core.js?v=3de5c5cecc" defer></script>
-<script src="app/charts/map.js?v=3de5c5cecc" defer></script>
-<script src="app/charts/dtf.js?v=3de5c5cecc" defer></script>
-<script src="app/charts/race.js?v=3de5c5cecc" defer></script>
-<script src="app/charts/xte.js?v=3de5c5cecc" defer></script>
-<script src="app/charts/sog.js?v=3de5c5cecc" defer></script>
-<script src="race/presentation.js?v=3de5c5cecc" defer></script>
-<script src="race/copy.js?v=3de5c5cecc" defer></script>
-<script src="race/modules/distspeed.js?v=3de5c5cecc" defer></script>
-<script src="race/modules/door.js?v=3de5c5cecc" defer></script>
-<script src="race/overlays/squall.js?v=3de5c5cecc" defer></script>
-<script src="race/overlays/courseline.js?v=3de5c5cecc" defer></script>
+<script src="app/helpers.js?v=c6b083e274" defer></script>
+<script src="app/tokens.js?v=c6b083e274" defer></script>
+<script src="app/core.js?v=c6b083e274" defer></script>
+<script src="app/charts/map.js?v=c6b083e274" defer></script>
+<script src="app/charts/dtf.js?v=c6b083e274" defer></script>
+<script src="app/charts/race.js?v=c6b083e274" defer></script>
+<script src="app/charts/xte.js?v=c6b083e274" defer></script>
+<script src="app/charts/sog.js?v=c6b083e274" defer></script>
+<script src="race/presentation.js?v=c6b083e274" defer></script>
+<script src="race/copy.js?v=c6b083e274" defer></script>
+<script src="race/modules/distspeed.js?v=c6b083e274" defer></script>
+<script src="race/modules/door.js?v=c6b083e274" defer></script>
+<script src="race/overlays/squall.js?v=c6b083e274" defer></script>
+<script src="race/overlays/courseline.js?v=c6b083e274" defer></script>
 <script src="vendor/plotly-basic-2.35.2.min.js" id="plotlyjs" defer></script>
 </head>
 <body>
@@ -45,7 +45,7 @@
 <header class="titleblock">
   <div class="tb-eyebrow">Chart of the Race · Around Long Island Regatta 2025 · 24–26 July · 207 NM</div>
   <h1><span class="mag">Daffodil</span> · <span style="color:#0E8A8A">Max</span> · and the finish door</h1>
-  <div class="tb-sub">New York Harbor, down the Narrows and out past Ambrose R“14”, the long ocean reach to Montauk, through Plum Gut, and a beat down a dying Sound to Glen Cove — where the race stopped being about speed and became about arrival time.</div>
+  <div class="tb-sub">New York Harbor, down the Narrows and out past Ambrose R“14”, the long ocean reach to Montauk, through Plum Gut, and a beat down a dying Sound to Sea Cliff — where the race stopped being about speed and became about arrival time.</div>
   <div class="tb-result"><span>ALIR Trophy <b>Max</b> · Pogo 50</span><span>Multihull line honors <b>Daffodil</b> · Corsair F31R (sole multihull)</span><span>Monohull line honors <b>Wahoo</b> · 24:11:49</span><span>Finishers <b>43 / 51</b> starters</span></div>
   <div class="tzn">All times EDT. Finish times verified against the tracker (the published results carry EDT wall clock mislabeled as UTC — corrected here).</div>
 </header>
@@ -99,7 +99,7 @@
 
 <section class="card">
   <div class="hd"><h2>The race</h2><span class="tools">x-axis: clock time</span></div>
-  <div class="note" id="dtf_note">Distance to the finish against the clock. The flat shelves on Friday night are real: the post-frontal calm parked the mid-fleet within sight of Glen Cove. The tinted band is the squall line crossing the Sound.</div>
+  <div class="note" id="dtf_note">Distance to the finish against the clock. The flat shelves on Friday night are real: the post-frontal calm parked the mid-fleet within sight of Sea Cliff. The tinted band is the squall line crossing the Sound.</div>
   <div id="dtf" class="plot"></div>
   <div class="tapnote" id="tap_dtf"></div>
 </section>
@@ -144,7 +144,7 @@
 </section>
 <section class="card">
   <div class="hd"><h2>Speed</h2><span class="tools"><button type="button" class="modebtn" id="sogm_s">SOG</button><button type="button" class="modebtn" id="sogm_v">VMC (toward finish)</button>&nbsp;·&nbsp;<span id="sog_axnote"></span></span></div>
-  <div class="note" id="sog_note">Speed over ground, smoothed on a 30-minute window. The race's fastest sustained sailing is the ocean reach — <span class="mag">Daffodil</span> peaks at 13.8 kt there, pacing boats 20 feet longer — and the slowest is Friday night off Glen Cove, where the mid-fleet drifts under 1 kt for hours. The tinted band on clock views is the squall: a two-minute, ~30 kt event a 5-minute tracker mostly records as the near-stops around it (crews dousing sail), not the gust itself.</div>
+  <div class="note" id="sog_note">Speed over ground, smoothed on a 30-minute window. The race's fastest sustained sailing is the ocean reach — <span class="mag">Daffodil</span> peaks at 13.8 kt there, pacing boats 20 feet longer — and the slowest is Friday night off Sea Cliff, where the mid-fleet drifts under 1 kt for hours. The tinted band on clock views is the squall: a two-minute, ~30 kt event a 5-minute tracker mostly records as the near-stops around it (crews dousing sail), not the gust itself.</div>
   <div id="sog" class="plot"></div>
   <div class="tapnote" id="tap_sog"></div>
 </section>

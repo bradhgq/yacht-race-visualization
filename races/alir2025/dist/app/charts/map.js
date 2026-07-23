@@ -130,7 +130,11 @@ function buildMap() {
     yaxis: { ...GAX, title: nw ? undefined : { text: 'Latitude', font: AXFONT }, ...(latRange ? { range: latRange } : {}) },
     // charts.map.legendBottom (additive, config-gated — ALIR round 2): force the
     // horizontal below-chart legend at every width, not just narrow
-    legend: (nw || mc.legendBottom) ? { orientation: 'h', y: -0.08, font: { size: 10 } } : { orientation: 'v', x: 1.001, y: 1, font: { size: 10.5 } },
-    margin: nw ? { l: 36, r: 10, t: 8, b: 30 } : { l: 56, r: 150, t: 8, b: 40 },
+    legend: nw ? { orientation: 'h', y: -0.08, font: { size: 10 } }
+      : mc.legendBottom ? { orientation: 'h', x: 0, y: -0.14, font: { size: 10.5 }, entrywidth: 170 }
+      : { orientation: 'v', x: 1.001, y: 1, font: { size: 10.5 } },
+    margin: nw ? { l: 36, r: 10, t: 8, b: 30 }
+      : mc.legendBottom ? { l: 56, r: 24, t: 8, b: 100 }   // legend lives under the axis, not on it;
+      : { l: 56, r: 150, t: 8, b: 40 },                    // reclaim the right gutter (no v-legend)
     ...(mc.hideLegend ? { showlegend: false } : {}) });
 }

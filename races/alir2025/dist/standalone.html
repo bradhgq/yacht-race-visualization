@@ -17,7 +17,7 @@
 <meta name="twitter:title" content="ALIR 2025 — Around Long Island Regatta">
 <meta name="twitter:description" content="ALIR 2025: the reach, the squall, the park — 43 finishers around Long Island.">
 <meta name="twitter:image" content="og.png">
-<link rel="icon" href="favicon.svg?v=3de5c5cecc" type="image/svg+xml">
+<link rel="icon" href="favicon.svg?v=c6b083e274" type="image/svg+xml">
 <style>
 /* Design tokens — the chart-paper / NOAA-chart identity (RETROSPECTIVE §3).
    Race-agnostic except --magenta, the HERO ACCENT: per-boat re-skin = change
@@ -260,7 +260,7 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
 <header class="titleblock">
   <div class="tb-eyebrow">Chart of the Race · Around Long Island Regatta 2025 · 24–26 July · 207 NM</div>
   <h1><span class="mag">Daffodil</span> · <span style="color:#0E8A8A">Max</span> · and the finish door</h1>
-  <div class="tb-sub">New York Harbor, down the Narrows and out past Ambrose R“14”, the long ocean reach to Montauk, through Plum Gut, and a beat down a dying Sound to Glen Cove — where the race stopped being about speed and became about arrival time.</div>
+  <div class="tb-sub">New York Harbor, down the Narrows and out past Ambrose R“14”, the long ocean reach to Montauk, through Plum Gut, and a beat down a dying Sound to Sea Cliff — where the race stopped being about speed and became about arrival time.</div>
   <div class="tb-result"><span>ALIR Trophy <b>Max</b> · Pogo 50</span><span>Multihull line honors <b>Daffodil</b> · Corsair F31R (sole multihull)</span><span>Monohull line honors <b>Wahoo</b> · 24:11:49</span><span>Finishers <b>43 / 51</b> starters</span></div>
   <div class="tzn">All times EDT. Finish times verified against the tracker (the published results carry EDT wall clock mislabeled as UTC — corrected here).</div>
 </header>
@@ -314,7 +314,7 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
 
 <section class="card">
   <div class="hd"><h2>The race</h2><span class="tools">x-axis: clock time</span></div>
-  <div class="note" id="dtf_note">Distance to the finish against the clock. The flat shelves on Friday night are real: the post-frontal calm parked the mid-fleet within sight of Glen Cove. The tinted band is the squall line crossing the Sound.</div>
+  <div class="note" id="dtf_note">Distance to the finish against the clock. The flat shelves on Friday night are real: the post-frontal calm parked the mid-fleet within sight of Sea Cliff. The tinted band is the squall line crossing the Sound.</div>
   <div id="dtf" class="plot"></div>
   <div class="tapnote" id="tap_dtf"></div>
 </section>
@@ -359,7 +359,7 @@ kbd{font-family:var(--mono);background:#EDF2F4;border-radius:3px;padding:0 5px;f
 </section>
 <section class="card">
   <div class="hd"><h2>Speed</h2><span class="tools"><button type="button" class="modebtn" id="sogm_s">SOG</button><button type="button" class="modebtn" id="sogm_v">VMC (toward finish)</button>&nbsp;·&nbsp;<span id="sog_axnote"></span></span></div>
-  <div class="note" id="sog_note">Speed over ground, smoothed on a 30-minute window. The race's fastest sustained sailing is the ocean reach — <span class="mag">Daffodil</span> peaks at 13.8 kt there, pacing boats 20 feet longer — and the slowest is Friday night off Glen Cove, where the mid-fleet drifts under 1 kt for hours. The tinted band on clock views is the squall: a two-minute, ~30 kt event a 5-minute tracker mostly records as the near-stops around it (crews dousing sail), not the gust itself.</div>
+  <div class="note" id="sog_note">Speed over ground, smoothed on a 30-minute window. The race's fastest sustained sailing is the ocean reach — <span class="mag">Daffodil</span> peaks at 13.8 kt there, pacing boats 20 feet longer — and the slowest is Friday night off Sea Cliff, where the mid-fleet drifts under 1 kt for hours. The tinted band on clock views is the squall: a two-minute, ~30 kt event a 5-minute tracker mostly records as the near-stops around it (crews dousing sail), not the gust itself.</div>
   <div id="sog" class="plot"></div>
   <div class="tapnote" id="tap_sog"></div>
 </section>
@@ -542,7 +542,7 @@ const plotlyReady = new Promise(res => {
   else go();
 });
 
-function dataURL(name) { return 'data/' + name + '?v=3de5c5cecc'; }
+function dataURL(name) { return 'data/' + name + '?v=c6b083e274'; }
 async function loadJSON(name) {
   const r = await fetch(dataURL(name));
   if (!r.ok) throw new Error(name + ': HTTP ' + r.status);
@@ -676,6 +676,14 @@ function makeCtx(el) {
 /* ═══ scoped re-rendering, batched through rAF ═══ */
 let PLOTLY_CHARTS, BUILDERS, SCOPES;
 function initRegistry() {
+  // charts.<id>.height (additive, config-gated — ALIR stage-5 review): a race
+  // may override a shell chart's CSS height with any CSS size string; absent
+  // key = stylesheet default (nb/bir unaffected). Same licence as map heightScale.
+  for (const id of ['dtf', 'race', 'xte', 'sog']) {
+    const h = CFG.charts && CFG.charts[id] && CFG.charts[id].height;
+    const el = h && document.getElementById(id);
+    if (el && el.style) el.style.height = h;
+  }
   PLOTLY_CHARTS = new Set(['map', 'dtf', 'race', 'xte', 'sog']);
   BUILDERS = { controls: buildControls, map: buildMap, dtf: buildDTF, race: buildRace,
                xte: buildXTE, sog: buildSOG, events: buildEventTable };
@@ -1375,8 +1383,12 @@ function buildMap() {
     yaxis: { ...GAX, title: nw ? undefined : { text: 'Latitude', font: AXFONT }, ...(latRange ? { range: latRange } : {}) },
     // charts.map.legendBottom (additive, config-gated — ALIR round 2): force the
     // horizontal below-chart legend at every width, not just narrow
-    legend: (nw || mc.legendBottom) ? { orientation: 'h', y: -0.08, font: { size: 10 } } : { orientation: 'v', x: 1.001, y: 1, font: { size: 10.5 } },
-    margin: nw ? { l: 36, r: 10, t: 8, b: 30 } : { l: 56, r: 150, t: 8, b: 40 },
+    legend: nw ? { orientation: 'h', y: -0.08, font: { size: 10 } }
+      : mc.legendBottom ? { orientation: 'h', x: 0, y: -0.14, font: { size: 10.5 }, entrywidth: 170 }
+      : { orientation: 'v', x: 1.001, y: 1, font: { size: 10.5 } },
+    margin: nw ? { l: 36, r: 10, t: 8, b: 30 }
+      : mc.legendBottom ? { l: 56, r: 24, t: 8, b: 100 }   // legend lives under the axis, not on it;
+      : { l: 56, r: 150, t: 8, b: 40 },                    // reclaim the right gutter (no v-legend)
     ...(mc.hideLegend ? { showlegend: false } : {}) });
 }
 
@@ -1618,8 +1630,8 @@ window.__RACE_CONFIG__ = {
     start: [40.7028, -74.0367], finish: [40.8619, -73.6603],   // = config.yaml course
     rhumbNm: 207.0,                       // official scoring distance (SI)
     dtfStartFallback: 205.8,              // routed polyline DTF at the start
-    mapRange: { lon: [-74.15, -71.65], lat: [40.44, 41.36] },  // trimmed-fleet bbox + margin
-    startLabel: 'START — Ellis Island', finishLabel: 'FINISH — Glen Cove',
+    mapRange: { lon: [-74.20, -71.72], lat: [40.46, 41.31] },  // snug right (owner); left pad clears the START label
+    startLabel: 'START — Ellis Island', finishLabel: 'FINISH — Sea Cliff',
     polyline: [                         // = config.yaml course.start + marks + finish (source of
       [40.7028, -74.0367],              //   truth; keep in lockstep) — drawn by overlays/courseline.js
       [40.6060, -74.0450], [40.5281, -74.0094], [40.5500, -73.4000],
@@ -1668,17 +1680,17 @@ window.__RACE_CONFIG__ = {
     overlays: {},
     raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'vmc',
   },
-  race: { milestoneTop: 200, milestoneBottom: 1, milestoneStep: 1,   // every 1 nm (owner, round 3)
+  race: { height: '430px', milestoneTop: 200, milestoneBottom: 1, milestoneStep: 1,   // every 1 nm (owner, round 3)
           correctedModel: 'tod',   // PHRF time-on-distance — first ToD race through the shell;
                                    // 'tot' (the default) would multiply partial elapsed by the
                                    // raw sec/mi rating and render garbage mid-race
           paceMinDone: 15, eventRowY: 19, ratingLabel: 'PHRF' },
   charts: {
     map: { heightScale: 0.75, legendBottom: true },  // 0.75x height (owner, round 3), legend below
-    dtf: { eventTopY: 200 },
-    sog: { yRange: [0, 16], eventTopY: 15,   // headroom: the trimaran's reach tops the monohull fleet
+    dtf: { eventTopY: 200, height: '280px' },
+    sog: { height: '340px', yRange: [0, 16], eventTopY: 15,   // headroom: the trimaran's reach tops the monohull fleet
            metrics: { s: 'SOG', v: 'VMC (toward finish)' }, vmcYRange: [-3, 14] },
-    xte: { eventTopY: 8 },
+    xte: { eventTopY: 8, height: '340px' },
   },
   ratingBands: { widths: [15, 30] },      // hero-centred PHRF bands: ±15 s/mi = Daffodil/Max/
                                           // Avalanche; ±30 adds Cougar, Ohana, Hunter
@@ -1700,7 +1712,7 @@ window.__RACE_CONFIG__ = {
     [196, 'AMBROSE R“14”', 28, 22],
     [95, 'MONTAUK', 30, -18],
     [70, 'PLUM GUT', -10, -26],
-    [15, 'THE DOOR', -34, 14],
+    [15, 'THE DOOR', 74, 66],    // into the loop interior — clear of the finish cluster and crew marker
   ],
   controls: { pills: ['@ghosts'] },   // no straight-line pill (owner, round 2); scored course is always on
   layout: ['map', 'dtf', 'race', '@door', '@distspeed', 'two:xte,sog', 'events'],
@@ -1719,7 +1731,7 @@ window.__COPY__ = {
   titleblock: {
     eyebrow: 'Chart of the Race · Around Long Island Regatta 2025 · 24–26 July · 207 NM',
     h1: '<span class="mag">Daffodil</span> · <span style="color:#0E8A8A">Max</span> · and the finish door',
-    sub: 'New York Harbor, down the Narrows and out past Ambrose R“14”, the long ocean reach to Montauk, through Plum Gut, and a beat down a dying Sound to Glen Cove — where the race stopped being about speed and became about arrival time.',
+    sub: 'New York Harbor, down the Narrows and out past Ambrose R“14”, the long ocean reach to Montauk, through Plum Gut, and a beat down a dying Sound to Sea Cliff — where the race stopped being about speed and became about arrival time.',
     result: '<span>ALIR Trophy <b>Max</b> · Pogo 50</span><span>Multihull line honors <b>Daffodil</b> · Corsair F31R (sole multihull)</span>' +
       '<span>Monohull line honors <b>Wahoo</b> · 24:11:49</span><span>Finishers <b>43 / 51</b> starters</span>',
     tzn: 'All times EDT. Finish times verified against the tracker (the published results carry EDT wall clock mislabeled as UTC — corrected here).',
@@ -1728,10 +1740,10 @@ window.__COPY__ = {
   noscript: 'This dashboard is interactive and needs JavaScript to draw its charts. The underlying data is plain JSON in <a href="data/core.json">data/core.json</a> if you\'d rather read it raw.',
   sections: {
     map:    { title: 'The course', note: 'Fifty trackers, five-minute pings. The dashed magenta line is the scored course (207 nm by the SIs; routed here at 205.8) — its one mandatory mark is Ambrose Channel R“14”, lower left. 42 of 43 finishers entered the Sound through Plum Gut — <b>Yopo</b> alone took the Sluiceway.' },
-    dtf:    { title: 'The race', note: 'Distance to the finish against the clock. The flat shelves on Friday night are real: the post-frontal calm parked the mid-fleet within sight of Glen Cove. The tinted band is the squall line crossing the Sound.' },
+    dtf:    { title: 'The race', note: 'Distance to the finish against the clock. The flat shelves on Friday night are real: the post-frontal calm parked the mid-fleet within sight of Sea Cliff. The tinted band is the squall line crossing the Sound.' },
     race:   { title: 'Where the race was won and lost — vs <span id="refname" style="color:var(--magenta)"></span>' },
     xte:    { title: 'Offset from the course line', note: 'Signed distance off the routed course. The south-shore spine of this course is drawn from the fleet\'s own sailed median, so large offsets here are sailing-angle choices, not errors — this is not an off-course meter.' },
-    sog:    { title: 'Speed', note: 'Speed over ground, smoothed on a 30-minute window. The race\'s fastest sustained sailing is the ocean reach — <span class="mag">Daffodil</span> peaks at 13.8 kt there, pacing boats 20 feet longer — and the slowest is Friday night off Glen Cove, where the mid-fleet drifts under 1 kt for hours. The tinted band on clock views is the squall: a two-minute, ~30 kt event a 5-minute tracker mostly records as the near-stops around it (crews dousing sail), not the gust itself.', noteVmc: 'VMC is closing speed on the finish along the routed course — computed from positions alone. The tracker carries no wind, so no VMG is shown or knowable here. Negatives are real: tacks, and drift in the park.' },
+    sog:    { title: 'Speed', note: 'Speed over ground, smoothed on a 30-minute window. The race\'s fastest sustained sailing is the ocean reach — <span class="mag">Daffodil</span> peaks at 13.8 kt there, pacing boats 20 feet longer — and the slowest is Friday night off Sea Cliff, where the mid-fleet drifts under 1 kt for hours. The tinted band on clock views is the squall: a two-minute, ~30 kt event a 5-minute tracker mostly records as the near-stops around it (crews dousing sail), not the gust itself.', noteVmc: 'VMC is closing speed on the finish along the routed course — computed from positions alone. The tracker carries no wind, so no VMG is shown or knowable here. Negatives are real: tacks, and drift in the park.' },
     events: { title: 'Race log — every marked moment', note: 'Nine public entries, each source-labeled: verified analysis waypoints (the east turn, the reach, Montauk, the upwind Sound, line honors, Max and the door), the squall line from the station record, the squall on Daffodil from the owner\'s deck account (corroborated by buoy 44065), and the midnight anchor 175 yards from the line (Lenoble\'s published account, confirmed by the tracker).' },
   },
   race: { notes: {
@@ -1920,13 +1932,13 @@ registerModule({
   deps: ['boats', 'ev'],
   section: {
     kind: 'plot',
-    height: 'min(440px, 92vw)',
+    height: 'min(380px, 92vw)',
     title: 'The finish door — the last 15 nm',
     note: 'Each dot is one finisher: <b>when</b> it reached 15 nm to go (x) and <b>how long</b> those 15 nm then took (y). ' +
       'Read it left to right: before ~2 PM Friday the door is open — 2–3 h to the line; <span class="mag">Max</span> is the last boat through at pace. ' +
       'Then the squall line crosses, the post-frontal calm sets in behind it, and the same 15 nm cost the mid-fleet 4.5–6.7 h — ' +
       '<span class="mag">Daffodil</span> entered just 2¾ h after Max and paid 5.8 h. After midnight the new northerly reopens the door. ' +
-      'No fixed slow zone exists on this course: the water off Glen Cove was fast at noon and dead at ten — the obstacle was arrival time, not geography.',
+      'No fixed slow zone exists on this course: the water off Sea Cliff was fast at noon and dead at ten — the obstacle was arrival time, not geography.',
   },
   build(ctx) {
     const { D, S, cfg, h } = ctx;
@@ -2015,7 +2027,7 @@ registerOverlay({
   bandAnnotations(ctx, mode) {
     const timeAxis = mode === 'time' || (mode === undefined && ctx.S.axis === 't');
     if (!timeAxis || ctx.h.narrow()) return [];
-    return [{ x: '2025-07-25 16:55', y: 1.045, xref: 'x', yref: 'paper', showarrow: false,
+    return [{ x: '2025-07-25 16:55', y: 0.96, xref: 'x', yref: 'paper', showarrow: false,   // inside the plot: the y>1 row belongs to phase labels
       text: 'SQUALL LINE · 24–32 kt gusts, west→east', xanchor: 'center',
       font: { size: 9, color: '#A34E14', family: 'SF Mono, Menlo, monospace' } }];
   },

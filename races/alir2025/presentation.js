@@ -18,8 +18,8 @@ window.__RACE_CONFIG__ = {
     start: [40.7028, -74.0367], finish: [40.8619, -73.6603],   // = config.yaml course
     rhumbNm: 207.0,                       // official scoring distance (SI)
     dtfStartFallback: 205.8,              // routed polyline DTF at the start
-    mapRange: { lon: [-74.15, -71.65], lat: [40.44, 41.36] },  // trimmed-fleet bbox + margin
-    startLabel: 'START — Ellis Island', finishLabel: 'FINISH — Glen Cove',
+    mapRange: { lon: [-74.20, -71.72], lat: [40.46, 41.31] },  // snug right (owner); left pad clears the START label
+    startLabel: 'START — Ellis Island', finishLabel: 'FINISH — Sea Cliff',
     polyline: [                         // = config.yaml course.start + marks + finish (source of
       [40.7028, -74.0367],              //   truth; keep in lockstep) — drawn by overlays/courseline.js
       [40.6060, -74.0450], [40.5281, -74.0094], [40.5500, -73.4000],
@@ -68,17 +68,17 @@ window.__RACE_CONFIG__ = {
     overlays: {},
     raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'vmc',
   },
-  race: { milestoneTop: 200, milestoneBottom: 1, milestoneStep: 1,   // every 1 nm (owner, round 3)
+  race: { height: '430px', milestoneTop: 200, milestoneBottom: 1, milestoneStep: 1,   // every 1 nm (owner, round 3)
           correctedModel: 'tod',   // PHRF time-on-distance — first ToD race through the shell;
                                    // 'tot' (the default) would multiply partial elapsed by the
                                    // raw sec/mi rating and render garbage mid-race
           paceMinDone: 15, eventRowY: 19, ratingLabel: 'PHRF' },
   charts: {
     map: { heightScale: 0.75, legendBottom: true },  // 0.75x height (owner, round 3), legend below
-    dtf: { eventTopY: 200 },
-    sog: { yRange: [0, 16], eventTopY: 15,   // headroom: the trimaran's reach tops the monohull fleet
+    dtf: { eventTopY: 200, height: '280px' },
+    sog: { height: '340px', yRange: [0, 16], eventTopY: 15,   // headroom: the trimaran's reach tops the monohull fleet
            metrics: { s: 'SOG', v: 'VMC (toward finish)' }, vmcYRange: [-3, 14] },
-    xte: { eventTopY: 8 },
+    xte: { eventTopY: 8, height: '340px' },
   },
   ratingBands: { widths: [15, 30] },      // hero-centred PHRF bands: ±15 s/mi = Daffodil/Max/
                                           // Avalanche; ±30 adds Cougar, Ohana, Hunter
@@ -100,7 +100,7 @@ window.__RACE_CONFIG__ = {
     [196, 'AMBROSE R“14”', 28, 22],
     [95, 'MONTAUK', 30, -18],
     [70, 'PLUM GUT', -10, -26],
-    [15, 'THE DOOR', -34, 14],
+    [15, 'THE DOOR', 74, 66],    // into the loop interior — clear of the finish cluster and crew marker
   ],
   controls: { pills: ['@ghosts'] },   // no straight-line pill (owner, round 2); scored course is always on
   layout: ['map', 'dtf', 'race', '@door', '@distspeed', 'two:xte,sog', 'events'],

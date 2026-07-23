@@ -18,13 +18,13 @@ registerModule({
   deps: ['boats', 'ev'],
   section: {
     kind: 'plot',
-    height: 'min(440px, 92vw)',
+    height: 'min(380px, 92vw)',
     title: 'The finish door — the last 15 nm',
     note: 'Each dot is one finisher: <b>when</b> it reached 15 nm to go (x) and <b>how long</b> those 15 nm then took (y). ' +
       'Read it left to right: before ~2 PM Friday the door is open — 2–3 h to the line; <span class="mag">Max</span> is the last boat through at pace. ' +
       'Then the squall line crosses, the post-frontal calm sets in behind it, and the same 15 nm cost the mid-fleet 4.5–6.7 h — ' +
       '<span class="mag">Daffodil</span> entered just 2¾ h after Max and paid 5.8 h. After midnight the new northerly reopens the door. ' +
-      'No fixed slow zone exists on this course: the water off Glen Cove was fast at noon and dead at ten — the obstacle was arrival time, not geography.',
+      'No fixed slow zone exists on this course: the water off Sea Cliff was fast at noon and dead at ten — the obstacle was arrival time, not geography.',
   },
   build(ctx) {
     const { D, S, cfg, h } = ctx;
