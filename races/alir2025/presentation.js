@@ -20,6 +20,13 @@ window.__RACE_CONFIG__ = {
     dtfStartFallback: 205.8,              // routed polyline DTF at the start
     mapRange: { lon: [-74.15, -71.65], lat: [40.44, 41.36] },  // trimmed-fleet bbox + margin
     startLabel: 'START — Ellis Island', finishLabel: 'FINISH — Glen Cove',
+    polyline: [                         // = config.yaml course.start + marks + finish (source of
+      [40.7028, -74.0367],              //   truth; keep in lockstep) — drawn by overlays/courseline.js
+      [40.6060, -74.0450], [40.5281, -74.0094], [40.5500, -73.4000],
+      [40.6400, -73.0500], [40.7700, -72.6000], [40.8600, -72.1000],
+      [41.0600, -71.8450], [41.1680, -72.2150], [41.0500, -73.3500],
+      [40.9250, -73.6250], [40.8619, -73.6603],
+    ],
   },
   phases: [                               // names per owner (stage-2 stop): self-explanatory,
                                           // "door" always reads "finish door"
@@ -41,12 +48,14 @@ window.__RACE_CONFIG__ = {
     dnfKey: 'fleet_dnf', outsideKey: '', fallbackKey: 'fleet_other',
     buttons: {},
   },
-  eventCategories: {},                    // no public events yet (Tier 1; owner squall testimony
-                                          // lands via events.yaml at stage 3 if opted in)
+  eventCategories: {                      // draw order low -> high; only the categories in use
+    crew:    { c: '#B9770E', sym: 'circle', label: 'Crew — Daffodil', short: 'Crew' },
+    insight: { c: '#0E5A8A', sym: 'star-diamond', label: 'Analysis notes', short: 'Insights', big: true },
+  },
   defaults: {
     boats: ['Daffodil', 'Max', 'Habiru YCC', 'Wahoo', 'Phantom', 'Dolcezza'],  // I7 core set
     ev: [], ref: 'Max',                   // milestone-delta reference: the overall winner
-    fleet: true, rhumb: true,
+    fleet: true, rhumb: false,   // the chord misleads on a marks course; the courseline overlay carries the course
     overlays: {},
     raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'vmc',
   },
@@ -67,10 +76,22 @@ window.__RACE_CONFIG__ = {
     toggle: { key: 'distMode', default: 'h',
               states: [{ v: 'e', label: 'Elapsed' }, { v: 'h', label: 'Corrected' }] },
   },
-  kpis: [],                               // authored at stage 4
-  mapLabels: [],
+  kpis: [                                 // every number is a confirmed stage-2/3 finding, scoped
+    { label: 'The door', value: '3<span class="u"> boats</span>', sub: 'finished before the squall — Max last, by 80 min' },
+    { label: 'Daffodil on the reach', value: '4th<span class="u"> of 43</span>', sub: '8¼ h through the ocean leg · fleet median 12 h' },
+    { label: 'Top three, corrected', value: '4:50<span class="u"> spread</span>', sub: 'after 27 h — inside rating noise (~10 min)' },
+    { label: 'The park', value: '55<span class="u"> min</span>', sub: 'Sound&#8217;s Great at anchor 175 yd from the line' },
+    { label: 'Distance sailed', value: '{stats.dist_sailed}<span class="u"> nm</span>', sub: 'Daffodil · +{stats.extra} over the 207 nm course' },
+    { label: 'Unified ladder', value: '30<span class="u"> /43</span>', sub: 'Daffodil, all three circles on one scale (unofficial)' },
+  ],
+  mapLabels: [                            // [[dtf, label, ax, ay]] — leader lines; placement reviewed by screenshot
+    [196, 'AMBROSE R“14”', 28, 22],
+    [95, 'MONTAUK', 30, -18],
+    [70, 'PLUM GUT', -10, -26],
+    [15, 'THE DOOR', -34, 14],
+  ],
   controls: { pills: ['@ghosts', '@rhumb'] },
-  layout: ['map', 'dtf', 'race', '@distspeed', 'two:xte,sog', 'events'],
-  modules: ['distspeed'],
-  overlays: [],
+  layout: ['map', 'dtf', 'race', '@door', '@distspeed', 'two:xte,sog', 'events'],
+  modules: ['distspeed', 'door'],
+  overlays: ['squall', 'courseline'],
 };

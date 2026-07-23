@@ -23,6 +23,7 @@ stays visible everywhere it already was.
 """
 import json
 import pathlib
+from datetime import datetime, timezone
 
 OUT = pathlib.Path("out/dashboard_data.json")
 CIRCLE_SHORT = {
@@ -73,10 +74,30 @@ def main() -> None:
                         f"official {official_sdl}{suffix} overall, {CIRCLE_SHORT[c]} "
                         f"({n_circ} boat{'s' if n_circ != 1 else ''})")
 
+    # THE DOOR metrics -> meta (stage-4 round-1 defect fix): the door module first
+    # computed enter/hours client-side from t/dtf series — but the split build
+    # ships full series only for the core boats until more.json loads, so the
+    # live page drew 6 dots where the standalone harness saw 43. meta ships for
+    # EVERY boat in core.json, so the numbers are computed here once, from the
+    # same gridded dtf the pipeline built, and the module just reads meta.
+    n_door = 0
+    for _, nm in finishers:
+        b = d["boats"][nm]
+        meta = b["meta"]
+        enter = next((b["t"][i] for i, x in enumerate(b.get("dtf") or [])
+                      if x is not None and x <= 15), None)
+        if enter is None:
+            continue
+        fin_local = datetime.strptime(meta["fin"], "%Y-%m-%d %H:%M:%S")
+        fin_epoch = fin_local.replace(tzinfo=timezone.utc).timestamp() + 4 * 3600
+        meta["doorEnter"] = int(enter)
+        meta["doorHrs"] = round((fin_epoch - enter) / 3600, 2)
+        n_door += 1
+
     OUT.write_text(json.dumps(d, separators=(",", ":")))
     print(f"postprocess: unified ladder applied to {len(finishers)} finishers "
           f"(circles: { {c: len(v) for c, v in by_circle.items()} }); "
-          f"official circle ranks preserved in meta.note")
+          f"official circle ranks preserved in meta.note; door metrics on {n_door} boats")
 
 
 if __name__ == "__main__":

@@ -203,7 +203,8 @@ pinned_values:                  # PINNED at the stage-2 stop (prime rule 3) — 
                                 # instruction. Full derivations in tests/regression.json _comment.
   tz_probe: { epoch: 1753467303, rendered: '2025-07-25 14:15' }   # Max's finish-line crossing
   endpoints: { ref: "Max", corrected_min: 357.77, elapsed_min: 350.87 }   # hero(Daffodil) - Max
-  module_canaries: {}
+  module_canaries:
+    door: { boat: "Daffodil", enter: "2025-07-25 14:30", hours: 5.78, finishers: 43 }
   names_present: ["Daffodil", "Max", "Habiru YCC", "Wahoo", "Phantom", "Dolcezza",
                   "Acadia", "Scapegoat", "Smoke & Mirrors", "Sound's Great", "Towhee", "Yopo"]
   names_absent: ["ACADIA", "SCAPEGOAT", "Smoke &Mirrors", "Habiru", "Little Texas", "Unbreakable",

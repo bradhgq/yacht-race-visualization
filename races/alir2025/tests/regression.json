@@ -1,16 +1,75 @@
 {
-  "_comment": "ALIR 2025 pinned values (prime rule 3) — hand-pinned at the stage-2 stop, never emitted by the pipeline under test. endpoints are hero (Daffodil) minus ref (Max) from OFFICIAL results: corrected (118842-97376)/60=357.77 min, elapsed (114702-93650)/60=350.87, pace 357.7667/207*100=172.83 min/100nm. vmc.hero_mean_kt basis is DTF-AT-THE-GUN on the ROUTED polyline (205.80 nm at Daffodil's 12:25 EDT gun position) / official elapsed 31.8617 h = 6.459 kt — NOT the official 207.0 (I14 routed basis; that would claim 6.497). finstrip_count 0 = no finish-spread strip: ALIR's largest in-division cluster is 3 boats, the heuristic never fires, and the harness skips the strip check for a zero count. distspeed.hero = payload sailedNm/avgKt for Daffodil, sanity-checked by hand (233.9 nm / 31.8617 h = 7.34 kt).",
-  "expected_checks": 13,
-  "tz_probe": { "epoch": 1753467303, "rendered": "2025-07-25 14:15" },
-  "endpoints": { "ref": "Max", "corrected_min": 357.77, "elapsed_min": 350.87, "pace_min_per_100": 172.83 },
-  "module_canaries": {},
-  "names_present": ["Daffodil", "Max", "Habiru YCC", "Wahoo", "Phantom", "Dolcezza",
-                    "Acadia", "Scapegoat", "Smoke & Mirrors", "Sound's Great", "Towhee", "Yopo"],
-  "names_absent": ["ACADIA", "SCAPEGOAT", "Smoke &Mirrors", "Habiru", "Little Texas", "Unbreakable",
-                   "COMMITTEE BOAT", "Wind Song", "Rocksteady"],
+  "_comment": "ALIR 2025 pinned values (prime rule 3) \u2014 hand-pinned at the stage-2 stop, never emitted by the pipeline under test. endpoints are hero (Daffodil) minus ref (Max) from OFFICIAL results: corrected (118842-97376)/60=357.77 min, elapsed (114702-93650)/60=350.87, pace 357.7667/207*100=172.83 min/100nm. vmc.hero_mean_kt basis is DTF-AT-THE-GUN on the ROUTED polyline (205.80 nm at Daffodil's 12:25 EDT gun position) / official elapsed 31.8617 h = 6.459 kt \u2014 NOT the official 207.0 (I14 routed basis; that would claim 6.497). finstrip_count 0 = no finish-spread strip: ALIR's largest in-division cluster is 3 boats, the heuristic never fires, and the harness skips the strip check for a zero count. distspeed.hero = payload sailedNm/avgKt for Daffodil, sanity-checked by hand (233.9 nm / 31.8617 h = 7.34 kt). module_canaries.door: enter = first 15-min grid point with routed DTF <= 15 nm (14:30 EDT Fri), hours = official finish (20:16:42 EDT) - enter = 5.78 h; finishers 43; asserted by tests/extra.cjs against the RENDERED door trace. expected_checks 16 = 13 fixture checks + 3 extra.cjs checks.",
+  "expected_checks": 16,
+  "tz_probe": {
+    "epoch": 1753467303,
+    "rendered": "2025-07-25 14:15"
+  },
+  "endpoints": {
+    "ref": "Max",
+    "corrected_min": 357.77,
+    "elapsed_min": 350.87,
+    "pace_min_per_100": 172.83
+  },
+  "module_canaries": {
+    "door": {
+      "boat": "Daffodil",
+      "enter": "2025-07-25 14:30",
+      "hours": 5.78,
+      "finishers": 43
+    }
+  },
+  "names_present": [
+    "Daffodil",
+    "Max",
+    "Habiru YCC",
+    "Wahoo",
+    "Phantom",
+    "Dolcezza",
+    "Acadia",
+    "Scapegoat",
+    "Smoke & Mirrors",
+    "Sound's Great",
+    "Towhee",
+    "Yopo"
+  ],
+  "names_absent": [
+    "ACADIA",
+    "SCAPEGOAT",
+    "Smoke &Mirrors",
+    "Habiru",
+    "Little Texas",
+    "Unbreakable",
+    "COMMITTEE BOAT",
+    "Wind Song",
+    "Rocksteady"
+  ],
   "finstrip_count": 0,
-  "vmc": { "hero_mean_kt": 6.459, "tol": 0.06, "y_range": [-3, 14] },
-  "distspeed": { "dots": 43, "hero": [233.9, 7.34], "rhumb_x": 207.0, "iso_check_days": 1.6 },
-  "duration_roundtrip": { "str": "31:51:42", "seconds": 114702 },
-  "start_window": { "boat": "Daffodil", "date": "2025-07-24", "hm_min": "12:20", "hm_max": "12:30" }
+  "vmc": {
+    "hero_mean_kt": 6.459,
+    "tol": 0.06,
+    "y_range": [
+      -3,
+      14
+    ]
+  },
+  "distspeed": {
+    "dots": 43,
+    "hero": [
+      233.9,
+      7.34
+    ],
+    "rhumb_x": 207.0,
+    "iso_check_days": 1.6
+  },
+  "duration_roundtrip": {
+    "str": "31:51:42",
+    "seconds": 114702
+  },
+  "start_window": {
+    "boat": "Daffodil",
+    "date": "2025-07-24",
+    "hm_min": "12:20",
+    "hm_max": "12:30"
+  }
 }

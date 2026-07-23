@@ -1,0 +1,24 @@
+# stage-4 — Review-Round Log — ALIR 2025 — DRAFT (owner round pending; >=1 owner round is mandatory)
+rounds: 1                        # round 1 = headless self-review on the hosted preview
+defects:
+  - found: "door module drew 6 dots on the live page vs 43 in the harness — it read t/dtf series,
+      which the split build ships only for core boats until more.json loads (standalone embeds
+      everything, so the harness couldn't see it)"
+    fix: "postprocess.py computes meta.doorEnter/doorHrs for all 43 finishers (meta rides
+      core.json); door.js reads meta only. Snapshot refrozen for exactly that diff class
+      (86 diffs = 43 boats x 2 new meta keys; I16 ledger: this entry)."
+    assertion: "tests/extra.cjs door canary asserts 43 rendered dots + Daffodil at
+      (2025-07-25 14:30, 5.78 h) against the RENDERED trace"
+  - found: "the door chart's SQUALL and PARK band labels collided at narrow width"
+    fix: "narrow-aware labels (h.narrow() -> SQUALL / PARK short forms)"
+    assertion: "not expressible (visual layout; caught by screenshot round)"
+  - found: "the shell @rhumb pill drew the straight start->finish chord labeled 'Course line' —
+      on a marks course that is neither the course nor sailable (it crosses Long Island)"
+    fix: "new overlays/courseline.js draws the routed polyline (default on, magenta dashed,
+      'Scored course · 207 nm'); defaults.rhumb false; pill relabeled 'Direct line'; map note
+      corrected. Polyline in presentation.js mirrors config.yaml course (source of truth)."
+    assertion: "not expressible as a fixture; covered by the courseline overlay being default-on
+      and the map trace name 'Scored course · 207 nm' (verified in the served page)"
+approved_to_productionize: false # set true at the owner's review round
+confirmed_by: ""
+date: ""
