@@ -98,7 +98,7 @@ groups:                # was postprocess step 1, now pipeline-native (grp_for pr
   by_rank: {}
   default_key: orc_other
   dnf_key: fleet_dnf
-exclude_boats: [Daffodil]   # CP-0: DNC, stationary at mooring (was postprocess step 2)
+exclude_boats: [Daffodil]   # stage-0 call: DNC, stationary at mooring (was postprocess step 2)
 extra_boats: []
 grid:
   minutes: 15
@@ -137,7 +137,7 @@ privacy:
 output:
   dir: out/
   generated: '2026-07-10'   # pinned at the M1 re-freeze for byte reproducibility
-goldens:
+pinned_values:
   tz_probe:
     epoch: 1779602689
     rendered: 2026-05-24 02:04
@@ -150,7 +150,7 @@ goldens:
       boat: Ragana
       vs: Christopher Dragon XII
       nm: 4.7
-  # name lists reconciled with the frozen oracle at R9 (NF1/NF2 — ledger entry in
+  # name lists reconciled with the snapshot reference at R9 (NF1/NF2 — ledger entry in
   # decisions/R9-owner-review.yaml): the payload uses display names, and Windfall
   # ships meta-only (untracked PHRF finisher; required for the PHRF band = 23)
   names_present:

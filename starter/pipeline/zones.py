@@ -8,7 +8,7 @@ bands whose median falls below `collapse_frac` x race-median SOG, kept only if
 the median boat's traversal of the run is >= `min_traversal_hours`.
 
 Thresholds come from config; the DETECTED band is an output, recorded in the
-run log and goldens — never an input constant.
+run log and pinned values — never an input constant.
 """
 import numpy as np
 import pandas as pd

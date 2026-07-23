@@ -10,7 +10,7 @@ Runs, in order, stopping on the first failure:
   2. races/<race>/postprocess.py            (if the race has one)
   3. shell/build.py races/<race>            (harness-gated, refuses dist on red)
   4. harness again under TZ=UTC             (the America/New_York run is step 3's gate)
-  5. compare_data vs frozen/ with ties      (when frozen/dashboard_data.json exists)
+  5. compare_data vs snapshot/ with ties    (when snapshot/dashboard_data.json exists)
 
 Reminder printed at the end: committed dist/ is production — `git checkout`
 it unless deploying is the point.
@@ -53,14 +53,14 @@ def main():
     run('4/5 harness under TZ=UTC',
         ['node', str(REPO / 'starter/tests/test_dashboard.js'), str(race_dir)],
         env={'TZ': 'UTC', 'PATH': __import__('os').environ['PATH']})
-    frozen = race_dir / 'frozen' / 'dashboard_data.json'
-    if frozen.exists():
-        run('5/5 compare vs frozen oracle (tie-exempt)',
+    snapshot = race_dir / 'snapshot' / 'dashboard_data.json'
+    if snapshot.exists():
+        run('5/5 snapshot compare (tie-exempt)',
             [PY, str(REPO / 'starter/pipeline/compare_data.py'),
-             str(race_dir / 'out' / 'dashboard_data.json'), str(frozen),
+             str(race_dir / 'out' / 'dashboard_data.json'), str(snapshot),
              '--ties', str(race_dir / 'out' / 'rounding_ties.json')])
     else:
-        print('\n══ 5/5 compare — no frozen oracle yet ══')
+        print('\n══ 5/5 compare — no snapshot reference yet ══')
 
     # the global dist/ gitignore silently skips NEW dist paths on `git add -A`
     # (found in production: BIR's first shell deploy shipped index.html without

@@ -31,7 +31,7 @@ python3 -m venv .venv && .venv/bin/pip install -r starter/requirements.txt   # o
 `build_race.py` runs, in order: `pipeline/build_data.py` → the race's
 `postprocess.py` (if any) → `shell/build.py` (refuses dist on a red harness,
 I10; `TZ=America/New_York`) → the harness again under `TZ=UTC` →
-`pipeline/compare_data.py` vs `frozen/` (tie-exempt). Piecemeal invocation
+`pipeline/compare_data.py` vs `snapshot/` (tie-exempt). Piecemeal invocation
 invites the stale-standalone trap — dist embeds `out/`, tests read dist.
 
 `build_data.py` refuses to run fleet math until ≥2 probe boats reproduce their

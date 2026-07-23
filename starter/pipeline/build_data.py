@@ -6,7 +6,7 @@
 Reads config.yaml, the official-results CSV, events.yaml (+ optional
 navlog.yaml), and the tracker export via its vendor adapter; emits
     <race>/out/dashboard_data.json     the canonical payload (schemas.md)
-    <race>/out/goldens.json            frozen fixtures for the JS harness
+    <race>/out/pinned_values.json      pinned values as emitted (the authored copy lives in config)
     <race>/out/run_log.json            invocation + input hashes (prime rule 1)
 
 No boat names, paths, course lengths, or narrative text live in this file —
@@ -411,10 +411,10 @@ def main():
     with open(out_dir / 'dashboard_data.json', 'w') as f:
         json.dump(data, f, separators=(',', ':'))
 
-    goldens = dict(cfg.get('goldens') or {})
-    goldens['zone'] = active
-    goldens['zone_source'] = 'authored' if authored else 'detected'
-    (out_dir / 'goldens.json').write_text(json.dumps(goldens, indent=2))
+    pinned = dict(cfg.get('pinned_values') or {})
+    pinned['zone'] = active
+    pinned['zone_source'] = 'authored' if authored else 'detected'
+    (out_dir / 'pinned_values.json').write_text(json.dumps(pinned, indent=2))
     (out_dir / 'rounding_ties.json').write_text(json.dumps(tie.ties, separators=(',', ':')))
 
     def sha(p):

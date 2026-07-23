@@ -35,7 +35,7 @@ def load(path, cfg=None):
         'name': raw['boat_name'],
         # nanosecond resolution, explicitly: pandas >= 3.0 defaults epoch-seconds to
         # datetime64[s], which changes time-interpolation weight arithmetic enough
-        # to flip round-half boundaries vs the frozen worked example
+        # to flip round-half boundaries vs the snapshot reference
         't_utc': pd.to_datetime(raw['epoch'], unit='s', utc=True).astype('datetime64[ns, UTC]'),
         'lat': raw['lat'].astype(float),
         'lon': raw['lon'].astype(float),

@@ -81,7 +81,7 @@ name_overrides:
   by_name: {}                   # tracker name -> name (syndicate/sponsor cleanup)
   display: {}                   # results name -> shipped display name (I4: dupes by sail number)
 
-groups:                         # chip-group semantics — who's in each is a CP-0/CP-2 judgment
+groups:                         # chip-group semantics — who's in each is a stage-0/stage-2 judgment
   hero_key: hero
   by_rank: {}                   # e.g. { class: [3,7,9], podium: [1,2,3] }
   default_key: fleet_other
@@ -105,7 +105,7 @@ zone_detection:
   band_nm: 10
   collapse_frac: 0.5
   min_traversal_hours: 6
-  # zone: { upper_nm: 0, lower_nm: 0 }   # optional authored CP-2 bounds; detection
+  # zone: { upper_nm: 0, lower_nm: 0 }   # optional authored stage-2 bounds; detection
   #                                        candidates are always logged for audit
 
 finish_spread: { window_min: 30, min_boats: 10 }
@@ -117,7 +117,7 @@ output:
   dir: out/
   # generated: 'YYYY-MM-DD'     # pin only to reproduce a frozen build byte-for-byte
 
-goldens:                        # freeze at CP-2 (prime rule 3); the four I10 categories
+pinned_values:                  # pinned at the stage-2 stop (prime rule 3); the I10 categories
   tz_probe: { epoch: 0, rendered: 'YYYY-MM-DD HH:MM' }
   endpoints: { ref: "", corrected_min: 0.0, elapsed_min: 0.0 }
   module_canaries: {}

@@ -1,5 +1,5 @@
 {
-  "_comment": "NB2026 frozen goldens (prime rule 3) — the four I10 categories plus the round-2 fixtures (recorded instruction: Sebastian's-upgrades prompt, 2026-07-08). Changing any value requires a recorded user instruction. finstrip_count is 82 scored boats (adjudication said 81 = non-hero dots; oracle-verified 82, see REPO_NOTES #17). vmc.hero_mean_kt is the time-mean over the OFFICIAL race window ≈ rhumb ÷ elapsed (∫VMC dt recovers the course).",
+  "_comment": "NB2026 pinned values (prime rule 3) — the four I10 categories plus the round-2 fixtures (recorded instruction: Sebastian's-upgrades prompt, 2026-07-08). Changing any value requires a recorded user instruction. finstrip_count is 82 scored boats (adjudication said 81 = non-hero dots; verified against the snapshot reference). vmc.hero_mean_kt is the time-mean over the OFFICIAL race window ≈ rhumb ÷ elapsed (∫VMC dt recovers the course).",
   "tz_probe": {
     "epoch": 1782094500,
     "rendered": "2026-06-21 22:15"

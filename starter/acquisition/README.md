@@ -128,5 +128,5 @@ alir25 a year on) — but snapshot races you care about; don't assume retention.
 
 `python3 -m unittest discover -s acquisition/tests` — offline decoder
 regression on a real 41 KB ildr2025 blob (3 boats, 5190 moments, expected
-endpoints frozen from a cross-checked independent download). CI-safe; the
+endpoints pinned from a cross-checked independent download). CI-safe; the
 network paths above are not in CI by design.

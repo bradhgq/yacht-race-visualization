@@ -53,7 +53,7 @@ python3 -m venv .venv && .venv/bin/pip install -r starter/requirements.txt   # o
 
 The chain runs, in order: build_data → race postprocess (if any) → shell/build
 (harness-gated under `TZ=America/New_York`) → harness again under `TZ=UTC` →
-compare vs the frozen oracle. Running the steps piecemeal invites the
+snapshot compare (vs `races/<race>/snapshot/`). Running the steps piecemeal invites the
 stale-standalone trap (dist embeds `out/`; tests read dist). After a
 verification rebuild, `git checkout -- races/*/dist` — committed dist is
 production, per above.

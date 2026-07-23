@@ -69,7 +69,7 @@ name_overrides:
     Phoenix F40: Phoenix USA93063     # I4: duplicate names disambiguated by sail number
     Phoenix J120: Phoenix USA25329
 
-groups:                         # chip-group semantics; who's in each is race judgment (CP-0/2)
+groups:                         # chip-group semantics; who's in each is race judgment (stage 0/2)
   hero_key: ragana
   by_rank:
     class: [13, 14, 15, 23, 26, 28, 30, 53, 60]     # SDL 3, minus the hero
@@ -98,7 +98,7 @@ zone_detection:
   band_nm: 10
   collapse_frac: 0.5
   min_traversal_hours: 6
-  # Shipped park bounds are an authored CP-2 analysis judgment (RETROSPECTIVE §5.3),
+  # Shipped park bounds are an authored stage-2 analysis judgment,
   # not a detection output: the fleet-median table (run_log.json) shows band 180-190
   # (5.93 kts) is slower than band 80-90 (6.15 kts), so no threshold rule can land
   # exactly on 180→80. Detection candidates are logged alongside for audit.
@@ -113,7 +113,7 @@ output:
   dir: out/
   generated: '2026-07-05'       # pinned: the frozen example reproduces byte-for-byte; omit for new races
 
-goldens:                        # frozen at CP-2 — never re-derive (prime rule 3)
+pinned_values:                  # pinned at the stage-2 stop — never re-derive (prime rule 3)
   tz_probe: { epoch: 1782094500, rendered: '2026-06-21 22:15' }
   endpoints: { ref: Christopher Dragon, corrected_min: 94.0, elapsed_min: 155.3 }
   module_canaries:

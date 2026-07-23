@@ -53,16 +53,16 @@
   differentiates — the routed polyline for marks courses, NOT the official
   length (BIR: the routed basis measures 5.02 kt where the official length
   predicts 4.96 — wider than the fixture’s ±0.06 kt tolerance; found at BIR M1).
-  Guarded per-race by the frozen `vmc` fixture in `tests/regression.json`.
+  Guarded per-race by the pinned `vmc` values in `tests/regression.json`.
   Negatives are real — never clamp (35 NB2026 boats have them).
 - **I15 — Modules own their geometry.** A `kind:plot` module declares
   `section.height`; the shell applies it at scaffold fill. Nothing about a
   module may require editing shell CSS. (Found by a zero-height chart.)
-- **I16 — The frozen oracle only moves with a ledger.** Any re-freeze of
-  `frozen/dashboard_data.json` — or any golden change — requires a
+- **I16 — The snapshot reference only moves with a ledger.** Any re-pin of
+  `snapshot/dashboard_data.json` — or any pinned-value change — requires a
   `decisions/` entry enumerating every diff class and citing the recorded
-  instruction. GATE A thereafter guards reproducibility, not history. Goldens
-  are never re-derived from the pipeline under test.
+  instruction. The snapshot compare thereafter guards reproducibility, not
+  history. Pinned values are never re-derived from the pipeline under test.
 - **I17 — Filters never eat manual selections.** Set-selection filters track
   their own additions (`S.filterSel`) and may remove only those; default- and
   hand-selected boats survive any filter toggle. Guarded by the

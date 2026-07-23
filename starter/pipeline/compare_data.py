@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Semantic JSON comparison for GATE A: key-order-insensitive, float-tolerant,
+"""Semantic JSON comparison against the snapshot reference: key-order-insensitive, float-tolerant,
 reports EVERY diff with its path.
 
     python3 pipeline/compare_data.py <candidate.json> <reference.json> \
@@ -7,7 +7,7 @@ reports EVERY diff with its path.
 
 Exit 0 iff no NON-EXEMPT diffs.
 
-Tie exemption (GATE A adjudication): with --ties (emitted by build_data.py), a
+Tie exemption (snapshot-compare adjudication): with --ties (emitted by build_data.py), a
 diff is exempt iff |Δ| equals exactly one serialization quantum AND the path
 was recorded as a .5 rounding tie when the candidate was built (i.e. the
 recomputed unrounded value sat within epsilon of the tie). Exempt diffs are

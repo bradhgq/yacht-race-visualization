@@ -14,18 +14,19 @@ never in top-level `docs/`; generalizable work lands in `starter/`.
 
 Runs in order: build_data → race postprocess (if any) → shell/build
 (harness-gated, TZ=America/New_York) → harness under TZ=UTC → compare vs the
-frozen oracle. Skipping or reordering steps invites the stale-standalone trap
+snapshot reference. Skipping or reordering steps invites the stale-standalone trap
 (dist embeds `out/`; tests read dist). Use the pinned `.venv` (pandas 2.2.3 /
 numpy 1.26.4).
 
 ## Hard rules — each one was paid for
 
-- **Frozen oracles and goldens move only with a `decisions/` ledger entry** (I16)
-  enumerating every diff class and citing the recorded instruction. Goldens are
-  never re-derived from the pipeline you are testing; fixtures are
-  authored-frozen in `races/<race>/tests/regression.json` and cross-checked
-  against config goldens by `shell/build.py` — never emitted by the pipeline
-  under test.
+- **The snapshot reference (`races/<race>/snapshot/`) and pinned values move
+  only with a `decisions/` ledger entry** (I16) enumerating every diff class
+  and citing the recorded instruction. Pinned values are never re-derived from
+  the pipeline you are testing; they are authored into
+  `races/<race>/tests/regression.json` + config `pinned_values:` and
+  cross-checked by `shell/build.py` — never emitted by the pipeline under
+  test.
 - **Committed `dist/` is production** (nix flake input serves the git tree).
   After a verification rebuild, `git checkout -- races/*/dist` unless deploying
   is the point. When deploying NEW dist paths, `git add -f` them — the global
