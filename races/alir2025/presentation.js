@@ -65,13 +65,13 @@ window.__RACE_CONFIG__ = {
     overlays: {},
     raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'vmc',
   },
-  race: { milestoneTop: 200, milestoneBottom: 5, milestoneStep: 5,   // every 5 nm (owner, round 2)
+  race: { milestoneTop: 200, milestoneBottom: 1, milestoneStep: 1,   // every 1 nm (owner, round 3)
           correctedModel: 'tod',   // PHRF time-on-distance — first ToD race through the shell;
                                    // 'tot' (the default) would multiply partial elapsed by the
                                    // raw sec/mi rating and render garbage mid-race
           paceMinDone: 15, eventRowY: 19, ratingLabel: 'PHRF' },
   charts: {
-    map: { heightScale: 1.6, legendBottom: true },   // ~75% viewport map, legend below (owner, round 2)
+    map: { heightScale: 0.75, legendBottom: true },  // 0.75x height (owner, round 3), legend below
     dtf: { eventTopY: 200 },
     sog: { yRange: [0, 16], eventTopY: 15,   // headroom: the trimaran's reach tops the monohull fleet
            metrics: { s: 'SOG', v: 'VMC (toward finish)' }, vmcYRange: [-3, 14] },
