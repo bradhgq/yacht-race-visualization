@@ -101,8 +101,22 @@ narrative_framing:               # owner directive, 2026-07-23 — binding on st
     never to the two heroes against each other. Loss-decomposition claims still name their
     benchmark (doctrine 5) — that benchmark is a division rival, not the other hero."
 
+ping_cadence:                    # measured over the RACING window only (start -> official finish);
+                                 # post-finish pings are excluded, since trackers stay on for the
+                                 # delivery home (Dolcezza's 9.1 h "gap" is entirely post-finish)
+  nominal: "300 s (5 min) — the median interval for all 49 tracked racers, no exceptions"
+  distribution: "23,271 intervals: 2.16% <=60 s (start/finish 1-min bursts), 95.72% 61-300 s,
+    1.95% 301-600 s, 0.02% 601-1800 s, 0.15% >1800 s"
+  gaps: "Only 2 boats show any in-race gap over 30 min, and only one exceeds 1 h (Vamonos, RET,
+    and that gap falls on 07-27 after retirement). No finisher has an in-race gap over 1 h."
+  focus_boats: "Daffodil max gap 10 min · Max 5 min · Habiru YCC 10 min — the boats carrying the
+    narrative have effectively unbroken coverage."
+  grid_justification: "grid.minutes 15 with interpolate_limit 4 (= 1 h of bridging) sits well
+    above the 5-min nominal cadence and comfortably covers every in-race gap. The default is
+    correct here; no deviation needed."
+
 tier: 1                          # public data only; dual-focus presentation within Tier 1
-grid_minutes: 15                 # 5-min pings (1-min near start/finish); default grid justified
+grid_minutes: 15                 # justified by ping_cadence above
 scoring:
   system: tod
   params: { rating_column: rating, distance_nm: 207.0 }
