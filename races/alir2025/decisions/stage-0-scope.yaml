@@ -112,8 +112,21 @@ weather_evidence:                # EXPERIMENTAL stage-0 extra (owner-requested)
   landed: "races/alir2025/raw/weather/ (NDBC 44065+44025+MTKN6+KPTN6 yearly 2025 stdmet;
     ERA5 hourly wind at 5 course points; CO-OPS current predictions for Plum Gut, The Race,
     Matinecock Pt, Execution Rocks). Provenance + sha256 in raw/weather/MANIFEST.md."
-  gap: "NO 2025 observation platform in central LI Sound (44017/44039/44040 all dead) — the park
-    zone is ERA5-model-only evidence; treat micro-calm claims accordingly."
+  verified: "Every file decompressed/parsed and its race-window coverage counted; all 17 sha256s
+    re-checked against disk. Working wind: 44065 (NY Harbor, 430 rows 1.2-11.0 m/s), 44025
+    (south-shore reach, 432 rows 3.7-10.8), KPTN6 (western Sound, 712 rows 0.0-10.1). Waves:
+    44065 (0.6-1.4 m), 44025 (0.6-1.5 m), 44097 Block Island (0.4-1.5 m). ERA5: 5 points x 72 h
+    in knots, grid drift <=0.063 deg. Currents: Plum Gut race-night ebb -2.91 kt (07-25 13:58)
+    and -2.89 kt (07-26 02:24), floods ~+2.0 kt."
+  gap: "TWO observation gaps, both binding on what may be claimed.
+    (1) MONTAUK CORNER HAS NO OBSERVED WIND: buoy 44017 has no 2025 file and shore station MTKN6's
+    2025 file contains ZERO wind rows all year (fetched, verified empty, deleted rather than kept
+    as false coverage). 44097 Block Island gives sea state only. Montauk wind is ERA5-model-only.
+    (2) CENTRAL LI SOUND HAS NO 2025 PLATFORM AT ALL (44039/44040/44022/44069 all dead) — exactly
+    where the fleet parked. ERA5's ~25 km grid smooths the micro-calms that decided the finish
+    order. Park-zone and Montauk wind claims must be labeled model-supported, never observed.
+    (44020 Nantucket Sound has wind but sits ~90 nm east — fetched, then discarded as too far to
+    inform this course honestly.)"
   scope_guard: "evidence for stages 1-3 only; no pipeline number may depend on it; I18 (VMC never
     VMG) stands."
   followup: "if the layer proves useful, bake weather acquisition into starter/acquisition/ + the
