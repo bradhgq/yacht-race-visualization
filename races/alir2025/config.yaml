@@ -1,0 +1,166 @@
+# ALIR 2025 — Around Long Island Regatta (48th), Sea Cliff YC — stage-0 DRAFT
+# Schema of record: skills/race-viz/references/schemas.md.
+# Facts verified at stage 0; see decisions/stage-0-scope.yaml for probes/anomalies.
+
+race:
+  name: "Around Long Island Regatta"
+  edition: 2025
+  slug: alir2025
+  organizer_url: "https://www.yachtscoring.com/emenu/50029"   # event site: www.alir.org
+
+tracker:
+  vendor: yb                    # YB race id alir25 (pro.yb.tl/alir25); satTrackingUrl now
+                                # empty in YS metadata — id verified by fleet/geography/start
+                                # ritual instead (stage-0 record)
+  path: raw/alir2025_tracks.csv
+
+official_results:
+  path: raw/alir2025_results_local.csv   # derived by derive_results_columns.py from
+                                         # raw/alir2025_results.csv (as-fetched): adds
+                                         # finish_local + retire_reason. The YS export's
+                                         # finish_time_utc is EDT WALL CLOCK mislabeled with a
+                                         # Z suffix (probe-proven, +4.00h on 5 boats) — the
+                                         # derivation strips the fake Z and applies NO shift.
+  columns:
+    rank: place_overall         # NOTE: per-circle overall (Spinnaker / Non-Spinnaker /
+                                # Multihull are scored separately by the organizer)
+    name: boat_name
+    sail: sail_number
+    rating: rating
+    elapsed: elapsed_hms
+    corrected: corrected_hms
+    type: design
+    finish_local: finish_local
+    division: class_name        # class_name carries the real division; the 'division'
+                                # column is uniformly "PHRF" and useless as meta.cls
+    class_rank: place_class
+    status: finish_status
+    retire_reason: retire_reason
+  finish_statuses: [AOK]        # observed statuses: AOK / RET / DNC
+  untracked_meta_only: []       # no in-scope finisher is untracked (probe: coverage matrix)
+
+entries: { path: raw/alir2025_scratch_sheet.csv }
+
+course:
+  type: marks                   # routed DTF via pipeline/route.py
+  start: [40.7028, -74.0367]    # SI: line ~0.25 nm NE of Ellis Island, NY Harbor
+  finish: [40.8619, -73.6603]   # SI: light on Glen Cove Breakwater, Hempstead Harbor
+  official_length_nm: 207.0     # SI: "207 nm for scoring purposes" (ATI course, out of scope: 250)
+  finish_radius_nm: 0.7
+  marks:                        # draft polyline 203.6 nm (delta -3.4 vs official; route.py logs it)
+    - [40.6060, -74.0450]       # Verrazzano Narrows mid-span (keeps leg 1 in the channel)
+    - [40.5281, -74.0094]       # Ambrose Channel Red Bell Q R "14" — the ONE mandatory mark (SI)
+    - [40.5500, -73.4000]       # south-shore spine waypoints: drafted from the sailed median of
+    - [40.6400, -73.0500]       #   Max/Daffodil/Habiru (the Ambrose->Montauk great circle cuts
+    - [40.7700, -72.6000]       #   across Long Island); validate against full fleet at stage 2
+    - [41.0600, -71.8450]       # Montauk Point rounding (fleet rounded 41.04–41.09 at ~-71.85)
+    - [41.1680, -72.2150]       # Plum Gut (43 of 45 finishers; The Race crossers were RETs — record)
+    - [41.0500, -73.3500]       # mid-Sound waypoint clearing Eatons Neck (fleet ~41.03 at -73.40)
+  mark_radius_nm: 1.0
+  arrival_search_after_nm: 0    # start and finish are far apart along the course; no early proximity
+
+time:
+  official_tz: America/New_York
+  utc_offset: -4
+  tz_label: EDT
+  race_start_utc: '2025-07-24T14:30:00+00:00'   # data trim: tracker goes live 10:30 EDT,
+                                                # 30 min before the 11:00 first warning
+  tz_probe:                     # stage-0 verified (decisions/stage-0-scope.yaml has 5-boat table)
+    boat: "Max"
+    official_finish_local: '2025-07-25 14:15:50'
+    track_epoch_utc: 1753467303   # 2025-07-25T18:15:03Z, 0.14 nm from the breakwater light
+
+scoring:
+  system: tod                   # corrected = elapsed - rating * 207.0; verified exact for
+  params: { rating_column: rating }   # every AOK boat in both circles (stage-0 probe)
+  probe_boats: ["Max", "Daffodil"]    # -18 and NEMA -20: same sec/mi scale, cross-checked
+
+start_method: finish_minus_elapsed   # reproduces warning+5min exactly for all 11 divisions,
+                                     # cross-checked vs YB RaceSetup.teams[].start (true UTC);
+                                     # YS races[].startTime carries the same EDT-as-Z mislabel
+divisions_in_scope:             # the Around Long Island course only; the two Around-the-Islands
+                                # circles sail a different 250 nm course and are untracked
+  - "Non-Spinnaker Division 1 - Warning  Signal 11:00"   # (sic — double space in source)
+  - "Non-Spinnaker Division 2 - Warning Signal 11:10"
+  - "Spinnaker Division 4 - Warning Signal 11:20"
+  - "Spinnaker Division 5 - Warning Signal 11:30"
+  - "Double-Handed Division 7 - Warning Signal 11:40"
+  - "Spinnaker Division 9 - Warning Signal 11:50"
+  - "Spinnaker Division X - Warning Signal 12:00"
+  - "Spinnaker Division 0 - Warning Signal 12:10"
+  - "Multihull (NEMA) Division M - Warning Signal 12:20"
+client_boat: "Daffodil"         # analysis pivot — PROPOSED, owner confirms at the stage-0 stop
+                                # (dual main characters: Daffodil crewed 2025, Max the 2026 ride)
+reference_boats: ["Max", "Habiru YCC", "Wahoo", "Phantom", "Dolcezza"]
+tier: 1
+
+name_overrides:
+  by_id: {}
+  by_name:                      # tracker (YB) name -> results (YS) name
+    "Habiru": "Habiru YCC"
+    "Little Texas": "Little Texas YCC"
+    "Unbreakable": "Unbreakable YCC"
+    "Pathfinder": "PATHFINDER"
+    "Duet": "DUET"
+    "Actaea": "ACTAEA"
+    "Acadia": "ACADIA"
+    "Wanderer": "WANDERER"
+    "Scapegoat": "SCAPEGOAT"
+  display:                      # results name -> shipped display name
+    "PATHFINDER": "Pathfinder"
+    "DUET": "Duet"
+    "ACTAEA": "Actaea"
+    "ACADIA": "Acadia"
+    "WANDERER": "Wanderer"
+    "SCAPEGOAT": "Scapegoat"
+    "Smoke &Mirrors": "Smoke & Mirrors"
+
+groups:
+  hero_key: hero
+  by_name:
+    spotlight: ["Max", "Habiru YCC"]   # always-on story boats besides the hero
+  by_cls: {}
+  by_rank: {}
+  default_key: fleet_other
+  dnf_key: fleet_dnf
+
+exclude_boats:                  # tracked-only committee vessel; two DNCs with no track
+  - "COMMITTEE BOAT"
+  - "Wind Song"
+  - "Rocksteady"
+extra_boats: []
+
+grid: { minutes: 15, end_utc: '2025-07-26T18:45:00+00:00', interpolate_limit: 4 }
+                                # last in-scope finisher (Terra Nova) 14:37:11 EDT = 18:37Z + pad
+sog: { half_window_s: 900, min_span_s: 600 }
+fleet: { resample: 1h, min_points: 5 }
+milestones: { start_nm: 200, step_nm: 20 }
+finish_pad_min: 3
+
+events: { path: events.yaml }
+event_categories: [crew, systems, sail, tactics, insight, milestone]
+
+zone_detection:                 # the western-Sound park is the expected stage-2 candidate
+  band_nm: 10
+  collapse_frac: 0.5
+  min_traversal_hours: 6
+
+finish_spread: { window_min: 30, min_boats: 10 }
+noise_floor_min: 10             # PROPOSED (owner confirms): ToD at ±3 s/mi rating uncertainty
+                                # x 207 nm ~ ±10 min. NOTE the overall podium margin (Max ->
+                                # Phantom) is 4:05 — inside ANY plausible floor; stage-1
+                                # controversy check gates how that gets narrated (doctrine 6)
+
+privacy: { build: public }
+
+output:
+  dir: out/
+
+pinned_values:                  # pinned at the stage-2 stop (prime rule 3) — placeholders until then
+  tz_probe: { epoch: 0, rendered: 'YYYY-MM-DD HH:MM' }
+  endpoints: { ref: "", corrected_min: 0.0, elapsed_min: 0.0 }
+  module_canaries: {}
+  names_present: []
+  names_absent: []
+  names_meta_only: []
+  finstrip_count: 0

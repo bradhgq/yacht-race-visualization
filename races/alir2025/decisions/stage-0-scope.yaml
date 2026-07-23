@@ -1,0 +1,106 @@
+# stage-0 — Scope Record — Around Long Island Regatta 2025 (48th), Sea Cliff YC — DRAFT (awaiting owner confirmation)
+#
+# Acquisition: starter/acquisition/fetch_race.py 50029 --yb alir25 --prefix alir2025
+#   --out-dir races/alir2025/raw/  (2026-07-23). satTrackingUrl is now EMPTY in the
+#   YS event metadata (allowSatTracking:false) — the YB id came from the owner's July-2025
+#   acquisition session (~/Downloads/race-data/RETROSPECTIVE.md) and was re-verified by
+#   the full ritual: RaceSetup fleet == entry list, first pings in NY Harbor 14:30Z
+#   Jul 24, per-team starts == warning+5min per division.
+# Cross-check: the owner-provided CSVs (alir25_{tracks,results,scratch_sheet}.csv,
+#   downloaded Jul 2025 with an earlier scraper build) are row-for-row IDENTICAL to
+#   the fresh 2026-07-23 download. Zero source conflicts. Fresh set is canonical raw/.
+
+fleet_count:
+  entries_scratch: 74            # 57 ACTIVE + 17 INACTIVE (withdrawn pre-race)
+  results_rows: 57               # 45 AOK + 7 RET + 2 DNC across 3 ALIR circles, + 8 ATI-course rows in 2 circles
+  tracked: 50                    # 49 racers + COMMITTEE BOAT
+  in_scope_expectation: 49       # ALIR-course racers with tracks; every in-scope FINISHER is tracked
+  untracked: ["Wind Song (Div 1, DNC)", "Rocksteady (Div 0, DNC)",
+              "all 6 Around-the-Islands boats (different 250 nm course, out of scope)"]
+
+anomalies:
+  - "TZ MISLABEL (adjudicated): results finish_time_utc is EDT wall clock with a spurious Z suffix.
+     Probe: track finish-line crossings sit +4.00 h from claimed on 5 boats (Max +3.99, Daffodil +4.00,
+     Habiru +3.99, Wahoo +4.00, Dolcezza +4.00; all 0.05–0.14 nm from the breakwater light).
+     YS races[].startTime carries the same mislabel; YB epochs are TRUE UTC.
+     Consequence: derive_results_columns.py strips the fake Z with NO offset shift."
+  - "Name joins (sail-only, proposed): Habiru->Habiru YCC, Little Texas->Little Texas YCC,
+     Unbreakable->Unbreakable YCC (YB drops the Youth Challenge Cup suffix)."
+  - "Case joins (proposed): Pathfinder/PATHFINDER, Duet/DUET, Actaea/ACTAEA, Acadia/ACADIA,
+     Wanderer/WANDERER, Scapegoat/SCAPEGOAT. Display cleanup maps shipped names to mixed case."
+  - "'Smoke &Mirrors' missing space in BOTH sources -> display override 'Smoke & Mirrors'."
+  - "COMMITTEE BOAT present in tracks only -> exclude_boats."
+  - "Wind Song + Rocksteady: DNC, no track -> proposed exclude_boats (the bir2026 'DNC at a
+     mooring' precedent). Alternative: keep as meta-only DNF rows — owner's call."
+  - "16 UNMATCHED-YS name-join rows are the 16 INACTIVE withdrawn entries + the untracked set above
+     — fully accounted for; no name-resolution miss remains."
+  - "Duplicate-sail hazard: YB RaceSetup lists sail '181' ambiguity around Wanderer/Windancer;
+     joins resolved by name, no collision in shipped set."
+  - "Coverage: 50 tracked vs 57 active entries (fetch warning) — the gap is exactly the ATI
+     course + 2 DNCs; spatial analysis is scoped to the ALIR course where coverage is COMPLETE."
+  - "Sound-entry gate: 43/45 in-scope finishers used Plum Gut. 'The Race' crossings: Kitli, Vamonos
+     (both RET — likely post-retirement deliveries). Yopo (finisher) closest-approach 3.7 nm off the
+     Plum Gut centerpoint — possibly a Gull-passage transit; verify at stage 2 before any per-boat
+     gate claim. Course polyline routes via Plum Gut."
+  - "Overall podium margin Max->Phantom is 4:05 corrected — inside any plausible noise floor
+     (proposed noise_floor_min: 10 for ToD x 207 nm). Doctrine 6: stage-1 controversy check gates
+     tight-margin narration. Related claims-in-circulation item: WindCheck headline says
+     'Sound's Great wins 2025 ALIR' while results show 22nd overall Spinnaker circle / 1st Div 5
+     — likely a club-trophy framing; resolve at stage 1."
+
+reference_boats:
+  - { name: "Max",          why: "Pogo 50, Spinnaker circle overall winner (ALIR Trophy) + Div 0 winner; main character #2 (owner crews her in ALIR 2026); finished before the park" }
+  - { name: "Habiru YCC",   why: "J/121, Div X winner + Youth Challenge Cup, 4th overall — owner-requested default highlight" }
+  - { name: "Wahoo",        why: "Ker 50 (US Naval Academy), monohull line honors, 3rd overall — pace benchmark for the leaders" }
+  - { name: "Phantom",      why: "J/105, 2nd overall corrected at +4:05 — the margin that frames Max's win" }
+  - { name: "Dolcezza",     why: "Hunter Legend 37.5, Non-Spinnaker circle overall winner — cross-circle comparison anchor" }
+  # client_boat / analysis pivot: Daffodil (Corsair F31R trimaran, only multihull, Div M winner,
+  # owner aboard) — PROPOSED; Max is the alternative pivot. Owner decides at this stop.
+
+tz:
+  official: "America/New_York (EDT, utc_offset -4)"
+  probe:
+    boat: "Max"
+    official_finish_local: "2025-07-25 14:15:50"
+    track_epoch_utc: 1753467303        # 2025-07-25T18:15:03Z, 0.14 nm from Glen Cove Breakwater light
+    offset: "-4h (5-boat confirmation table in anomalies[0])"
+
+course_model: "marks (routed DTF via pipeline/route.py): start [40.7028,-74.0367] (SI line NE of
+  Ellis Island) -> Verrazzano Narrows -> Ambrose Channel Red Bell Q R \"14\" [40.5281,-74.0094]
+  (the ONE mandatory mark, left to port; all other government marks may be disregarded per SI)
+  -> 3 south-shore spine waypoints drafted from the sailed median (the direct Ambrose->Montauk
+  great circle crosses Long Island) -> Montauk Pt rounding [41.0600,-71.8450] -> Plum Gut
+  [41.1680,-72.2150] -> mid-Sound [41.0500,-73.3500] (clears Eatons Neck) -> finish
+  [40.8619,-73.6603] (Glen Cove Breakwater light). Draft polyline 203.6 nm vs official scoring
+  distance 207.0 (SI: 'considered 207 nm for scoring purposes'; delta -3.4 logged by build).
+  SI mandates neither Plum Gut nor The Race — the fleet chose Plum Gut (see anomalies)."
+
+divisions_in_scope: ["Around Long Island Course: Non-Spin 1, Non-Spin 2, Spin 4, Spin 5, DH 7,
+  Spin 9, Spin X, Spin 0, Multihull M (9 divisions, 3 scored circles). OUT: the two
+  Around-the-Islands circles (250 nm course, untracked)."]
+
+cross_circle_comparison: "PROPOSED: ship a unified UNOFFICIAL corrected ladder across all three
+  ALIR circles. Basis: every rating (incl. Daffodil's NEMA -20) is sec/mi on the identical 207.0 nm
+  ToD formula — verified exact for all 45 AOK boats. Official scoring stays per-circle; the unified
+  view is labeled unofficial. This is what lets Daffodil-vs-monohulls comparisons exist."
+
+tier: 1                          # public data only; dual-hero presentation within Tier 1
+grid_minutes: 15                 # 5-min pings (1-min near start/finish); default grid justified
+scoring:
+  system: tod
+  params: { rating_column: rating, distance_nm: 207.0 }
+  probe_boats: ["Max", "Daffodil"]   # pre-verified exact; pipeline re-runs the probe at build
+
+weather_evidence:                # EXPERIMENTAL stage-0 extra (owner-requested)
+  landed: "races/alir2025/raw/weather/ (NDBC 44065+44025+MTKN6+KPTN6 yearly 2025 stdmet;
+    ERA5 hourly wind at 5 course points; CO-OPS current predictions for Plum Gut, The Race,
+    Matinecock Pt, Execution Rocks). Provenance + sha256 in raw/weather/MANIFEST.md."
+  gap: "NO 2025 observation platform in central LI Sound (44017/44039/44040 all dead) — the park
+    zone is ERA5-model-only evidence; treat micro-calm claims accordingly."
+  scope_guard: "evidence for stages 1-3 only; no pipeline number may depend on it; I18 (VMC never
+    VMG) stands."
+  followup: "if the layer proves useful, bake weather acquisition into starter/acquisition/ + the
+    skill (docs/OPEN_THREADS.md entry)."
+
+confirmed_by: ""                 # owner
+date: ""

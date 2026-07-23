@@ -1,0 +1,101 @@
+{
+  "fetched": "2026-07-23T02:49:22-0400",
+  "warnings": [
+    "coverage: 50 tracked boats vs 57 active entries (74 incl. withdrawn) \u2014 spatial analysis is limited to the tracked subset",
+    "28 name-join row(s) need review in alir2025_name_join.csv (sail-only / ambiguous / unmatched) \u2014 the join is a PROPOSAL, confirm at the stage-0 stop"
+  ],
+  "race": {
+    "name": "2025 Around Long Island Regatta (48th Annual)",
+    "dates": "July 24 - 27, 2025",
+    "venue": null,
+    "ys_event_id": 50029,
+    "yb_race_id": "alir25"
+  },
+  "files": {
+    "alir2025_results.csv": 57,
+    "alir2025_scratch_sheet.csv": 74,
+    "alir2025_tracks.csv": 26177
+  },
+  "name_join": {
+    "file": "alir2025_name_join.csv",
+    "rows_to_review": 28
+  },
+  "coverage": {
+    "tracked_boats": 50,
+    "ping_rows": 26177,
+    "raceSetup_teams": 50,
+    "entries": 74,
+    "results_rows": 57
+  },
+  "start_times": {
+    "yb_team_starts_epoch": [
+      1753369500,
+      1753370100,
+      1753370700,
+      1753371300,
+      1753371900,
+      1753372500,
+      1753373100,
+      1753373700,
+      1753374300
+    ],
+    "ys_division_starts": [
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2025-07-24T11:15:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2025-07-24T11:35:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2025-07-24T11:45:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2025-07-24T12:25:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2025-07-24T11:05:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2025-07-24T11:15:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2025-07-24T11:25:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2025-07-24T11:35:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2025-07-24T11:45:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2025-07-24T11:55:00.000Z"
+      }
+    ],
+    "note": "cross-check config start_method (finish \u2212 elapsed) against these"
+  },
+  "sha256": {
+    "alir2025_results.csv": "a85ea9db1f76ca72b48604c9ee8c689413053ae9ffca9acef5aa7ef58df1f15e",
+    "alir2025_scratch_sheet.csv": "8fec100749d056e3483c423c0cbdec7ab930b19afd1149195736b1df9e7a42c6",
+    "alir2025_tracks.csv": "6ed2645b67f995fa95d8c3db8177a367f8801a8a4e47c5429f9c7bcc0e506b22"
+  }
+}

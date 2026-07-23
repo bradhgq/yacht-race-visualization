@@ -1,0 +1,67 @@
+/* Presentation config template — the shell's window.__RACE_CONFIG__.
+   Copy alongside config.yaml and fill in. FACTS shared with config.yaml
+   (course, hero/client_boat, time, defaults) must MATCH it — shell/build.py
+   runs a consistency check and refuses to build on divergence. Presentation
+   judgment (phases, KPI copy, map leader-labels, palette tweaks) lives only
+   here. Worked examples document every key with its origin:
+   races/nb2026/presentation.js (point-to-point) and
+   races/bir2026/presentation.js (marks course — division-scoped race block,
+   charts.map gates, acts overlays). OPTIONAL blocks not skeletoned below,
+   copy from a worked example when wanted: classFilter, ratingBands,
+   charts.sog.metrics (SOG|VMC toggle) + vmcYRange, distspeed, mapAnnotations,
+   groups.chipExtras/chipRank. */
+window.__RACE_CONFIG__ = {
+  meta: { title: '', url: '', description: '', ogDescription: '', ogImage: 'og.png' },
+  hero: { name: '', color: '#C2187E' },        // must equal config.yaml client_boat; color pairs with --magenta
+  time: { utcOffset: -4, tzLabel: 'EDT' },     // must equal config.yaml time
+  course: {
+    start: [0, 0], finish: [0, 0],             // must equal config.yaml course
+    rhumbNm: 0, dtfStartFallback: 0,
+    mapRange: { lon: [0, 0], lat: [0, 0] },
+    startLabel: '', finishLabel: '',
+  },
+  phases: [],                                  // [[fromDTF, toDTF, 'LABEL'], …] — authored narrative
+  groups: {
+    palette: {},                               // group key -> {label, colors:[…]}
+    quick: [],                                 // chip-row groups; drives the core.json data split
+    dnfKey: '', outsideKey: '', fallbackKey: '',
+    buttons: {},                               // group button label -> [display names]
+  },
+  eventCategories: {},                         // key -> {c, sym, label, short, big?}; order = draw order
+  defaults: {
+    boats: [],                                 // I7: every boat here ships in core.json
+    ev: [], ref: '',
+    fleet: true, rhumb: true,
+    overlays: {},                              // overlay id -> bool
+    // corrected + VMC are the house defaults (owner 2026-07-15); speedMetric
+    // only matters once charts.sog.metrics is configured
+    raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'vmc',
+  },
+  race: { milestoneTop: 620, milestoneBottom: 30, milestoneStep: 10,
+          // paceMinDone guards only the done->0 blowup at the very start —
+          // keep it SMALL (NB 15, BIR 20); the original 50 blanked ~4 opening
+          // milestones and read as "the start isn't drawn" (shipped NB defect)
+          paceMinDone: 15, eventRowY: 19, ratingLabel: '' },
+  charts: {
+    dtf: { yRange: [0, 0], eventTopY: 0 },
+    sog: { yRange: [0, 14], eventTopY: 0,
+           // SOG|VMC y-metric toggle — part of the core six; VMC boots (owner default)
+           metrics: { s: 'SOG', v: 'VMC (toward finish)' }, vmcYRange: [-3, 14] },
+    xte: { eventTopY: 0 },
+    // parkShading: { zone: [hi, lo], core: [hi, lo] },   // only with a park module (stage-2 call)
+  },
+  // distspeed (shared shell module — core six): iso rays are equal-finish-time
+  // guides; pick 3 values bracketing the fleet's elapsed/corrected day counts.
+  // Captions live in copy.js COPY.distspeed slots (see the worked examples).
+  distspeed: {
+    isoDays: [0, 0, 0], isoDaysCorr: [0, 0, 0],
+    toggle: { key: 'distMode', default: 'h',
+              states: [{ v: 'e', label: 'Elapsed' }, { v: 'h', label: 'Corrected' }] },
+  },
+  kpis: [],                                    // {label, value, sub}; {stats.*}/{park.hero.*} resolve from data
+  mapLabels: [],                               // [[dtf, 'LABEL', ax, ay], …] — authored leader lines
+  controls: { pills: ['@ghosts', '@rhumb'] },  // pill order; '@' = shell pills, ids = overlays
+  layout: ['map', 'dtf', 'race', '@distspeed', 'two:xte,sog', 'events'],   // '@<id>' mounts a section module
+  modules: ['distspeed'],
+  overlays: [],
+};

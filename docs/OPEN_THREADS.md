@@ -25,6 +25,14 @@ introduction).
   `module_canaries.upwind_excess` can drift between config and
   tests/regression.json unchecked. Fix: iterate whatever keys both sides
   carry instead of a hardcoded list.
+- **Weather-evidence acquisition (ALIR 2025 experiment)** (2026-07-23):
+  stage 0 landed NDBC stdmet + ERA5 point winds + CO-OPS current predictions
+  under `races/alir2025/raw/weather/` (provenance + scope guard in its
+  MANIFEST.md — evidence only, no pipeline numbers). If the layer earns its
+  keep by stage 3, bake it into `starter/acquisition/` + the skill's stage-0/1
+  references as a first-class optional source; the fetch commands are in the
+  manifest. Known gap either way: no 2025 observation platform in central LI
+  Sound (44017/44039/44040 dead) — park-zone wind is model-only.
 - **Tier-1 (fleet-only) builds need a hero today** (review, 2026-07-23):
   `build_data.py` pivots stats/groups/series on `client_boat` unconditionally
   — a null client_boat crashes at the stats step, so true fleet-commentary
