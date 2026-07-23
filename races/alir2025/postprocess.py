@@ -94,10 +94,28 @@ def main() -> None:
         meta["doorHrs"] = round((fin_epoch - enter) / 3600, 2)
         n_door += 1
 
+    # Compact division labels (stage-4 round 2, owner): the results carry
+    # "Spinnaker Division X - Warning Signal 12:00"-style strings; meta.cls is a
+    # display surface (ranked rows, hovers, filters), so shorten it. The full
+    # strings remain in config divisions_in_scope and the raw results.
+    SHORT = {"Non-Spinnaker Division 1": "NS Div 1", "Non-Spinnaker Division 2": "NS Div 2",
+             "Spinnaker Division 4": "Div 4", "Spinnaker Division 5": "Div 5",
+             "Double-Handed Division 7": "DH Div 7", "Spinnaker Division 9": "Div 9",
+             "Spinnaker Division X": "Div X", "Spinnaker Division 0": "Div 0",
+             "Multihull (NEMA) Division M": "Multihull"}
+    n_cls = 0
+    for b in d["boats"].values():
+        cls = b["meta"].get("cls") or ""
+        for long, short in SHORT.items():
+            if cls.startswith(long):
+                b["meta"]["cls"] = short
+                n_cls += 1
+                break
+
     OUT.write_text(json.dumps(d, separators=(",", ":")))
     print(f"postprocess: unified ladder applied to {len(finishers)} finishers "
           f"(circles: { {c: len(v) for c, v in by_circle.items()} }); "
-          f"official circle ranks preserved in meta.note; door metrics on {n_door} boats")
+          f"official circle ranks preserved in meta.note; door metrics on {n_door} boats; compact division labels on {n_cls}")
 
 
 if __name__ == "__main__":

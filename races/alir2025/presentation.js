@@ -46,7 +46,13 @@ window.__RACE_CONFIG__ = {
     },
     quick: ['hero', 'focus', 'spotlight'],
     dnfKey: 'fleet_dnf', outsideKey: '', fallbackKey: 'fleet_other',
-    buttons: {},
+    buttons: {                          // each button = a defensible comparison set (5-7 boats);
+                                        // names asserted subset of the payload by the harness
+      'Div 0 — the big boats': ['Max', 'Wahoo', 'Avalanche', 'Cougar', 'Ohana', 'Hunter'],
+      'Div X — Habiru’s class': ['Habiru YCC', 'Acadia', 'Della Aurora', 'Duet', 'Lucky Luke', 'Surface Tension'],
+      'Daffodil’s pace peers': ['Daffodil', 'Towhee', 'Random', 'Midnight Rider - PMP Strategy', 'Unbreakable YCC', 'Maggie', 'Inessa II'],
+      'Unified podium': ['Max', 'Phantom', 'Wahoo', 'Habiru YCC', 'Acadia'],
+    },
   },
   eventCategories: {                      // draw order low -> high; only the categories in use
     crew:    { c: '#B9770E', sym: 'circle', label: 'Crew — Daffodil', short: 'Crew' },
@@ -54,22 +60,25 @@ window.__RACE_CONFIG__ = {
   },
   defaults: {
     boats: ['Daffodil', 'Max', 'Habiru YCC', 'Wahoo', 'Phantom', 'Dolcezza'],  // I7 core set
-    ev: [], ref: 'Max',                   // milestone-delta reference: the overall winner
+    ev: ['crew', 'insight'], ref: 'Max',   // markers on by default (owner, round 2)                   // milestone-delta reference: the overall winner
     fleet: true, rhumb: false,   // the chord misleads on a marks course; the courseline overlay carries the course
     overlays: {},
     raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'vmc',
   },
-  race: { milestoneTop: 200, milestoneBottom: 20, milestoneStep: 20,
+  race: { milestoneTop: 200, milestoneBottom: 5, milestoneStep: 5,   // every 5 nm (owner, round 2)
           correctedModel: 'tod',   // PHRF time-on-distance — first ToD race through the shell;
                                    // 'tot' (the default) would multiply partial elapsed by the
                                    // raw sec/mi rating and render garbage mid-race
           paceMinDone: 15, eventRowY: 19, ratingLabel: 'PHRF' },
   charts: {
+    map: { heightScale: 1.6, legendBottom: true },   // ~75% viewport map, legend below (owner, round 2)
     dtf: { eventTopY: 200 },
     sog: { yRange: [0, 16], eventTopY: 15,   // headroom: the trimaran's reach tops the monohull fleet
            metrics: { s: 'SOG', v: 'VMC (toward finish)' }, vmcYRange: [-3, 14] },
     xte: { eventTopY: 8 },
   },
+  ratingBands: { widths: [15, 30] },      // hero-centred PHRF bands: ±15 s/mi = Daffodil/Max/
+                                          // Avalanche; ±30 adds Cougar, Ohana, Hunter
   distspeed: {
     isoDays: [1.1, 1.6, 2.1],             // elapsed 26.4 / 38.4 / 50.4 h — brackets 24:11..51:32
     isoDaysCorr: [1.15, 1.5, 1.85],       // corrected 27.6 / 36 / 44.4 h — brackets 27:02..42:23
@@ -79,7 +88,7 @@ window.__RACE_CONFIG__ = {
   kpis: [                                 // every number is a confirmed stage-2/3 finding, scoped
     { label: 'The door', value: '3<span class="u"> boats</span>', sub: 'finished before the squall — Max last, by 80 min' },
     { label: 'Daffodil on the reach', value: '4th<span class="u"> of 43</span>', sub: '8¼ h through the ocean leg · fleet median 12 h' },
-    { label: 'Top three, corrected', value: '4:50<span class="u"> spread</span>', sub: 'after 27 h — inside rating noise (~10 min)' },
+    { label: 'Top three, corrected', value: '00:04:50<span class="u"> spread</span>', sub: 'after 27 h — inside rating noise (~10 min)' },
     { label: 'The park', value: '55<span class="u"> min</span>', sub: 'Sound&#8217;s Great at anchor 175 yd from the line' },
     { label: 'Distance sailed', value: '{stats.dist_sailed}<span class="u"> nm</span>', sub: 'Daffodil · +{stats.extra} over the 207 nm course' },
     { label: 'Unified ladder', value: '30<span class="u"> /43</span>', sub: 'Daffodil, all three circles on one scale (unofficial)' },
@@ -90,7 +99,7 @@ window.__RACE_CONFIG__ = {
     [70, 'PLUM GUT', -10, -26],
     [15, 'THE DOOR', -34, 14],
   ],
-  controls: { pills: ['@ghosts', '@rhumb'] },
+  controls: { pills: ['@ghosts'] },   // no straight-line pill (owner, round 2); scored course is always on
   layout: ['map', 'dtf', 'race', '@door', '@distspeed', 'two:xte,sog', 'events'],
   modules: ['distspeed', 'door'],
   overlays: ['squall', 'courseline'],

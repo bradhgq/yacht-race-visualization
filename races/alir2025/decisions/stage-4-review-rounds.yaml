@@ -1,5 +1,5 @@
 # stage-4 — Review-Round Log — ALIR 2025 — DRAFT (owner round pending; >=1 owner round is mandatory)
-rounds: 1                        # round 1 = headless self-review on the hosted preview
+rounds: 2                        # round 1 = headless self-review; round 2 = OWNER review (7 items)
 defects:
   - found: "door module drew 6 dots on the live page vs 43 in the harness — it read t/dtf series,
       which the split build ships only for core boats until more.json loads (standalone embeds
@@ -19,6 +19,38 @@ defects:
       corrected. Polyline in presentation.js mirrors config.yaml course (source of truth)."
     assertion: "not expressible as a fixture; covered by the courseline overlay being default-on
       and the map trace name 'Scored course · 207 nm' (verified in the served page)"
-approved_to_productionize: false # set true at the owner's review round
+  # ---- round 2: owner review, 2026-07-23 (screenshots of header/controls/map) ----
+  - found: "groups row empty; owner wants division comparison sets of 5-6 boats and no
+      straight-line pill"
+    fix: "four groups.buttons (Div 0, Div X, Daffodil's pace peers = unified 27-33, unified
+      podium) + hero-centred PHRF ratingBands (±15/±30 s/mi); @rhumb pill removed from controls.
+      classFilter NOT used: the shell's filter contract is numeric-only and ALIR has divisions
+      X and M — buttons cover all nine divisions instead."
+    assertion: "harness name-hygiene check asserts every groups.buttons name exists in the payload"
+  - found: "title-block result line rendered as broken prose"
+    fix: "rewritten as the shell's chip markup (<span>label <b>value</b></span> x4)"
+    assertion: "not expressible (visual)"
+  - found: "KPI '4:50 spread' reads as hours"
+    fix: "value now 00:04:50"
+    assertion: "not expressible (copy)"
+  - found: "map: legend should sit below at all widths; map deserves ~75% viewport height"
+    fix: "charts.map { heightScale: 1.6, legendBottom: true }; legendBottom is a new additive
+      config-gated engine hook in shell/app/charts/map.js (nb/bir unaffected)"
+    assertion: "not expressible (visual); verified in served layout.legend"
+  - found: "race chart milestones too coarse at 20 nm"
+    fix: "milestoneStep 5, milestoneBottom 5 (41 points inc. the official-endpoint anchor)"
+    assertion: "endpoint fixtures unchanged (endpoints ride meta, not milestones)"
+  - found: "race log rendered empty — event categories all defaulted OFF (the section looked
+      deletable; populating it honors the owner's intent of visible markers better than deleting)"
+    fix: "defaults.ev ['crew','insight']; six new verified insight events from the confirmed
+      research/analysis (east turn, the reach, Montauk, the Sound beat, line honors, Max and the
+      door) — nine public events total, all source-labeled"
+    assertion: "payload events==9; snapshot refrozen for exactly {events 3->9, meta.cls
+      compacted on 49 boats} — I16 ledger: this entry"
+  - found: "division labels were the raw 'Spinnaker Division X - Warning Signal 12:00' strings"
+    fix: "postprocess compacts meta.cls to Div 0/Div X/NS Div 1/DH Div 7/Multihull etc.; full
+      strings remain in config and raw results"
+    assertion: "covered by the same snapshot refreeze class"
+approved_to_productionize: false # owner confirms after seeing round 2
 confirmed_by: ""
 date: ""

@@ -8,7 +8,8 @@ window.__COPY__ = {
     eyebrow: 'Chart of the Race · Around Long Island Regatta 2025 · 24–26 July · 207 NM',
     h1: '<span class="mag">Daffodil</span> · <span style="color:#0E8A8A">Max</span> · and the finish door',
     sub: 'New York Harbor, down the Narrows and out past Ambrose R“14”, the long ocean reach to Montauk, through Plum Gut, and a beat down a dying Sound to Glen Cove — where the race stopped being about speed and became about arrival time.',
-    result: 'Official: <b>Max</b> (Pogo 50, Moritz Hilf) wins the Around Long Island Regatta Trophy · <b>Daffodil</b> (Corsair F31R, the only multihull entered) takes Division M and multihull line honors · 43 finishers of 51 starters on the Long Island course.',
+    result: '<span>ALIR Trophy <b>Max</b> · Pogo 50</span><span>Multihull line honors <b>Daffodil</b> · Corsair F31R (sole multihull)</span>' +
+      '<span>Monohull line honors <b>Wahoo</b> · 24:11:49</span><span>Finishers <b>43 / 51</b> starters</span>',
     tzn: 'All times EDT. Finish times verified against the tracker (the published results carry EDT wall clock mislabeled as UTC — corrected here).',
   },
   loading: 'Loading the race record…',
@@ -19,7 +20,7 @@ window.__COPY__ = {
     race:   { title: 'Where the race was won and lost — vs <span id="refname" style="color:var(--magenta)"></span>' },
     xte:    { title: 'Offset from the course line', note: 'Signed distance off the routed course. The south-shore spine of this course is drawn from the fleet\'s own sailed median, so large offsets here are sailing-angle choices, not errors — this is not an off-course meter.' },
     sog:    { title: 'Speed', note: '', noteVmc: 'VMC is closing speed on the finish along the routed course — computed from positions alone. The tracker carries no wind, so no VMG is shown or knowable here. Negatives are real: tacks, and drift in the park.' },
-    events: { title: 'Race log — every marked moment', note: 'Three public entries: the squall line (station record), the squall on Daffodil (the owner\'s account from the deck, corroborated by buoy 44065), and the midnight anchor 175 yards from the line (Lenoble\'s published account, confirmed by the tracker).' },
+    events: { title: 'Race log — every marked moment', note: 'Nine public entries, each source-labeled: verified analysis waypoints (the east turn, the reach, Montauk, the upwind Sound, line honors, Max and the door), the squall line from the station record, the squall on Daffodil from the owner\'s deck account (corroborated by buoy 44065), and the midnight anchor 175 yards from the line (Lenoble\'s published account, confirmed by the tracker).' },
   },
   race: { notes: {
     h: 'Corrected (PHRF time-on-distance, 207 nm) offset to {ref} at each milestone; the end point is the official corrected delta, exactly. Cross-circle comparison rides the unofficial unified ladder — official scoring is per circle. The top three finished within 4:50 corrected after 27 hours: inside rating noise, so read mechanisms, not margins.',

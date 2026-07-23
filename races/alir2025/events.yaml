@@ -5,6 +5,55 @@
 # first-person accounts (WindCheck + SailNet); analysis = derived from the pipeline.
 
 events:
+- t: "2025-07-24 13:30"
+  cat: insight
+  label: "The fleet turns east"
+  txt: "Ambrose Channel R\"14\" — the course's ONE mandatory mark — goes to port and the
+    ocean reach begins. The leaders round about 90 minutes after their guns; from here it
+    is 100+ nm of pressed reaching along the south shore."
+  source: analysis
+  visibility: public
+- t: "2025-07-24 20:00"
+  cat: insight
+  label: "A 31-footer among the 50s"
+  txt: "Mid-reach, Daffodil is holding the pace of the three fastest boats in the fleet —
+    she will traverse the ocean leg 4th of 43 (8¼ h; fleet median 12 h), behind only
+    Avalanche, Max and Wahoo, all far larger. This is what a Corsair F31R is for."
+  source: analysis
+  visibility: public
+- t: "2025-07-25 03:20"
+  cat: insight
+  label: "Montauk in the dark"
+  txt: "The mid-fleet rounds Montauk Point in the small hours (Sound's Great at 03:20,
+    matching her crew's published account to within ten minutes); the leaders had turned
+    before midnight. Next: Gardiners Bay, Plum Gut, and a Sound with fading wind."
+  source: analysis
+  visibility: public
+- t: "2025-07-25 09:00"
+  cat: insight
+  label: "The Sound turns upwind"
+  txt: "Friday morning's sou'wester sits 20-58 degrees off the westbound course (model
+    reanalysis — no working wind platform existed in the central Sound in 2025) and dies
+    from 11 kt toward 7. This beat is where Daffodil's race went: about 2 h conceded to
+    Habiru YCC on overlapping water, with more tacks and 6 nm more sailed."
+  source: analysis
+  visibility: public
+- t: "2025-07-25 12:26"
+  cat: insight
+  label: "Line honors: Wahoo"
+  txt: "The Naval Academy's Ker 50 is first home in 24:11:49 — the fastest boat around
+    the course by nearly two hours. On corrected time the handicap flips her behind Max
+    by 4:50, a margin inside rating noise."
+  source: analysis
+  visibility: public
+- t: "2025-07-25 14:15"
+  cat: insight
+  label: "Max finishes — the door is still open"
+  txt: "Max crosses at 14:15, the third and last boat home before the squall line enters
+    the Sound 80 minutes later — and hours before the post-frontal calm shuts the final
+    15 nm on everyone behind. The overall trophy is decided here, not in any margin."
+  source: analysis
+  visibility: public
 - t: "2025-07-25 15:36"
   cat: insight
   label: "Squall line enters the Sound"

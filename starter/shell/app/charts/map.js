@@ -128,7 +128,9 @@ function buildMap() {
   react('map', tr, { ...BASE(), annotations: mapAnn,
     xaxis: { ...GAX, title: nw ? undefined : { text: 'Longitude', font: AXFONT }, ...(lonRange ? { range: lonRange } : {}) },
     yaxis: { ...GAX, title: nw ? undefined : { text: 'Latitude', font: AXFONT }, ...(latRange ? { range: latRange } : {}) },
-    legend: nw ? { orientation: 'h', y: -0.08, font: { size: 10 } } : { orientation: 'v', x: 1.001, y: 1, font: { size: 10.5 } },
+    // charts.map.legendBottom (additive, config-gated — ALIR round 2): force the
+    // horizontal below-chart legend at every width, not just narrow
+    legend: (nw || mc.legendBottom) ? { orientation: 'h', y: -0.08, font: { size: 10 } } : { orientation: 'v', x: 1.001, y: 1, font: { size: 10.5 } },
     margin: nw ? { l: 36, r: 10, t: 8, b: 30 } : { l: 56, r: 150, t: 8, b: 40 },
     ...(mc.hideLegend ? { showlegend: false } : {}) });
 }
