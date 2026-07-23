@@ -15,7 +15,7 @@ regression: green                # 16/16 under TZ=America/New_York AND TZ=UTC; s
 artifact:
   hash: "sha256:6f5cc3d367abb098814a2880… (dist/standalone.html at this commit; full hash via
     `shasum -a 256 races/alir2025/dist/standalone.html`)"
-  url: "PENDING owner deploy. Proposed silverbox nginx location: /alir-2025/ under the hgq.fyi
+  url: "PENDING owner deploy. Silverbox nginx location: /daffodil-around-long-island-2025/ under the hgq.fyi
     vhost, aliased to ${inputs.race-viz-site}/races/alir2025/dist/. Deploy = merge the PR, add
     the nginx location, then `nix flake update race-viz-site && sudo nixos-rebuild switch
     --flake .#silverbox` — owner-only actions (CLAUDE.md)."

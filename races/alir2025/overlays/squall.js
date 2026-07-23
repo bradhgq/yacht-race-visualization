@@ -24,8 +24,12 @@ registerOverlay({
   bandAnnotations(ctx, mode) {
     const timeAxis = mode === 'time' || (mode === undefined && ctx.S.axis === 't');
     if (!timeAxis || ctx.h.narrow()) return [];
-    return [{ x: '2025-07-25 16:55', y: 0.96, xref: 'x', yref: 'paper', showarrow: false,   // inside the plot: the y>1 row belongs to phase labels
-      text: 'SQUALL LINE · 24–32 kt gusts, west→east', xanchor: 'center',
-      font: { size: 9, color: '#A34E14', family: 'SF Mono, Menlo, monospace' } }];
+    // LABEL-LANE RULE (owner, 2026-07-23): horizontal lanes are spoken for —
+    // y>1 belongs to phase labels, the top in-plot row to event markers. A
+    // band label therefore renders VERTICALLY inside its own band, where by
+    // construction nothing else lives.
+    return [{ x: '2025-07-25 16:55', y: 0.5, xref: 'x', yref: 'paper', showarrow: false,
+      text: 'SQUALL LINE · 24–32 kt · west→east', textangle: -90, xanchor: 'center',
+      font: { size: 9, color: '#A34E14', family: 'SF Mono, Menlo, monospace' }, opacity: 0.85 }];
   },
 });

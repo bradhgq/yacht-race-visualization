@@ -7,7 +7,7 @@
 window.__RACE_CONFIG__ = {
   meta: {
     title: 'ALIR 2025 — Around Long Island Regatta',
-    url: '',
+    url: 'https://hgq.fyi/daffodil-around-long-island-2025/',
     description: 'Around Long Island Regatta 2025 — 207 nm, NY Harbor to Hempstead Harbour. Fleet analysis.',
     ogDescription: 'ALIR 2025: the reach, the squall, the park — 43 finishers around Long Island.',
     ogImage: 'og.png',
