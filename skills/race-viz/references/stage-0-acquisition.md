@@ -25,9 +25,10 @@ A race starts as a Claude Code session in the monorepo ("run race-viz on
      client boat (or none) · comparison boats (or "propose a set").
    - *Optional — each raises what's possible:* crew journal → events layer
      (Tier 2) · nav log → reconciliation module (Tier 2) · weather brief /
-     routing notes → phase-attribution evidence · broadcast or interview
-     transcripts → primary research sources · watch schedule → watch-split
-     module candidate.
+     routing notes → phase-attribution evidence · public weather/current
+     observations → fetchable (weather evidence, below) · broadcast or
+     interview transcripts → primary research sources · watch schedule →
+     watch-split module candidate.
 3. **Offer to fetch what's fetchable.** Missing data + a YachtScoring event
    id or YB race id ⇒ offer acquisition (below) and run it on the user's go.
    Ask the USER only for what remains unfetchable.
@@ -88,6 +89,44 @@ name themselves `ys<eventId>_*`. Report every warning the run produces.
 - Both APIs are undocumented and unversioned. Data for past races persists in
   practice, but keep what you downloaded in `raw/`, and re-run the ritual
   after any re-download.
+
+## Weather evidence (optional acquisition — offer it, don't assume it)
+
+A race whose story has a weather axis (a squall, a park, a gradient shift)
+can carry a weather-evidence layer; offer it at kickoff alongside the other
+optional inputs. **Scope guard, non-negotiable:** these files are
+stage-1/2/3 phase-attribution and narrative EVIDENCE only. No pipeline
+number may depend on them; the pipeline consumes tracks/results/scratch
+exclusively, and I18 stands — VMC, never VMG; a wind-referenced claim cites
+the weather files as external evidence, never implies the tracker measured
+wind.
+
+```
+python3 starter/acquisition/fetch_weather.py --window <start>..<end> \
+    --ndbc <stations> --era5 <name,lat,lon> … --coops <stations> \
+    --tz <race tz> --out-dir races/<race>/raw/weather
+```
+
+Three sources (details in `starter/acquisition/README.md`): NDBC buoy/shore
+observations (yearly stdmet files, UTC, public domain), Open-Meteo ERA5
+reanalysis point winds (model, CC-BY 4.0 with attribution, ~25 km grid —
+claims resting on it are "model-supported, never observed"), and CO-OPS
+tidal-current *predictions* (harmonic model, not observations). Pick NDBC
+stations and ERA5 points to bracket the course legs; pick CO-OPS stations at
+the tidal gates the fleet actually used.
+
+**The verified-coverage ritual is mandatory — a file can exist yet be
+empty.** The fetcher decompresses each NDBC file, counts non-sentinel
+race-window rows (sentinels: WDIR 999, WSPD/GST 99.0, WVHT 99.00), deletes
+zero-coverage files rather than keeping false coverage (ALIR 2025's MTKN6
+file existed with zero wind rows all year), and writes
+`weather_manifest.json` recording positive AND negative findings. Carry
+both kinds into a hand-written `MANIFEST.md` beside it, including the
+judgments the fetcher can't make: stations too distant to inform the course
+honestly, and which observation gaps constrain which claims (ALIR: no
+observed wind at the Montauk corner; no platform at all in the central Sound
+where the fleet parked — so park-zone wind claims are model-supported and
+say so). Worked example: `races/alir2025/raw/weather/MANIFEST.md`.
 
 ## Scope procedures
 
