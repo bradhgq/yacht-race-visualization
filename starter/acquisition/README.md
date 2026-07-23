@@ -10,6 +10,7 @@ python3 starter/acquisition/fetch_race.py <ysEventId> --out-dir races/<race>/raw
 python3 starter/acquisition/fetch_race.py --yb nb2026 …                             # YB-only race
 python3 starter/acquisition/yb_tracker_download.py <ybRaceId> [--include-dtf]       # tracks only
 python3 starter/acquisition/yachtscoring_download.py <ysEventId> [--prefix p]       # results/scratch only
+python3 starter/acquisition/fetch_weather.py --window a..b …                        # optional weather evidence
 ```
 
 `fetch_race.py` chains YachtScoring → `satTrackingUrl` → YB, writes a
@@ -109,6 +110,62 @@ https://api.yachtscoring.com/v1/public/event/{eventId}                    metada
 - Newport Bermuda is NOT on YachtScoring — YB-only; results from the
   organizer's site.
 
+## Weather evidence (optional; promoted from ALIR 2025)
+
+**Scope guard first:** weather files are stage-1/2/3 phase-attribution and
+narrative EVIDENCE only. No pipeline number may depend on them — the pipeline
+consumes tracks/results/scratch exclusively, and VMC stays VMC (I18): a
+wind-referenced claim cites these files as external evidence, never implies
+the tracker measured wind.
+
+```
+python3 starter/acquisition/fetch_weather.py --window 2025-07-24..2025-07-26 \
+    --ndbc 44065 44025 kptn6 --era5 montauk,41.05,-71.90 --coops LIS1012 \
+    --tz America/New_York --out-dir races/<race>/raw/weather
+python3 starter/acquisition/fetch_weather.py --window a..b --ndbc … --verify-only races/<race>/raw/weather
+```
+
+Three sources, one file layout (`ndbc/`, `openmeteo/`, `coops/` under
+`races/<race>/raw/weather/` — the layout of the worked example,
+`races/alir2025/raw/weather/`):
+
+- **NDBC** — NOAA historical standard-met yearly files, public domain:
+  `https://www.ndbc.noaa.gov/data/historical/stdmet/<station>h<year>.txt.gz`.
+  Timestamps UTC; wind m/s, waves m. Buoys near the course give observed
+  wind/sea state; shore C-MAN stations (e.g. KPTN6) give wind only.
+- **Open-Meteo ERA5 archive** — model reanalysis point winds
+  (`archive-api.open-meteo.com/v1/archive`, hourly wind speed/direction/gusts,
+  requested in knots and race-local time). CC-BY 4.0 — attribute
+  "Weather data by Open-Meteo.com; ERA5 © ECMWF/Copernicus". Open-Meteo snaps
+  to the ~25 km ERA5 grid; the manifest records requested vs served
+  coordinates and the drift in nm. Model data smooths micro-calms — a claim
+  resting on ERA5 alone is "model-supported, never observed"; say so.
+- **CO-OPS** — NOAA tidal-current **predictions** (harmonic model, not
+  observations; public domain) via
+  `api.tidesandcurrents.noaa.gov/api/prod/datagetter`, two cuts per station:
+  hourly (`interval=60`) and the flood/ebb/slack table
+  (`interval=MAX_SLACK`); end date padded a day so the last night's cycle
+  completes.
+
+### The verified-coverage ritual (mandatory — a file can exist yet be empty)
+
+Decompress each NDBC file and count non-sentinel rows whose UTC date falls in
+the race window (sentinels: WDIR 999, WSPD/GST 99.0, WVHT 99.00). ALIR 2025's
+MTKN6 file existed with **zero wind observations for the entire year** —
+kept, it would have read as Montauk coverage. The fetcher runs the ritual on
+everything it downloads, deletes zero-coverage files rather than keeping
+false coverage, and writes `weather_manifest.json` recording **positive AND
+negative findings** (kept stations with row counts + min/max ranges; rejected
+stations with the reason — empty all year vs empty in the window vs no file
+for the year). `--verify-only` re-runs the ritual offline on already-fetched
+files (re-verification after any re-download; it reproduces the ALIR
+MANIFEST.md counts exactly).
+
+The JSON manifest is the machine record; the prose judgments — which gaps
+constrain which claims, which stations are too far away to inform the course
+honestly (ALIR rejected 44020 at ~90 nm out) — belong in a hand-written
+`MANIFEST.md` beside it, modeled on the worked example.
+
 ## Start times
 
 Staggered per-division starts appear in YB `RaceSetup.teams[].start` and YS
@@ -128,5 +185,8 @@ alir25 a year on) — but snapshot races you care about; don't assume retention.
 
 `python3 -m unittest discover -s starter/acquisition/tests  # from the repo root` — offline decoder
 regression on a real 41 KB ildr2025 blob (3 boats, 5190 moments, expected
-endpoints pinned from a cross-checked independent download). CI-safe; the
-network paths above are not in CI by design.
+endpoints pinned from a cross-checked independent download), plus the
+weather-coverage ritual against a real 44065 race-window excerpt (counts
+pinned from the ALIR MANIFEST's independently verified numbers) and the
+MTKN6/44097 negative-finding cases. CI-safe; the network paths above are not
+in CI by design.

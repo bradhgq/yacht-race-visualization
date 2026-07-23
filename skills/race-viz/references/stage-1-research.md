@@ -14,6 +14,12 @@ Before anything else: official notices, protest and redress decisions, rescoring
 4. Press coverage — corroboration tier, never sole support for a claim.
 5. Weather and current context: what the forecasts said pre-race versus what apparently occurred, where determinable from public sources.
 
+## Weather narrative cross-check (when stage 0 acquired weather evidence)
+
+If `races/<race>/raw/weather/` exists, every weather claim in circulation gets checked against it before it enters the brief: crew accounts of wind strength against the nearest NDBC station's observed range, the timing of a feature (squall line, dying gradient) against its arrival at successive stations, current-gate stories against the CO-OPS flood/ebb cycle. Label each cross-check with the evidence class — **observed** (NDBC), **model** (ERA5 — the ~25 km grid smooths micro-calms, so "model-supported, never observed" for anything the grid can't resolve), or **predicted** (CO-OPS harmonic tables) — and honor the coverage gaps the weather MANIFEST records: where no station observed, say so rather than borrowing a distant one. ALIR 2025 is the worked example (`races/alir2025/raw/weather/MANIFEST.md`): the layer corroborated the owner's squall account (31.9 kt observed vs ~30 felt), timed the squall line across three stations, and explained the park via the forecast gradient collapse — while the MANIFEST's two recorded gaps kept Montauk-corner and park-zone wind claims honestly model-scoped.
+
+**Scope guard (unchanged from stage 0):** weather files are evidence for narrative and phase attribution only — no pipeline number may depend on them, and I18 stands: VMC, never VMG; the tracker carries no wind.
+
 ## Output — the research brief
 
 - **Source list split primary / corroboration**, with URLs and access dates.
