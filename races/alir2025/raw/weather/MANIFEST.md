@@ -72,8 +72,8 @@ Harmonic/subordinate current predictions (not observations), 2025-07-24 →
 
 | station | name | relevance |
 |---|---|---|
-| LIS1012 | Plum Gut | the fleet's Sound entry gate (43/45 finishers). Verified race-night cycle: ebb −2.91 kt at 07-25 13:58, flood +1.98 at 21:22, ebb −2.89 at 07-26 02:24, flood +2.04 at 09:50 (local) |
-| LIS1001 | The Race | alternate gate (only two RETired boats crossed it) |
+| LIS1012 | Plum Gut | 42 of the 43 in-scope finishers (Yopo took the Sluiceway). Verified race-night cycle: ebb −2.91 kt at 07-25 13:58, flood +1.98 at 21:22, ebb −2.89 at 07-26 02:24, flood +2.04 at 09:50 (local) |
+| LIS1001 | The Race | alternate gate — only Kitli and Vamonos, both crossing while racing, both later RET |
 | LIS1035 | Matinecock Point | finish approach |
 | LIS1036 | Execution Rocks | western Sound / park zone |
 

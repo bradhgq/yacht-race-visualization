@@ -46,18 +46,33 @@ course:
   start: [40.7028, -74.0367]    # SI: line ~0.25 nm NE of Ellis Island, NY Harbor
   finish: [40.8619, -73.6603]   # SI: light on Glen Cove Breakwater, Hempstead Harbor
   official_length_nm: 207.0     # SI: "207 nm for scoring purposes" (ATI course, out of scope: 250)
-  finish_radius_nm: 0.7
-  marks:                        # draft polyline 203.6 nm (delta -3.4 vs official; route.py logs it)
+  finish_radius_nm: 0.4         # NOT the 0.7 default. The fleet-ghost loop applies this radius to
+                                # every boat, and Hempstead Harbour's approach doubles back past
+                                # the line: at 0.7 nm SEVEN finishers get their ghost track cut
+                                # >15 min early (Sound's Great by 110 min). 0.4 nm cuts that to 3.
+                                # Per-boat series are unaffected either way (they trim on finish).
+  marks:                        # polyline 205.9 nm (delta -1.1 vs official; route.py logs it).
+                                # Every leg verified against the sailed fleet envelope: no leg
+                                # passes inshore of any racing track (the two land-crossing legs
+                                # found at first draft are fixed by the two marks flagged NEW).
     - [40.6060, -74.0450]       # Verrazzano Narrows mid-span (keeps leg 1 in the channel)
     - [40.5281, -74.0094]       # Ambrose Channel Red Bell Q R "14" — the ONE mandatory mark (SI)
-    - [40.5500, -73.4000]       # south-shore spine waypoints: drafted from the sailed median of
-    - [40.6400, -73.0500]       #   Max/Daffodil/Habiru (the Ambrose->Montauk great circle cuts
-    - [40.7700, -72.6000]       #   across Long Island); validate against full fleet at stage 2
-    - [41.0600, -71.8450]       # Montauk Point rounding (fleet rounded 41.04–41.09 at ~-71.85)
-    - [41.1680, -72.2150]       # Plum Gut (43 of 45 finishers; The Race crossers were RETs — record)
-    - [41.0500, -73.3500]       # mid-Sound waypoint clearing Eatons Neck (fleet ~41.03 at -73.40)
+    - [40.5500, -73.4000]       # south-shore spine: drafted from the sailed median, because the
+    - [40.6400, -73.0500]       #   direct Ambrose->Montauk great circle crosses Long Island
+    - [40.7700, -72.6000]       #   (152 of 160 samples inshore, worst -6.7 nm)
+    - [40.8600, -72.1000]       # NEW — Moriches/Shinnecock offing. Without it the spine->Montauk
+                                #   chord runs over the Amagansett–Napeague ocean beach: ZERO of
+                                #   1,198 outbound pings lay north of it, worst clearance -1.5 nm.
+    - [41.0600, -71.8450]       # Montauk Point rounding, 0.9 nm SE of the light (every finisher's
+                                #   closest approach <=0.66 nm, so the radius rule always fires)
+    - [41.1680, -72.2150]       # Plum Gut — 42 of 43 finishers within 0.52 nm. (Yopo took the
+                                #   Sluiceway; the two Race crossings were Kitli and Vamonos.)
+    - [41.0500, -73.3500]       # mid-Sound, clearing Eatons Neck (fleet return min 40.953)
+    - [40.9250, -73.6250]       # NEW — Matinecock/Prospect Point. Without it the run to the line
+                                #   cuts Centre Island/Bayville: no return ping lay south of it.
   mark_radius_nm: 1.0
-  arrival_search_after_nm: 0    # start and finish are far apart along the course; no early proximity
+  arrival_search_after_nm: 0    # verified safe: with routed DTF >20 nm the closest any boat comes
+                                # to the finish is 12.0 nm — 11+ nm of clearance. No false arrival.
 
 time:
   official_tz: America/New_York
@@ -143,6 +158,16 @@ exclude_boats:                  # tracked-only committee vessel; two DNCs with n
   - "COMMITTEE BOAT"
   - "Wind Song"
   - "Rocksteady"
+  - "Scarlett"                  # PROPOSED — owner confirms at the stage-0 stop. Scarlett (RET)
+                                # turned back off Fire Island on day 1, and her tracker then
+                                # travelled home OVERLAND up the Hudson, parking near Kingston NY
+                                # (41.92, -73.99) for a day. Inside the grid window she contributes
+                                # 650 pings, 468 of them north of 41.3N, and single-handedly
+                                # stretches the fleet bounding box from 41.281N to 41.922N — about
+                                # 38 nm of phantom extent on every map frame. Excluding her costs
+                                # ~4 h of genuine racing track; keeping her puts a boat in the
+                                # Catskills. Alternative if the owner prefers: keep her and cap
+                                # her series at turn-back (needs a per-boat cap the config lacks).
 extra_boats: []
 
 grid: { minutes: 15, end_utc: '2025-07-26T18:45:00+00:00', interpolate_limit: 4 }
