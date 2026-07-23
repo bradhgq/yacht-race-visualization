@@ -58,10 +58,11 @@ stale-standalone trap (dist embeds `out/`; tests read dist). After a
 verification rebuild, `git checkout -- races/*/dist` — committed dist is
 production, per above.
 
-New race: copy [`starter/template/`](starter/template/) to `races/<race>/`, drop
-raw data in `raw/`, fill `config.yaml` + `presentation.js`, and follow the
-skill's checkpoint protocol (never skip CP-0 or CP-2). Kickoff prompt template:
-[`docs/KICKOFF_TEMPLATE.md`](docs/KICKOFF_TEMPLATE.md).
+New race: start a Claude Code session here and ask for race-viz on your race —
+stage 0 inventories what exists, asks for (or fetches) the rest, and stops for
+your sign-off before analysis. Mechanically it copies
+[`starter/template/`](starter/template/) to `races/<race>/` and fills
+`config.yaml` + `presentation.js`; never skip the stage-0 or stage-2 stops.
 
 See [`starter/README.md`](starter/README.md) for the engine doctrines. The
 `/race-viz` skill in [`skills/race-viz/`](skills/race-viz/SKILL.md) is the

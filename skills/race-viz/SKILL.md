@@ -35,8 +35,7 @@ Read the stage's reference file before executing it. Do not load stage files ahe
 
 | Stage | Read first | Runs in | Requires | Emits | Checkpoint |
 |---|---|---|---|---|---|
-| acq (optional) | `references/data-acquisition.md` | Claude Code or user-run locally | race identifiers (YachtScoring event id / YB race id) | tracks, scratch sheet, results CSVs + manifest | none — verification lands in CP-0 |
-| 0 Intake & scope | `references/stage-0-intake.md` | chat | user's raw inputs | manifest, fleet parse, TZ verification, draft `config.yaml` | **CP-0 Scope Record** — hard stop |
+| 0 Acquisition, intake & scope | `references/stage-0-acquisition.md` | chat | user's raw inputs and/or race identifiers (acquisition runs inside stage 0) | manifest, fleet parse, TZ verification, draft `config.yaml` | **CP-0 Scope Record** — hard stop |
 | 1 Research | `references/stage-1-research.md` | chat (Research feature preferred) | CP-0 | research brief + claims-in-circulation list | soft review, no hard stop |
 | 2 Analysis | `references/stage-2-analysis.md` | chat-orchestrated; pipeline in container or Claude Code per triggers | CP-0 | `dashboard_data.json`, findings memo, frozen goldens | **CP-2 Findings & Modules Record** — hard stop |
 | 3 Synthesis | `references/stage-3-synthesis.md` | chat | CP-2 (+ research brief) | narrative pack: acts, decompositions, discrepancy register, lessons | **CP-3 Corrections Record** — hard stop |
@@ -69,4 +68,4 @@ Soft doctrines: **show the arithmetic** (every derived number traceable in-docum
 
 All formats live in `references/schemas.md`: `config.yaml`, `events.yaml`, `dashboard_data.json`, decision-record templates CP-0…CP-5, the findings-memo format, the discrepancy-register format, and the Claude Code `PROMPT.md` skeleton. Build commands and code live in the starter repo — one command, always the full chain: `.venv/bin/python starter/build_race.py races/<race>` (build_data → postprocess → harness-gated shell build → harness under the second TZ → frozen-oracle compare). This skill defines process and judgment; the repo defines code; `config.yaml` defines the race.
 
-Monorepo: `github:bradhgq/yacht-race-visualization` (public). Layout: `starter/` holds the engine code (shell, pipeline, adapters, acquisition, tests); `skills/race-viz/` is this skill (the authoritative source of truth); `docs/` holds the spec and build logs; `races/<race>/` holds each race's config + data + committed `dist/`. Acquisition scripts: `starter/acquisition/`; worked examples: `races/nb2026/`, `races/bir2026/`; kickoff prompt template: `docs/KICKOFF_TEMPLATE.md`.
+Monorepo: `github:bradhgq/yacht-race-visualization` (public). Layout: `starter/` holds the engine code (shell, pipeline, adapters, acquisition, tests); `skills/race-viz/` is this skill (the authoritative source of truth); `docs/` holds the spec and build logs; `races/<race>/` holds each race's config + data + committed `dist/`. Acquisition scripts: `starter/acquisition/`; worked examples: `races/nb2026/`, `races/bir2026/`. A race kicks off as a session in this repo — stage 0 carries the checklist (no kickoff template exists).
