@@ -46,7 +46,15 @@ function buildRace() {
     ms.forEach((m, i) => {
       const t = hitTime(b, m); if (t === null || refT[i] === null) { xs.push(raceX(m)); ys.push(null); return; }
       const mine = t - st, theirs = refT[i] - refStart;
-      let v = S.raceMode === 'h' ? (mine * tcf - theirs * refTCF) / 60 : (mine - theirs) / 60;
+      // corrected model: 'tot' multiplies partial elapsed by the factor;
+      // 'tod' subtracts rating (sec/nm) x distance DONE — at m=0 both agree
+      // with the official corrected delta the endpoint assertion pins (I2).
+      // R.correctedModel defaults to 'tot' (nb2026/bir2026, unchanged).
+      let v = S.raceMode === 'h'
+        ? (R.correctedModel === 'tod'
+            ? ((mine - theirs) - (tcf - refTCF) * (rhumb - m)) / 60
+            : (mine * tcf - theirs * refTCF) / 60)
+        : (mine - theirs) / 60;
       if (pace) { const done = rhumb - m; if (done < R.paceMinDone) { xs.push(raceX(m)); ys.push(null); return; } v = v / done * 100; }
       xs.push(raceX(m)); ys.push(v);
     });

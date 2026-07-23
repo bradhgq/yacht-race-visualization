@@ -47,6 +47,16 @@ from pipeline.route import Course  # noqa: E402
 
 PRE_PAD_S = 15 * 60      # keep a quarter hour of pre-start manoeuvring
 POST_PAD_S = 5 * 60      # keep a few pings past the line for a clean finish frame
+VEHICLE_KT = 25.0        # faster than any boat in this fleet ever sailed (max 13.8)
+STATIONARY_H = 3         # a non-finisher parked this long has retired
+STATIONARY_NM = 0.3
+
+
+def geo_nm(la1, lo1, la2, lo2):
+    import math
+    a, b, c, d = map(math.radians, (la1, lo1, la2, lo2))
+    return 2 * 3440.065 * math.asin(min(1.0, math.sqrt(
+        math.sin((c - a) / 2) ** 2 + math.cos(a) * math.cos(c) * math.sin((d - b) / 2) ** 2)))
 
 
 def load_cfg():
@@ -128,13 +138,38 @@ def main():
             end_cut = fin + POST_PAD_S
             why = f"finished {datetime.fromtimestamp(fin, tz=timezone.utc):%m-%d %H:%MZ}"
         else:
+            # Non-finisher: min-DTF alone is not enough — a retiree whose tracker
+            # travels home TOWARD the finish keeps "approaching" it (Ricky Bobby
+            # anchored 12 h off Mattituck, then rode down the LIE at ~60 kt,
+            # which read as closing the finish). End at the EARLIEST of:
+            #   (a) minimum routed DTF (the furthest she got),
+            #   (b) the start of the first sustained stationary period
+            #       (>= STATIONARY_H hours within STATIONARY_NM) — anchoring
+            #       after retiring,
+            #   (c) the ping before the first interval implying > VEHICLE_KT —
+            #       a car or a tow, not a boat (fleet max under sail: 13.8 kt).
             lat = [float(r["lat"]) for r in uniq]
             lon = [float(r["lon"]) for r in uniq]
+            eps = [int(r["epoch"]) for r in uniq]
             dtf, _xte, _leg = course.dtf_xte(lat, lon)
-            i_min = min(range(len(uniq)), key=lambda i: dtf[i])
-            end_cut = int(uniq[i_min]["epoch"]) + POST_PAD_S
-            why = (f"no finish; furthest point {dtf[i_min]:.1f} nm to go @ "
-                   f"{datetime.fromtimestamp(int(uniq[i_min]['epoch']), tz=timezone.utc):%m-%d %H:%MZ}")
+            cands = [(min(range(len(uniq)), key=lambda i: dtf[i]), "furthest point")]
+            for i in range(1, len(uniq)):
+                dt = eps[i] - eps[i - 1]
+                d = geo_nm(lat[i - 1], lon[i - 1], lat[i], lon[i])
+                if dt > 0 and d / (dt / 3600) > VEHICLE_KT:
+                    cands.append((i - 1, f"vehicle speed {d/(dt/3600):.0f} kt next"))
+                    break
+            for i in range(len(uniq)):
+                j = i
+                while j + 1 < len(uniq) and geo_nm(lat[i], lon[i], lat[j + 1], lon[j + 1]) < STATIONARY_NM:
+                    j += 1
+                if eps[j] - eps[i] >= STATIONARY_H * 3600:
+                    cands.append((i, f"anchored {(eps[j]-eps[i])/3600:.0f} h"))
+                    break
+            i_end, reason = min(cands, key=lambda c: c[0])
+            end_cut = eps[i_end] + POST_PAD_S
+            why = (f"no finish; cut at {reason}, {dtf[i_end]:.1f} nm to go @ "
+                   f"{datetime.fromtimestamp(eps[i_end], tz=timezone.utc):%m-%d %H:%MZ}")
 
         out = [r for r in uniq if start_cut <= int(r["epoch"]) <= end_cut]
         kept.extend(out)

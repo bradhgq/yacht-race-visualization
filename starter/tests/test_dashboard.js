@@ -216,7 +216,11 @@ const approx = (a, b, tol, msg) => assert.ok(Math.abs(a - b) < tol, `${msg}: ${a
     assert.ok(new RegExp(`${park.boat}[\\s\\S]*?${park.u4}%`).test(el.innerHTML),
       'rendered park table does not show the canary');
   });
-  if (!FIX.finstrip_bands)   // multi-band strips assert per-division counts in extra.cjs
+  // finstrip is a race-unique module (finish-spread heuristic), not core-six:
+  // a race where no division bunches at the line ships none (first case:
+  // alir2025, max in-division cluster 3 boats) — count 0 means "no strip",
+  // and asserting against a plot that never mounts would fail every such race.
+  if (!FIX.finstrip_bands && FIX.finstrip_count)
   check('derived-metric', `finstrip renders every scored boat (${FIX.finstrip_count})`, () => {
     const scored = Object.values(D.boats).filter(b => b.meta.corr).length;
     assert.equal(scored, FIX.finstrip_count, 'scored-boat count drifted');

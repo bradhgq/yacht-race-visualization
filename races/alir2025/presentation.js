@@ -1,67 +1,70 @@
-/* Presentation config template — the shell's window.__RACE_CONFIG__.
-   Copy alongside config.yaml and fill in. FACTS shared with config.yaml
-   (course, hero/client_boat, time, defaults) must MATCH it — shell/build.py
-   runs a consistency check and refuses to build on divergence. Presentation
-   judgment (phases, KPI copy, map leader-labels, palette tweaks) lives only
-   here. Worked examples document every key with its origin:
-   races/nb2026/presentation.js (point-to-point) and
-   races/bir2026/presentation.js (marks course — division-scoped race block,
-   charts.map gates, acts overlays). OPTIONAL blocks not skeletoned below,
-   copy from a worked example when wanted: classFilter, ratingBands,
-   charts.sog.metrics (SOG|VMC toggle) + vmcYRange, distspeed, mapAnnotations,
-   groups.chipExtras/chipRank. */
+/* ALIR 2025 presentation config — stage-2 MINIMUM-VIABLE authoring.
+   Enough for the chain to build and the analysis to be read; the real
+   presentation pass happens at stage 4. FACTS here must match config.yaml
+   (shell/build.py consistency check). Dual-focus doctrine: Daffodil (hero)
+   and Max (focus) carry equal visual weight and are never framed as a duel
+   (decisions/stage-0-scope.yaml narrative_framing). */
 window.__RACE_CONFIG__ = {
-  meta: { title: '', url: '', description: '', ogDescription: '', ogImage: 'og.png' },
-  hero: { name: '', color: '#C2187E' },        // must equal config.yaml client_boat; color pairs with --magenta
-  time: { utcOffset: -4, tzLabel: 'EDT' },     // must equal config.yaml time
+  meta: {
+    title: 'ALIR 2025 — Around Long Island Regatta',
+    url: '',
+    description: 'Around Long Island Regatta 2025 — 207 nm, NY Harbor to Hempstead Harbour. Fleet analysis.',
+    ogDescription: 'ALIR 2025: the reach, the squall, the park — 43 finishers around Long Island.',
+    ogImage: 'og.png',
+  },
+  hero: { name: 'Daffodil', color: '#C2187E' },  // = config client_boat (pipeline pivot; NOT a duel protagonist)
+  time: { utcOffset: -4, tzLabel: 'EDT' },
   course: {
-    start: [0, 0], finish: [0, 0],             // must equal config.yaml course
-    rhumbNm: 0, dtfStartFallback: 0,
-    mapRange: { lon: [0, 0], lat: [0, 0] },
-    startLabel: '', finishLabel: '',
+    start: [40.7028, -74.0367], finish: [40.8619, -73.6603],   // = config.yaml course
+    rhumbNm: 207.0,                       // official scoring distance (SI)
+    dtfStartFallback: 205.8,              // routed polyline DTF at the start
+    mapRange: { lon: [-74.15, -71.65], lat: [40.44, 41.36] },  // trimmed-fleet bbox + margin
+    startLabel: 'START — Ellis Island', finishLabel: 'FINISH — Glen Cove',
   },
-  phases: [],                                  // [[fromDTF, toDTF, 'LABEL'], …] — authored narrative
+  phases: [],                             // authored at stage 3/4 (start–R14, south-shore reach,
+                                          // Montauk, the Sound, the park)
   groups: {
-    palette: {},                               // group key -> {label, colors:[…]}
-    quick: [],                                 // chip-row groups; drives the core.json data split
-    dnfKey: '', outsideKey: '', fallbackKey: '',
-    buttons: {},                               // group button label -> [display names]
+    palette: {
+      hero:        { label: 'Daffodil',   colors: ['#C2187E'] },
+      focus:       { label: 'Max',        colors: ['#0E8A8A'] },   // co-focus, equal weight
+      spotlight:   { label: 'Habiru YCC', colors: ['#D2691E'] },
+      fleet_other: { label: 'Fleet',      colors: ['#7C8C9A', '#5F7484', '#93A3B1', '#6B8299'] },
+      fleet_dnf:   { label: 'Retired',    colors: ['#9AA5AC'] },
+    },
+    quick: ['hero', 'focus', 'spotlight'],
+    dnfKey: 'fleet_dnf', outsideKey: '', fallbackKey: 'fleet_other',
+    buttons: {},
   },
-  eventCategories: {},                         // key -> {c, sym, label, short, big?}; order = draw order
+  eventCategories: {},                    // no public events yet (Tier 1; owner squall testimony
+                                          // lands via events.yaml at stage 3 if opted in)
   defaults: {
-    boats: [],                                 // I7: every boat here ships in core.json
-    ev: [], ref: '',
+    boats: ['Daffodil', 'Max', 'Habiru YCC', 'Wahoo', 'Phantom', 'Dolcezza'],  // I7 core set
+    ev: [], ref: 'Max',                   // milestone-delta reference: the overall winner
     fleet: true, rhumb: true,
-    overlays: {},                              // overlay id -> bool
-    // corrected + VMC are the house defaults (owner 2026-07-15); speedMetric
-    // only matters once charts.sog.metrics is configured
+    overlays: {},
     raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'vmc',
   },
-  race: { milestoneTop: 620, milestoneBottom: 30, milestoneStep: 10,
-          // paceMinDone guards only the done->0 blowup at the very start —
-          // keep it SMALL (NB 15, BIR 20); the original 50 blanked ~4 opening
-          // milestones and read as "the start isn't drawn" (shipped NB defect)
-          paceMinDone: 15, eventRowY: 19, ratingLabel: '' },
+  race: { milestoneTop: 200, milestoneBottom: 20, milestoneStep: 20,
+          correctedModel: 'tod',   // PHRF time-on-distance — first ToD race through the shell;
+                                   // 'tot' (the default) would multiply partial elapsed by the
+                                   // raw sec/mi rating and render garbage mid-race
+          paceMinDone: 15, eventRowY: 19, ratingLabel: 'PHRF' },
   charts: {
-    dtf: { yRange: [0, 0], eventTopY: 0 },
-    sog: { yRange: [0, 14], eventTopY: 0,
-           // SOG|VMC y-metric toggle — part of the core six; VMC boots (owner default)
+    dtf: { eventTopY: 200 },
+    sog: { yRange: [0, 16], eventTopY: 15,   // headroom: the trimaran's reach tops the monohull fleet
            metrics: { s: 'SOG', v: 'VMC (toward finish)' }, vmcYRange: [-3, 14] },
-    xte: { eventTopY: 0 },
-    // parkShading: { zone: [hi, lo], core: [hi, lo] },   // only with a park module (stage-2 call)
+    xte: { eventTopY: 8 },
   },
-  // distspeed (shared shell module — core six): iso rays are equal-finish-time
-  // guides; pick 3 values bracketing the fleet's elapsed/corrected day counts.
-  // Captions live in copy.js COPY.distspeed slots (see the worked examples).
   distspeed: {
-    isoDays: [0, 0, 0], isoDaysCorr: [0, 0, 0],
+    isoDays: [1.1, 1.6, 2.1],             // elapsed 26.4 / 38.4 / 50.4 h — brackets 24:11..51:32
+    isoDaysCorr: [1.15, 1.5, 1.85],       // corrected 27.6 / 36 / 44.4 h — brackets 27:02..42:23
     toggle: { key: 'distMode', default: 'h',
               states: [{ v: 'e', label: 'Elapsed' }, { v: 'h', label: 'Corrected' }] },
   },
-  kpis: [],                                    // {label, value, sub}; {stats.*}/{park.hero.*} resolve from data
-  mapLabels: [],                               // [[dtf, 'LABEL', ax, ay], …] — authored leader lines
-  controls: { pills: ['@ghosts', '@rhumb'] },  // pill order; '@' = shell pills, ids = overlays
-  layout: ['map', 'dtf', 'race', '@distspeed', 'two:xte,sog', 'events'],   // '@<id>' mounts a section module
+  kpis: [],                               // authored at stage 4
+  mapLabels: [],
+  controls: { pills: ['@ghosts', '@rhumb'] },
+  layout: ['map', 'dtf', 'race', '@distspeed', 'two:xte,sog', 'events'],
   modules: ['distspeed'],
   overlays: [],
 };
