@@ -3,7 +3,7 @@ the out-and-back collapse regression). Run:
 
     .venv/bin/python -m unittest tests.test_route -v
 
-Synthetic courses only — real mark lists are per-race CP-0 inputs. The
+Synthetic courses only — real mark lists are per-race stage-0 inputs. The
 conventions under test are documented in pipeline/route.py."""
 import sys
 import unittest

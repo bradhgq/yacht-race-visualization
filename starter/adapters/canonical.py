@@ -67,7 +67,7 @@ def validate(df):
 
 
 def ping_gap_report(df, gap_factor=6.0):
-    """Per-boat ping-cadence anomalies -> feeds the CP-0 anomalies list.
+    """Per-boat ping-cadence anomalies -> feeds the stage-0 anomalies list.
 
     A gap is anomalous when it exceeds gap_factor x that boat's median cadence.
     Returns a list of per-boat dicts; boats with no anomalies are summarized in

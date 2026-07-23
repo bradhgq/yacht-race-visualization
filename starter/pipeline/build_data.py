@@ -6,7 +6,7 @@
 Reads config.yaml, the official-results CSV, events.yaml (+ optional
 navlog.yaml), and the tracker export via its vendor adapter; emits
     <race>/out/dashboard_data.json     the canonical payload (schemas.md)
-    <race>/out/goldens.json            frozen fixtures for the JS harness
+    <race>/out/pinned_values.json      pinned values as emitted (the authored copy lives in config)
     <race>/out/run_log.json            invocation + input hashes (prime rule 1)
 
 No boat names, paths, course lengths, or narrative text live in this file —
@@ -132,7 +132,7 @@ def main():
         return groups['default_key']
 
     finish_statuses = set(cfg['official_results'].get('finish_statuses') or ['FIN'])
-    # exclude_boats: CP-0 removals (e.g. BIR2026's Daffodil — DNC, stationary at
+    # exclude_boats: stage-0 removals (e.g. BIR2026's Daffodil — DNC, stationary at
     # a mooring). Matched by normalized name against results AND fleet layers.
     excl_keys = {canonical.norm_key(nm) for nm in (cfg.get('exclude_boats') or [])}
     entries = {}          # track name -> meta dict
@@ -361,7 +361,7 @@ def main():
 
     # ── slow-zone detection + per-boat traversal metrics (doctrine 1) ──
     # Detection candidates always go to the run log. The SHIPPED zone bounds may
-    # instead be an authored CP-2 judgment (zone_detection.zone) — RETROSPECTIVE
+    # instead be an authored stage-2 judgment (zone_detection.zone) — RETROSPECTIVE
     # §5.3 classes park bounds as an analysis framing, and NB2026's 180→80 is
     # empirically not reachable by the threshold rule (see run_log band medians).
     detected, zdiag = zones.detect_zones(feat_series, cfg['zone_detection'])
@@ -411,10 +411,10 @@ def main():
     with open(out_dir / 'dashboard_data.json', 'w') as f:
         json.dump(data, f, separators=(',', ':'))
 
-    goldens = dict(cfg.get('goldens') or {})
-    goldens['zone'] = active
-    goldens['zone_source'] = 'authored' if authored else 'detected'
-    (out_dir / 'goldens.json').write_text(json.dumps(goldens, indent=2))
+    pinned = dict(cfg.get('pinned_values') or {})
+    pinned['zone'] = active
+    pinned['zone_source'] = 'authored' if authored else 'detected'
+    (out_dir / 'pinned_values.json').write_text(json.dumps(pinned, indent=2))
     (out_dir / 'rounding_ties.json').write_text(json.dumps(tie.ties, separators=(',', ':')))
 
     def sha(p):

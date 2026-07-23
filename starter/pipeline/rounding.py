@@ -1,4 +1,4 @@
-"""Tie-aware rounding — the GATE A adjudication, encoded.
+"""Tie-aware rounding — the snapshot-compare adjudication (2026-07-07), encoded.
 
 Cross-platform builds can disagree by exactly one serialization quantum when
 the unrounded value lies on a .5 rounding tie (1-ulp differences upstream

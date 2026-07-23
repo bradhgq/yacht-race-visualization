@@ -9,7 +9,7 @@ code, config and data stay at the race root (`races/bir2026/`).
   R9 post-launch lessons, shell-extraction recommendations.
 - [FURTHER_WORK.md](FURTHER_WORK.md) — owner backlog: visual + research integration.
 - [copy.md](copy.md) — frozen narrative-copy record + CP-3 correction log.
-- [decisions/](decisions/) — the checkpoint ledgers (CP-0 → CP-5, R9). Golden or
+- [decisions/](../decisions/) — the checkpoint ledgers (CP-0 → CP-5, R9). Golden or
   oracle changes require an entry here (prime rule 3).
 
 Privacy note: this public tree ships 14 of the 16 race events; two third-party

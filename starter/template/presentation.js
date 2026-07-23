@@ -44,14 +44,24 @@ window.__RACE_CONFIG__ = {
           paceMinDone: 15, eventRowY: 19, ratingLabel: '' },
   charts: {
     dtf: { yRange: [0, 0], eventTopY: 0 },
-    sog: { yRange: [0, 14], eventTopY: 0 },
+    sog: { yRange: [0, 14], eventTopY: 0,
+           // SOG|VMC y-metric toggle — part of the core six; VMC boots (owner default)
+           metrics: { s: 'SOG', v: 'VMC (toward finish)' }, vmcYRange: [-3, 14] },
     xte: { eventTopY: 0 },
-    // parkShading: { zone: [hi, lo], core: [hi, lo] },   // only with a park module (CP-2)
+    // parkShading: { zone: [hi, lo], core: [hi, lo] },   // only with a park module (stage-2 call)
+  },
+  // distspeed (shared shell module — core six): iso rays are equal-finish-time
+  // guides; pick 3 values bracketing the fleet's elapsed/corrected day counts.
+  // Captions live in copy.js COPY.distspeed slots (see the worked examples).
+  distspeed: {
+    isoDays: [0, 0, 0], isoDaysCorr: [0, 0, 0],
+    toggle: { key: 'distMode', default: 'h',
+              states: [{ v: 'e', label: 'Elapsed' }, { v: 'h', label: 'Corrected' }] },
   },
   kpis: [],                                    // {label, value, sub}; {stats.*}/{park.hero.*} resolve from data
   mapLabels: [],                               // [[dtf, 'LABEL', ax, ay], …] — authored leader lines
   controls: { pills: ['@ghosts', '@rhumb'] },  // pill order; '@' = shell pills, ids = overlays
-  layout: ['map', 'dtf', 'race', 'two:xte,sog', 'events'],   // '@<id>' mounts a section module
-  modules: [],
+  layout: ['map', 'dtf', 'race', '@distspeed', 'two:xte,sog', 'events'],   // '@<id>' mounts a section module
+  modules: ['distspeed'],
   overlays: [],
 };

@@ -128,7 +128,7 @@ confirmed incidents about **other boats**, not in the public record. Asked direc
 Brad confirmed the carve-out ("the rule is sound and let's keep it out"), so
 `build.py` hard-blocks the two labels (`NEVER_PUBLIC`) and the public build ships the
 other 14; the event bodies exist only in the private client record. The decision and
-the deploy path are in [`decisions/CP-5.yaml`](decisions/CP-5.yaml).
+the deploy path are in [`decisions/CP-5.yaml`](../decisions/CP-5.yaml).
 
 This is the general shape for any future public race board: the client (private) build
 is the default; the public build is an opt-in *subtraction*, with a hard floor the
@@ -151,7 +151,7 @@ allowlist can't override.
 ## 7. R9 — what the first post-launch owner round taught (2026-07-09)
 
 The board went live and Brad's first real-use pass produced eleven fixes
-([`decisions/R9-owner-review.yaml`](decisions/R9-owner-review.yaml); every one a
+([`decisions/R9-owner-review.yaml`](../decisions/R9-owner-review.yaml); every one a
 named `R9_*` test — the suite is now 34). Three lessons worth carrying forward:
 
 - **§1's divergence argument applies *within* one build.** The monolith had three

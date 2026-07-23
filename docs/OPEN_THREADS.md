@@ -19,7 +19,14 @@ introduction).
   "triangulated from six boats' official finish times" but no document
   records which six or the method; coordinates were taken from legacy code as
   given. Needs owner input (or a re-derivation exercise) to close.
-- **KICKOFF_TEMPLATE retirement** (owner, 2026-07-23): fold its checklist into
-  the skill's stage-0 intake (agent asks the user for anything not yet
-  provided, offers `starter/acquisition/` for data it can fetch), then delete
-  the file — scheduled for the CC-native skill PR.
+- **consistency_check covers only the NB-shaped pinned keys** (review,
+  2026-07-23): `starter/shell/build.py` cross-checks tz_probe, the three
+  endpoint keys, and `module_canaries.park` — BIR's `names_meta_only` and
+  `module_canaries.upwind_excess` can drift between config and
+  tests/regression.json unchecked. Fix: iterate whatever keys both sides
+  carry instead of a hardcoded list.
+- **Tier-1 (fleet-only) builds need a hero today** (review, 2026-07-23):
+  `build_data.py` pivots stats/groups/series on `client_boat` unconditionally
+  — a null client_boat crashes at the stats step, so true fleet-commentary
+  builds aren't possible yet. Docs now state the requirement (pick an
+  analysis pivot); a guarded hero-less path is the real fix.

@@ -1,72 +1,71 @@
 ---
 name: race-viz
-description: Turn yacht-race tracker data plus supporting documents into researched race analysis, quantitative insights, and an interactive dashboard through a staged, checkpointed pipeline. Use this skill whenever the user provides a race tracker export (YB, Kattack, TracTrac, PredictWind, or similar), a scratch sheet or entry list, official race results, crew journals, or navigation logs — or asks for race analysis, a race debrief, a race dashboard or visualization, post-race commentary, "how did we do," "where did we win or lose the race," or a race blog / story site. Also use when resuming any stage of an existing race-viz project (reviewing findings, iterating on dashboard screenshots, preparing or executing a Claude Code handoff) — or when the user provides a YB Tracking or YachtScoring race link or event id to pull data from — even if the user doesn't name the skill.
+description: Turn yacht-race tracker data plus supporting documents into researched race analysis, quantitative insights, and an interactive dashboard through a staged pipeline with owner stops. Use this skill whenever the user provides a race tracker export (YB, Kattack, TracTrac, PredictWind, or similar), a scratch sheet or entry list, official race results, crew journals, or navigation logs — or asks for race analysis, a race debrief, a race dashboard or visualization, post-race commentary, "how did we do," "where did we win or lose the race," a race blog / story site, or to kick off / run race-viz on a race. Also use when resuming any stage of an existing race-viz project, or when the user provides a YB Tracking or YachtScoring race link or event id to pull data from — even if the user doesn't name the skill.
 ---
 
 # race-viz — staged race analysis and visualization
 
-Produces one of three tiers, each a strict superset of the previous:
+Three tiers, each a strict superset of the previous:
+1. **Fleet commentary** (public data: map, race shape, phases, 1–2 race-unique metrics)
+2. **Boat-annotated debrief** (+ client boat highlighted, log events on the track, log↔tracker reconciliation, benchmarks, private debrief)
+3. **Story site** (+ narrative post with embedded visualizations, hosted)
 
-- **Tier 1 — Fleet commentary** (public data only): fleet-level analysis page — course/fleet map, leaders' race shape, phase structure, notable duels, 1–2 race-unique metrics.
-- **Tier 2 — Boat-annotated debrief** (client logs): Tier 1 plus the client boat highlighted, log events pinned to the track, log↔tracker reconciliation, benchmark comparisons, and a private debrief document.
-- **Tier 3 — Story site**: Tier 2 plus a narrative post with embedded visualizations, productionized via Claude Code.
+Worked examples: `races/nb2026/` (point-to-point) and `races/bir2026/` (marks course — routed distance-remaining, division-scoped scoring). Their numbers are settled pinned values — never re-derive or "correct" them.
 
-Worked examples, kept in the monorepo: RAGANA / Newport Bermuda 2026 (`races/nb2026/` — point-to-point, the original) and Ragana / Block Island Race 2026 (`races/bir2026/` — marks course with routed distance-remaining, division-scoped scoring, race postprocess). Their numbers are settled golden fixtures — never re-derive or "correct" them.
+## Vocabulary
 
-## Operating environments
+- **Stage / stage stop** — six stages; each ends at a stop where the owner reviews before anything further runs.
+- **Stage record** — the confirmed decision file a stop produces (`races/<race>/decisions/stage-N-*.yaml`; older `CP-*.yaml` files are the same thing, historical).
+- **Pinned values** — the hand-pinned expected numbers (config `pinned_values:` + `tests/regression.json`) the harness asserts on every build.
+- **Snapshot reference** — `races/<race>/snapshot/dashboard_data.json`, the byte-pinned payload; every rebuild diffs against it (the **snapshot compare**, tie-exempt).
+- **Doctrine checks** — the enforceable process rules below; each was paid for with a real bug.
 
-The same skill files serve both environments; each stage file states its default home.
+## Environment
 
-- **Claude chat** is the orchestration home: stages 0–4, every checkpoint conversation, the research pass (use the deep Research feature when available), and the screenshot-iteration loop. The chat container may execute the pipeline for exploration and for normal-size fleets. The chat session is also the **coordinator**: at every Claude-Code-bound step (data acquisition, escalated analysis, new geometry code, productionization) it emits a complete, paste-ready prompt — the user never composes a handoff themselves.
-- **Claude Code** executes data acquisition (the race APIs are unreachable from the chat container's restricted network), always executes stage 5 (productionize), and executes stage 2's pipeline from the start when an escalation trigger fires: fleet > ~150 boats, raw pings > ~1M, a course geometry the repo's route model can't express (standard mark courses are covered by `pipeline/route.py`), or a new tracker-vendor adapter. (Thresholds are provisional — calibrated on one race; revisit after race #2.)
-- State passes between environments as files: `config.yaml`, `events.yaml`, `decisions/CP-*.yaml`, `dashboard_data.json`, and a thin per-race `PROMPT.md` for the Claude Code session.
+Claude Code, in this monorepo, runs everything — stage 0 (acquisition) through stage 5 (publication); state lives in the repo. Chat appears exactly once: as stage 1's optional owner-run deep-research input.
+
+## The stop mechanic
+
+At every stage stop: (1) write the stage's deliverables as clickable artifacts; (2) host them on a temporary localhost preview (session-scoped, never committed — screenshots are never committed anywhere, not in `docs/`, not in PR bodies); (3) enter plan mode for the next stage, so the owner's comments land before anything runs. Degrade to present-inline-and-wait where preview or plan mode is unavailable. A missing stage record is a missing input — never begin the next stage's artifacts in the turn that presents a stop, even when asked to "run the whole thing."
 
 ## Prime rules
 
-1. **Exploration is free; shipped numbers come only from the pipeline.** Ad-hoc analysis may generate hypotheses, but every number that lands in a findings memo, synthesis document, or `dashboard_data.json` must be produced by the repo pipeline run against `config.yaml`, with the exact invocation logged into the handoff.
-2. **Checkpoints are input dependencies.** Each stage requires the named decision record from the previous checkpoint as a literal input. If the record is missing, emit the checkpoint form (templates in `references/schemas.md`) and end the turn. Never begin the next stage's artifacts in the same response that presents a checkpoint form — even if the user asked to "run the whole thing." A missing record is a missing input, not an invitation to proceed.
-3. **Golden numbers are generated once, then frozen** (I16). At CP-2 each race gets golden regression values from official results plus one hand-verified probe; after that they are fixtures. Changing a golden — *or the frozen GATE-A oracle* — requires an explicit user instruction captured in a `decisions/` ledger entry; the re-freeze and its rationale live in that record, never silently in a rebuild.
-4. **Privacy defaults private.** Crew journals and nav logs are private performance data. Anything derived from them appears publicly only with per-item opt-in recorded in the CP-5 publication ledger. Never publish claims about *other* boats' crew decisions beyond their own public statements.
-5. **Every human-caught correction becomes a regression assertion** (where expressible) before the Claude Code handoff. The test suite is the accumulated memory of screenshot review.
+1. **Shipped numbers come only from the pipeline** — the one-command chain `.venv/bin/python starter/build_race.py races/<race>`, invocation logged in the stage record. Exploration is free.
+2. **Stage records are input dependencies** — each stage requires the latest confirmed record (templates in `references/schemas.md`; stage 1's stop is soft — its brief needs an owner go, not a record).
+3. **Pinned once, then fixtures** (I16) — values pin at the stage-2 stop from official results + one hand-verified probe; changing a pinned value or the snapshot reference requires an explicit owner instruction in a `decisions/` ledger entry, never a silent rebuild.
+4. **Privacy: what the dashboard doesn't show is discarded** — private inputs (journals, nav logs, transcripts) never enter the repo; each derived item ships only by a case-by-case human decision flagged at the stop.
+5. **Every human-caught correction becomes a regression assertion** (where expressible) before stage 5 ships.
 
 ## Stage router
 
-Read the stage's reference file before executing it. Do not load stage files ahead of need.
+Read the stage's reference file before executing it; do not load ahead of need.
 
-| Stage | Read first | Runs in | Requires | Emits | Checkpoint |
-|---|---|---|---|---|---|
-| acq (optional) | `references/data-acquisition.md` | Claude Code or user-run locally | race identifiers (YachtScoring event id / YB race id) | tracks, scratch sheet, results CSVs + manifest | none — verification lands in CP-0 |
-| 0 Intake & scope | `references/stage-0-intake.md` | chat | user's raw inputs | manifest, fleet parse, TZ verification, draft `config.yaml` | **CP-0 Scope Record** — hard stop |
-| 1 Research | `references/stage-1-research.md` | chat (Research feature preferred) | CP-0 | research brief + claims-in-circulation list | soft review, no hard stop |
-| 2 Analysis | `references/stage-2-analysis.md` | chat-orchestrated; pipeline in container or Claude Code per triggers | CP-0 | `dashboard_data.json`, findings memo, frozen goldens | **CP-2 Findings & Modules Record** — hard stop |
-| 3 Synthesis | `references/stage-3-synthesis.md` | chat | CP-2 (+ research brief) | narrative pack: acts, decompositions, discrepancy register, lessons | **CP-3 Corrections Record** — hard stop |
-| 4 Visualization | `references/stage-4-visualization.md` | chat | CP-3 + CP-2 module list | built dashboard v1…vN | **CP-4 Screenshot Log** (≥1 round) — hard stop |
-| 5 Handoff & publication | `references/stage-5-handoff.md` | Claude Code | CP-4 + green regression suite | handoff package, public cut, hosted build | **CP-5 Publication Ledger** |
+| Stage | Read first | Needs | Stop & deliverable |
+|---|---|---|---|
+| 0 Acquisition, intake & scope | `references/stage-0-acquisition.md` | raw inputs and/or race identifiers | **hard** · scope record — manifest, fleet parse, TZ probe, draft `config.yaml` |
+| 1 Research | `references/stage-1-research.md` | stage-0 record | soft · research brief + claims-in-circulation list |
+| 2 Analysis | `references/stage-2-analysis.md` | stage-0 record | **hard** · findings memo + module list + pinned values |
+| 3 Synthesis | `references/stage-3-synthesis.md` | stage-2 record (+ research brief) | **hard** · corrections record over the narrative pack |
+| 4 Visualization | `references/stage-4-visualization.md` | stage-3 record + module list | **hard** · review-round log — hosted build, ≥1 owner round |
+| 5 Productionize & publish | `references/stage-5-productionize.md` | stage-4 record + green suite | **hard** · publication ledger — public cut before anything goes live |
 
-**Tier relaxation:** Tier 1 may merge CP-3 into CP-2, and CP-5 into CP-4. CP-0, CP-2, and CP-4's minimum one screenshot round are mandatory at every tier — CP-2 is where fixed-window-class artifacts get caught by human eyes, and no tier is exempt from that.
+Tier 1 may merge stage 3's stop into stage 2's, and stage 5's ledger into stage 4's sign-off; stage 0, stage 2, and stage 4's minimum one review round are mandatory at every tier. Resuming mid-project: find the latest confirmed record in `decisions/`, enter at the following stage; never skip past a missing stage-0 or stage-2 record.
 
-**Resuming mid-project:** identify the latest confirmed decision record (ask the user, or locate `decisions/CP-*.yaml` in the repo). Enter at the following stage. Never skip past a missing CP-0 or CP-2.
+## Doctrine checks
 
-## Doctrine gates
+Enforce as testable predicates, not advice.
 
-Enforce these as testable predicates, not advice. Each was paid for with a real bug in the worked example.
+1. **Spatial phenomena → spatial metrics** — slow-zone/park metrics run over each boat's own traversal of the same band, never a wall-clock window; checked by a module canary. (Origin: the "0% parked" artifact.)
+2. **Endpoints come from official results** — comparative charts end at official elapsed/corrected values; asserted in both scoring modes. (Origin: a truncation that flipped three finish signs.)
+3. **One verified time base, rendered timezone-naive** — TZ probe at stage 0; chart x-values are naive local strings, never Date objects; suite runs under two TZs. Expect participant logs to carry clock-base errors.
+4. **Names are dirty** — normalize early, disambiguate duplicates by sail number; asserted: every selection-set name exists in the data keys.
+5. **Loss decomposition is benchmark-dependent** — every "lost X here" names its reference and reconciles to the official delta (stage-3 sum-check).
+6. **Corrected margins have a noise floor** (`noise_floor_min`, default 30) — sub-floor margins narrate as scoring noise; the stage-1 controversy check gates tight-margin language.
+7. **Test the stakeholder's hypothesis before building their view** — verify the bundled claim against the tracker first; ship the view with the verdict in its caption, whichever way it lands. (Origin: the "shorter routing" claim the data reversed.)
+8. **Buy the cheapest sufficient view** — restate every visualization request as the question it answers; if a cheaper surface answers it, ship that and record the deferral in `decisions/`.
 
-1. **Spatial phenomena → spatial metrics.** Any slow-zone / current-gate / park metric is computed over each boat's own traversal of the same distance-remaining or geographic band — never a wall-clock window. Gate: stage-2 validation plus a module canary assertion in the test harness. (Origin: the Gemini II "0% parked" artifact.)
-2. **Endpoints come from official results.** Comparative charts end at values parsed from official elapsed/corrected; tracker-derived milestones are estimates only. Gate: endpoint assertions against official results, in both scoring modes. (Origin: a DTF-20 truncation that flipped finish signs for three boats.)
-3. **One verified time base, rendered timezone-naive.** Timezone verified at stage 0 by triangulating an official finish against the track; all chart x-values are naive local strings — never Date objects; the suite runs under a non-UTC `TZ`. Expect participant logs to carry clock-base errors and reconcile them explicitly. Gate: the tz-probe assertion.
-4. **Names are dirty.** Normalize whitespace and Unicode early; disambiguate duplicate names by sail number; resolve syndicate-vs-boat-name mismatches with the user. Gate: assertion that every selection-set name exists in the data keys.
-5. **Loss decomposition is benchmark-dependent.** Every "lost X here" claim names its reference boat and shows arithmetic that reconciles to the official delta. Gate: stage-3 sum-check on every decomposition table.
-6. **Corrected margins have a noise floor** (`noise_floor_min` in config, default 30). Margins under the floor are narrated as scoring noise, and the stage-1 scoring-controversy check is mandatory before narrating any tight margin. Gate: stage-3 language check.
-7. **Test the stakeholder's hypothesis before building their view.** When a stakeholder requests a view to demonstrate X, test X against the data before speccing the view — and ship the view with the verdict in its caption, whichever way it lands. A view built to confirm a wrong hypothesis is a printed error. Gate: the caption of any stakeholder-requested view names the verdict. (Origin: round 2's "show the Sunday gain came from sailing shorter" — ten minutes against the tracker reversed it; the gain was boatspeed, and the shipped caption says so.)
-8. **Buy the cheapest sufficient view.** Restate every visualization request as the question it answers; if a cheaper existing surface answers it, ship that and record the deferral with its rationale in `decisions/` — deferred-with-reason keeps stakeholder trust, silently dropped requests don't. Gate: every deferred request has a decisions/ entry. (Origin: the sailed-distance x-axis, near-degenerate with the DTF axis; a y-metric toggle + one scatter answered the real question at a fraction of the cost.)
-
-7. **Test the stakeholder's hypothesis before building the view.** When a request arrives bundled with a claim ("show that we gained because we sailed shorter"), verify the claim against the tracker *first*, in minutes, before speccing anything — then ship the view with the verdict, whichever way it lands. (Origin: the round-2 "we gained on shorter routing" hypothesis, which the data reversed — the gain was boatspeed; the shipped captions say so.)
-8. **Translate the request into the analytical question, then pick the cheapest sufficient view.** A literal feature ask is not always the cheapest answer to the need behind it. Name the question, choose the lowest-cost view that answers it, and defer the literal ask with rationale if a cheaper view suffices. (Origin: a sailed-distance x-axis — near-degenerate with DTF here — deferred in favor of the VMC toggle + dist-vs-speed scatter.)
-
-Soft doctrines: **show the arithmetic** (every derived number traceable in-document) and **primary sources beat aggregators** (official notices and transcripts over press summaries; press for corroboration).
+Soft doctrines: show the arithmetic; primary sources beat aggregators.
 
 ## Contracts
 
-All formats live in `references/schemas.md`: `config.yaml`, `events.yaml`, `dashboard_data.json`, decision-record templates CP-0…CP-5, the findings-memo format, the discrepancy-register format, and the Claude Code `PROMPT.md` skeleton. Build commands and code live in the starter repo — one command, always the full chain: `.venv/bin/python starter/build_race.py races/<race>` (build_data → postprocess → harness-gated shell build → harness under the second TZ → frozen-oracle compare). This skill defines process and judgment; the repo defines code; `config.yaml` defines the race.
-
-Monorepo: `github:bradhgq/yacht-race-visualization` (public). Layout: `starter/` holds the engine code (shell, pipeline, adapters, acquisition, tests); `skills/race-viz/` is this skill (the authoritative source of truth); `docs/` holds the spec and build logs; `races/<race>/` holds each race's config + data + committed `dist/`. Acquisition scripts: `starter/acquisition/`; worked examples: `races/nb2026/`, `races/bir2026/`; kickoff prompt template: `docs/KICKOFF_TEMPLATE.md`.
+`references/schemas.md` holds every format: `config.yaml`, `events.yaml`, `dashboard_data.json`, stage-record templates, findings-memo and discrepancy-register formats, the stage-5 productionization checklist. This skill defines process and judgment; the starter repo defines code; `config.yaml` defines the race. A race kicks off as a session in this repo — stage 0 carries the checklist; no kickoff template exists.

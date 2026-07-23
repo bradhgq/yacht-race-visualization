@@ -7,6 +7,6 @@ slot set: titleblock (eyebrow/h1/sub/result/tzn), app states, per-section
 titles+notes, race-chart mode notes (h/e), sog axis hints, controls hint,
 pill labels, more-panel strings, empty states, footer.
 
-Voice and claims are the owner's (RETROSPECTIVE §5.2): a session may propose
-microcopy, never analysis claims. Copy freezes at CP-3; corrections after that
-are recorded CP-3 items.
+Voice and claims are the owner's: a session may propose microcopy, never
+analysis claims. Copy pins at the stage-3 stop; corrections after that are
+recorded stage-3 items.

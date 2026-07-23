@@ -69,7 +69,7 @@ Module retitled "Distance vs. finish — what the 4.7 nm cost, and what it didn'
 
 First review of the live board. No analysis number changed; every item is
 presentation-layer and is locked by a named `R9_*` regression test. Full ledger:
-[`decisions/R9-owner-review.yaml`](decisions/R9-owner-review.yaml). Items that
+[`decisions/R9-owner-review.yaml`](../decisions/R9-owner-review.yaml). Items that
 touch claims in this memo:
 
 | memo claim | R9 disposition |

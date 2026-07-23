@@ -6,13 +6,16 @@ Boundary rule: **facts about the race → `config.yaml`; judgment about races �
 
 ```yaml
 race: { name: "", edition: 2026, slug: "", organizer_url: "" }   # slug = output filename stem
-tracker: { vendor: auto, path: raw/tracks.csv }      # yb | kattack | tractrac | predictwind | auto
+tracker: { vendor: yb, path: raw/tracks.csv }        # yb is the only adapter today; any other
+                                                     # vendor = write starter/adapters/<v>.py + its
+                                                     # test loop at stage 0 before data is consumed
 official_results:
   path: raw/results.csv
   columns: { rank: , name: , sail: , rating: , elapsed: , corrected: , type: ,
              finish_local: , division: , class_rank: , status: , retire_reason: }
                                 # class_rank drives meta.clsPos; status/retire_reason carry DNF rows
   finish_statuses: [FIN, AOK]   # status values counted as finishers; anything else retires
+  untracked_meta_only: []       # EXPLICIT names: untracked finishers shipped meta-only (no track)
 entries: { path: raw/scratch.csv }                   # optional scratch sheet
 course:
   type: point_to_point          # point_to_point | marks (marks = routed DTF via pipeline/route.py)
@@ -22,6 +25,7 @@ course:
   finish_radius_nm: 0.7         # arrival cut for boats without an official finish
   marks: []                     # ordered [lat, lon] turning marks; required when type: marks
   mark_radius_nm: 1.0           # rounding radius (conventions documented in pipeline/route.py)
+  arrival_search_after_nm: 0    # out-and-back guard: only search for arrival after this many nm
 time:
   official_tz: America/New_York
   utc_offset: -4                # fixed offset for the race window (I1: naive-local rendering)
@@ -37,19 +41,24 @@ scoring:
   probe_boats: ["", ""]         # official corrected must reproduce exactly before fleet math
 start_method: finish_minus_elapsed   # finish_minus_elapsed | pursuit | staggered | custom (document it)
 divisions_in_scope: []
-client_boat: null               # null for Tier 1
+client_boat: ""                 # REQUIRED even at Tier 1 — the pipeline pivots stats/groups on
+                                # a hero boat; pick the analysis pivot (true fleet-only builds:
+                                # see docs/OPEN_THREADS.md)
 reference_boats: []
 tier: 1                         # 1 | 2 | 3
 name_overrides:                 # structured, not a flat map (I4)
   by_id: {}                     # tracker boat_id -> name (duplicate-name split)
   by_name: {}                   # tracker name -> name (syndicate/sponsor cleanup)
   display: {}                   # results name -> shipped display name (dupes by sail number)
-groups:                         # chip-group semantics; membership is CP-0/CP-2 judgment
-  hero_key: hero
+groups:                         # chip-group semantics; membership is stage-0/stage-2 judgment
+  hero_key: hero                # grp_for precedence: hero > by_name > by_cls > by_rank > default
+  by_name: {}                   # e.g. { class6: [names...] } — explicit name lists
+  by_cls: {}                    # e.g. { phrf: [PHRF] } — by division label (meta.cls)
   by_rank: {}                   # e.g. { class: [3,7,9], podium: [1,2,3] }
   default_key: fleet_other
   dnf_key: fleet_dnf
 extra_boats: []                 # tracked but unscored: { track_name, display, type, group }
+exclude_boats: []               # normalized names removed entirely (e.g. a DNC parked at a mooring)
 grid: { minutes: 15, end_utc: '', interpolate_limit: 4 }
 sog: { half_window_s: 900, min_span_s: 600 }         # centered 30-min SOG window
 fleet: { resample: 1h, min_points: 5 }               # hourly ghost layer
@@ -61,27 +70,29 @@ event_categories: [crew, systems, sail, tactics, insight, milestone]   # draw or
 zone_detection:                 # defaults find ZERO candidates on the worked example (NB2026's
   band_nm: 10                   # only sub-threshold run traverses ~3 h vs min 6) — they are
   collapse_frac: 0.5            # proposal knobs, not truth. Detection PROPOSES and logs its
-  min_traversal_hours: 6        # band-median table; CP-2 DECIDES; config RECORDS the decision:
-  # zone: { upper_nm: 180, lower_nm: 80 }   # authored CP-2 bounds (NB2026's shipped park)
+  min_traversal_hours: 6        # band-median table; the stage-2 stop DECIDES; config RECORDS it:
+  # zone: { upper_nm: 180, lower_nm: 80 }   # authored stage-2 bounds (NB2026's shipped park)
 finish_spread: { window_min: 30, min_boats: 10 }
 noise_floor_min: 30             # per-race; scoring-system dependent
-privacy: { default: private }
+privacy: { build: public }      # build: public|private — which event cut ships (private inputs
+                                # themselves never enter the repo; prime rule 4)
 output:
   dir: out/
-  # generated: 'YYYY-MM-DD'     # pin only to reproduce a frozen build byte-for-byte
-goldens:                        # frozen at CP-2; changing one requires a recorded instruction (I16)
+  # generated: 'YYYY-MM-DD'     # pin only to reproduce a shipped build byte-for-byte
+pinned_values:                  # pinned at the stage-2 stop; changing one requires a recorded instruction (I16)
   tz_probe: { epoch: 0, rendered: "YYYY-MM-DD HH:MM" }
   endpoints: { ref: "", corrected_min: 0.0, elapsed_min: 0.0 }
   module_canaries: {}           # e.g. { park: { boat: "Gemini II", u4: 31 } } — numbers, not "31%"
   names_present: []             # I4 name-hygiene fixtures (dupes disambiguated, normalization)
   names_absent: []
+  names_meta_only: []           # boats shipped scored-but-trackless (mirrors untracked_meta_only)
   finstrip_count: 0
 ```
 
 `starter/template/config.yaml` is the fill-me copy of this schema, kept in
 lockstep: when the pipeline grows a key, the template and this block move
 together (the first cold-start had to reverse-engineer a dozen
-keys from pipeline code). The pace endpoint golden
+keys from pipeline code). The pace endpoint value
 (`endpoints.pace_min_per_100`) is deliberately NOT a config.yaml key: it lives
 in `tests/regression.json` only, asserted from the rendered traces by the
 harness; `shell/build.py`'s consistency check cross-checks just
@@ -91,7 +102,7 @@ ref/corrected_min/elapsed_min between config and fixtures.
 (`window.__RACE_CONFIG__`): layout/section order, palette + group presentation,
 defaults, chart y-ranges + heights, KPI slots, `modules`/`overlays` lists, and
 the selection filters (`classFilter: { prefix, inputLabel, placeholder }` and
-`ratingBands: { widths: [...] }`, std since R2 — presence of a block renders
+`ratingBands: { widths: [...] }` — presence of a block renders
 its control; absence renders nothing, so one-design races simply omit them).
 Facts shared with `config.yaml` (course, hero/client boat, time) must MATCH —
 `shell/build.py` runs a consistency check and refuses the build on divergence.
@@ -101,12 +112,14 @@ example (`races/nb2026/presentation.js`) documents every key with its origin.
 ## events.yaml — narrative as data
 
 ```yaml
+events:                         # a MAPPING carrying an events: list (not a bare list)
 - t: "2026-06-20 03:30"         # official-TZ local, naive string
   cat: crew                     # crew | systems | sail | tactics | insight | milestone
   label: ""
   txt: ""
   source: journal               # journal | navlog | transcript | analysis
-  visibility: private           # private | public — public requires a CP-5 opt-in
+  visibility: private           # private | public — public requires a stage-5 opt-in
+watches: []                     # optional [[t0, t1], ...] spans (same naive-local strings)
 ```
 
 ## dashboard_data.json — canonical pipeline output
@@ -115,17 +128,19 @@ example (`races/nb2026/presentation.js`) documents every key with its origin.
 {
   start: [lat, lon], fin: [lat, lon],
   boats: { <displayName>: { t:[epochUTC...], lat:[], lon:[], dtf:[], xte:[], sog:[],
-           vmc:[],                               // std since R2: closing speed on the finish =
+           vmc:[],                               // standard: closing speed on the finish =
                                                  // centered diff of gridded dtf (~30-min window),
                                                  // knots; negatives are real (tacks / sailing away).
                                                  // For mark courses, requires routed dtf (route.py).
-           meta: { grp, typ, sail, tcf, el:"4d 01:34:52", corr:"2d 10:00:43",
-                   fin:"YYYY-MM-DD HH:MM:SS", sdl:<rank>, retireReason?,
-                   sailedNm, avgKt,              // std since R2: total sailed distance from raw pings,
+           meta: { grp, typ, sail, disp, tcf, el:"4d 01:34:52", corr:"2d 10:00:43",
+                   fin:"YYYY-MM-DD HH:MM:SS", sdl:<rank>, retireReason?, note?,
+                   // untracked meta-only boats ship EMPTY series (t/lat/... = [],
+                   // no vmc) with meta.note explaining why they still score,
+                   sailedNm, avgKt,              // standard: total sailed distance from raw pings,
                                                  // and sailedNm ÷ official elapsed (dist-vs-speed chart)
-                   cls, clsPos } } },            // std since R2: division label + rank-in-division
+                   cls, clsPos } } },            // standard: division label + rank-in-division
                                                  // (from official results; drives class/rating filters)
-  fleet: [ { name, lat:[], lon:[] } ],           // hourly ghost layer, all boats
+  fleet: [ { name, t:[], lat:[], lon:[] } ],     // hourly ghost layer, all boats
   events: [ { t, cat, label, txt } ],            // from events.yaml, post privacy cut
   watches: [ [t0,t1], ... ],
   parkFair: { <name>: { enter, hrs, mean, u4, u2, xte } },  // u4/u2 are NUMBERS (whole pct
@@ -133,26 +148,30 @@ example (`races/nb2026/presentation.js`) documents every key with its origin.
   recon: [ { t, <matched_key>, log:[lat,lon], trk:[lat,lon], d, speed, course, wind,
              temp, verdict: match|warn, note } ], // matched-time key is named by config
                                                  // reconcile.matched_key (template default
-                                                 // matched_local; the NB2026 frozen payload
+                                                 // matched_local; the NB2026 snapshot payload
                                                  // ships matched_edt — parity won)
   mil: { milestones:[...], series:{...} },
   stats: { dist_sailed, rhumb, extra, avg_sog, max_sog, pct_under3, pct_under5,
-           max_xte_e, max_xte_w },
+           max_xte_e, max_xte_w },                // a race postprocess.py MAY reshape stats
+                                                 // (bir2026 ships sailed_ragana etc.) — the
+                                                 // KPI templates resolve whatever ships
   meta: { generated: "YYYY-MM-DD", tz: "EDT (UTC-4)" }
 }
 ```
 
-## Decision-record templates — `decisions/CP-*.yaml`
+## Stage-record templates — `decisions/stage-N-*.yaml`
 
-Emit as a fenced YAML block in chat, filled as a draft for the user to confirm or edit; the confirmed block is the artifact. When a repo exists, write confirmed records to `decisions/`.
+(Older races carry `CP-*.yaml` filenames — the same artifacts, historical.)
+
+Fill as a draft for the owner to confirm or edit at the stage stop; write the confirmed record to `races/<race>/decisions/` — the committed file is the artifact.
 
 ```yaml
-# CP-0 — Scope Record
+# stage-0 — Scope Record
 fleet_count: 0
 anomalies: []                   # every name-resolution miss, gap, duplicate
 reference_boats: [ { name: "", why: "" } ]
 tz: { official: "", probe: { boat: "", official_finish_local: "", track_epoch_utc: 0, offset: "" } }
-course_model: point_to_point    # or marks (escalation trigger)
+course_model: point_to_point    # or marks (routed distance-remaining via pipeline/route.py)
 divisions_in_scope: []
 tier: 1
 grid_minutes: 15
@@ -162,19 +181,19 @@ date: ""
 ```
 
 ```yaml
-# CP-2 — Findings & Modules Record
+# stage-2 — Findings & Modules Record
 modules_selected: []
 modules_vetoed: []
 reference_set_confirmed: true
 corrections: []                 # factual flags raised at review
-goldens_frozen: true
+values_pinned: true
 pipeline_invocation: ""         # exact command that produced the shipped numbers
 confirmed_by: ""
 date: ""
 ```
 
 ```yaml
-# CP-3 — Corrections Record
+# stage-3 — Corrections Record
 corrections:                    # may be empty, but the record must exist and say so
   - { before: "", after: "", source: "", propagated_to: [] }
 spine_approved: true
@@ -183,17 +202,17 @@ date: ""
 ```
 
 ```yaml
-# CP-4 — Screenshot Log
+# stage-4 — Review-Round Log
 rounds: 0                       # minimum 1
 defects:
   - { found: "", fix: "", assertion: "" }   # assertion: test id, or "not expressible"
-approved_for_handoff: true
+approved_to_productionize: true
 confirmed_by: ""
 date: ""
 ```
 
 ```yaml
-# CP-5 — Publication Ledger
+# stage-5 — Publication Ledger
 public_items:                   # each log-derived item going public, individually opted in
   - { item: "", opted_in: true }
 private_confirmed: true         # everything not listed stays private
@@ -209,37 +228,35 @@ date: ""
 2. **Proposed race-unique modules** — which heuristic fired, with its evidence.
 3. **Data-quality anomalies.**
 4. **Open questions** for the user.
-5. The CP-2 form, ready to confirm.
+5. The stage-2 record, ready to confirm.
 
 ## Discrepancy-register row (stage-3 output)
 
 | claim | source | what the track shows | verdict | note |
 Verdicts: confirmed / contradicted / partial / unresolvable.
 
-## Claude Code PROMPT.md skeleton (stage-5 handoff)
+## Stage-5 productionization checklist
 
 ```markdown
 # <RACE> dashboard — productionize
 
-## Context
-<race, edition, tier, client boat, where the project stands, repo layout>
-
-## Invariants — violating any of these is a failed handoff
+## Invariants — violating any of these fails the stage
 - Timezone-naive rendering: chart x-values are naive local strings; never Date objects.
 - Chart endpoints are exact official-results values.
 - State-model conventions: <one state object, pure build*() re-renders, axis helpers>.
 - The shell invariant list (shell/INVARIANTS.md, I1–I18) — I5–I13 and I15–I18 govern productionization work.
-- Golden values (frozen): <paste the config goldens block>.
-- <anything added during CP-4 rounds>
+- Pinned values: <the config pinned_values block>.
+- <anything added during stage-4 rounds>
 
 ## Do not touch
-Golden values; dashboard_data.json semantics; module math.
+Pinned values; dashboard_data.json semantics; module math.
 
 ## Jobs
 Mobile breakpoints; lazy-loading; performance budget; hosting; accessibility.
 
 ## Protocol
 Run the full chain — `.venv/bin/python starter/build_race.py races/<race>` (harness under both
-TZ=America/New_York and TZ=UTC, then the frozen-oracle compare) — BEFORE starting and AFTER
+TZ=America/New_York and TZ=UTC, then the snapshot compare) — BEFORE starting and AFTER
 finishing: all green both times. Any newly human-caught defect becomes a new assertion.
+Before shipping: scan docs/OPEN_THREADS.md — close what this round resolved, raise the rest.
 ```

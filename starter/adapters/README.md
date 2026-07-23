@@ -20,7 +20,7 @@ Canonical schema (validated by `canonical.validate`):
 
 `canonical.validate` sorts by `(boat_id, t_utc)`, drops exact duplicate pings,
 and hard-errors on schema violations. `canonical.ping_gap_report` flags cadence
-anomalies (> 6× a boat's median gap) for the CP-0 anomalies list.
+anomalies (> 6× a boat's median gap) for the stage-0 anomalies list.
 
 Selection: `tracker.vendor` in config, explicit. `auto` runs `detect()` across
 all adapters and **errors on ambiguity** rather than guessing.

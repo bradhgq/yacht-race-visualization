@@ -41,11 +41,11 @@ KEEP = ['events', 'watches', 'recon', 'parkFair', 'stats', 'start', 'fin', 'meta
 
 def run_tests(race_dir):
     harness = STARTER / 'tests' / 'test_dashboard.js'
-    goldens = race_dir / 'tests' / 'regression.json'
+    fixtures = race_dir / 'tests' / 'regression.json'
     if not harness.exists():
         sys.exit(f'{harness} missing — the regression harness is a build gate (or pass --skip-tests)')
     try:
-        subprocess.run(['node', str(harness), str(race_dir), str(goldens)], cwd=STARTER, check=True,
+        subprocess.run(['node', str(harness), str(race_dir), str(fixtures)], cwd=STARTER, check=True,
                        env={'TZ': 'America/New_York', 'PATH': __import__('os').environ['PATH']})
     except FileNotFoundError:
         sys.exit('node not found — regression tests are a build gate (or pass --skip-tests)')
@@ -72,7 +72,7 @@ def compact(obj):
 def consistency_check(race_dir, cfg):
     """Two-config drift, resolved (round-1 doctrine): config.yaml stays the
     analysis source of record; the keys presentation.js shares with it must
-    match exactly, and the frozen goldens must agree with the runner fixtures.
+    match exactly, and the pinned values must agree with the runner fixtures.
     Divergence refuses the build."""
     import yaml
     ana = yaml.safe_load((race_dir / 'config.yaml').read_text())
@@ -90,29 +90,29 @@ def consistency_check(race_dir, cfg):
     eq('course.official_length_nm / rhumbNm', ana['course']['official_length_nm'], cfg['course']['rhumbNm'])
 
     fix_path = race_dir / 'tests' / 'regression.json'
-    if fix_path.exists() and ana.get('goldens'):
-        g, f = ana['goldens'], json.loads(fix_path.read_text())
+    if fix_path.exists() and ana.get('pinned_values'):
+        g, f = ana['pinned_values'], json.loads(fix_path.read_text())
         for key in ('tz_probe', 'names_present', 'names_absent', 'finstrip_count',
                     'vmc', 'class_filter', 'tcf_bands', 'distspeed', 'corrections'):
             if key in g and key in f:
-                eq(f'goldens.{key}', g[key], f[key])
+                eq(f'pinned_values.{key}', g[key], f[key])
         for key in ('ref', 'corrected_min', 'elapsed_min'):
             if key in g.get('endpoints', {}) and key in f.get('endpoints', {}):
-                eq(f'goldens.endpoints.{key}', g['endpoints'][key], f['endpoints'][key])
+                eq(f'pinned_values.endpoints.{key}', g['endpoints'][key], f['endpoints'][key])
         gp = (g.get('module_canaries') or {}).get('park')
         fp = (f.get('module_canaries') or {}).get('park')
         if gp and fp:
-            eq('goldens.module_canaries.park', gp, fp)
+            eq('pinned_values.module_canaries.park', gp, fp)
     if errs:
         sys.exit('config.yaml <-> presentation.js/fixtures DIVERGED — not building:\n  '
                  + '\n  '.join(errs))
 
 
 def park_copy_lint(race_dir, cfg, data):
-    """CP-3 amendment §4: the park KPI + section note quote numbers about the
+    """the park-copy amendment (2026-07-07): the park KPI + section note quote numbers about the
     DISPLAYED default selection — assert they match the payload so copy can't
     silently drift from data again. (The '3.3 kt dead core' claim is pooled
-    raw-sample math unavailable from the payload; covered by the CP-3 record.)"""
+    raw-sample math unavailable from the payload; covered by the amendment record (races/nb2026/decisions/).)"""
     if 'parkfair' not in cfg.get('modules', []):
         return
     pf = data['parkFair']

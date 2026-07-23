@@ -53,15 +53,17 @@ python3 -m venv .venv && .venv/bin/pip install -r starter/requirements.txt   # o
 
 The chain runs, in order: build_data → race postprocess (if any) → shell/build
 (harness-gated under `TZ=America/New_York`) → harness again under `TZ=UTC` →
-compare vs the frozen oracle. Running the steps piecemeal invites the
+snapshot compare (vs `races/<race>/snapshot/`). Running the steps piecemeal invites the
 stale-standalone trap (dist embeds `out/`; tests read dist). After a
 verification rebuild, `git checkout -- races/*/dist` — committed dist is
 production, per above.
 
-New race: copy [`starter/template/`](starter/template/) to `races/<race>/`, drop
-raw data in `raw/`, fill `config.yaml` + `presentation.js`, and follow the
-skill's checkpoint protocol (never skip CP-0 or CP-2). Kickoff prompt template:
-[`docs/KICKOFF_TEMPLATE.md`](docs/KICKOFF_TEMPLATE.md).
+New race: start a Claude Code session here and ask for race-viz on your race —
+stage 0 inventories what exists, asks for (or fetches) the rest, and stops for
+your sign-off before analysis. Mechanically it copies
+[`starter/template/`](starter/template/) to `races/<race>/` and fills
+`config.yaml`, `presentation.js`, and the `copy.js`/`copy.md` narrative slots
+(first build uses `--bootstrap`); never skip the stage-0 or stage-2 stops.
 
 See [`starter/README.md`](starter/README.md) for the engine doctrines. The
 `/race-viz` skill in [`skills/race-viz/`](skills/race-viz/SKILL.md) is the

@@ -2,7 +2,7 @@
 
 All distances in nautical miles (earth radius 3440.065 nm), angles in radians
 internally. These are byte-for-byte the worked example's formulas — do not
-"improve" them without regenerating goldens (prime rule 3).
+"improve" them without re-pinning the expected values (prime rule 3).
 """
 import numpy as np
 
