@@ -47,9 +47,9 @@ numpy 1.26.4).
   when a decision becomes a rule, encode it where it belongs (CLAUDE.md, the
   skill, INVARIANTS.md, a code comment) and delete the entry. **Never append
   closure notes — git history is the archive.** `docs/` holds living documents
-  only: review screenshots are PR material and leave the tree once their round
-  merges; retrospective insights get consolidated into the skill and the retro
-  file deleted; big binaries go to a GitHub release (`archives-2026-07` is the
+  only: review happens on hosted localhost previews — screenshots are never
+  committed anywhere (not docs/, not PR bodies); retrospective insights get
+  consolidated into the skill and the retro file deleted; big binaries go to a GitHub release (`archives-2026-07` is the
   precedent). Suites green before and after each phase.
 
 ## Git & publication

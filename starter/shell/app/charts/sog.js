@@ -6,7 +6,7 @@
    and the vmcYRange must accommodate them.
    The park/dead-core shading rectangles belong to the park analysis: they
    render only when the race config carries charts.parkShading (an authored
-   CP-2 judgment), and only on the distance axis where "same water"
+   stage-2 judgment), and only on the distance axis where "same water"
    comparison is meaningful — in both metrics. */
 "use strict";
 

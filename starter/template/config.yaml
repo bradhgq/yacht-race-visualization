@@ -12,7 +12,8 @@ race:
   organizer_url: ""
 
 tracker:
-  vendor: auto                  # yb | kattack | tractrac | predictwind | auto (detect, error on ambiguity)
+  vendor: yb                    # yb is the only adapter today; any other vendor means writing
+                                # starter/adapters/<v>.py + its test loop at stage 0 first
   path: raw/tracks.csv
 
 official_results:
@@ -37,6 +38,7 @@ official_results:
     status: finish_status       # YS: AOK/DNF/… — see finish_statuses below
     retire_reason: retire_reason
   finish_statuses: [FIN, AOK]   # status values treated as finishers; anything else is a retirement
+  untracked_meta_only: []       # EXPLICIT names: untracked finishers shipped meta-only (no track)
 
 entries: { path: raw/scratch.csv }   # optional scratch sheet
 
@@ -49,6 +51,7 @@ course:
   finish_radius_nm: 0.7         # arrival cut for boats without an official finish
   marks: []                     # ordered [lat, lon] turning marks; required when type: marks
   mark_radius_nm: 1.0           # a boat within this of the next mark has rounded it
+  arrival_search_after_nm: 0    # out-and-back guard: only search for arrival after this many nm
                                 # (conventions documented in pipeline/route.py)
 
 time:
@@ -72,7 +75,8 @@ scoring:
 # and cross-check it against finish − elapsed before trusting either.
 start_method: finish_minus_elapsed   # finish_minus_elapsed | pursuit | staggered | custom
 divisions_in_scope: []
-client_boat: null               # null for Tier 1
+client_boat: ""                 # REQUIRED even at Tier 1 — the pipeline pivots on a hero boat;
+                                # pick the analysis pivot (fleet-only builds: OPEN_THREADS.md)
 reference_boats: []
 tier: 1
 
@@ -82,11 +86,14 @@ name_overrides:
   display: {}                   # results name -> shipped display name (I4: dupes by sail number)
 
 groups:                         # chip-group semantics — who's in each is a stage-0/stage-2 judgment
-  hero_key: hero
+  hero_key: hero                # grp_for precedence: hero > by_name > by_cls > by_rank > default
+  by_name: {}                   # e.g. { class6: [names...] } — explicit name lists
+  by_cls: {}                    # e.g. { phrf: [PHRF] } — by division label (meta.cls)
   by_rank: {}                   # e.g. { class: [3,7,9], podium: [1,2,3] }
   default_key: fleet_other
   dnf_key: fleet_dnf
 
+exclude_boats: []               # normalized names removed entirely (e.g. a DNC parked at a mooring)
 extra_boats: []                 # tracked but unscored, e.g.
                                 # - { track_name: X, display: X, type: '...', group: maxi }
 
@@ -111,7 +118,8 @@ zone_detection:
 finish_spread: { window_min: 30, min_boats: 10 }
 noise_floor_min: 30             # margins under this are scoring noise (doctrine 6)
 
-privacy: { default: private }
+privacy: { build: public }      # public|private — which event cut ships (private inputs never
+                                # enter the repo at all; prime rule 4)
 
 output:
   dir: out/
@@ -123,4 +131,5 @@ pinned_values:                  # pinned at the stage-2 stop (prime rule 3); the
   module_canaries: {}
   names_present: []
   names_absent: []
+  names_meta_only: []           # scored-but-trackless boats (mirrors untracked_meta_only)
   finstrip_count: 0

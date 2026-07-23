@@ -132,7 +132,7 @@ def main():
         return groups['default_key']
 
     finish_statuses = set(cfg['official_results'].get('finish_statuses') or ['FIN'])
-    # exclude_boats: CP-0 removals (e.g. BIR2026's Daffodil — DNC, stationary at
+    # exclude_boats: stage-0 removals (e.g. BIR2026's Daffodil — DNC, stationary at
     # a mooring). Matched by normalized name against results AND fleet layers.
     excl_keys = {canonical.norm_key(nm) for nm in (cfg.get('exclude_boats') or [])}
     entries = {}          # track name -> meta dict
@@ -361,7 +361,7 @@ def main():
 
     # ── slow-zone detection + per-boat traversal metrics (doctrine 1) ──
     # Detection candidates always go to the run log. The SHIPPED zone bounds may
-    # instead be an authored CP-2 judgment (zone_detection.zone) — RETROSPECTIVE
+    # instead be an authored stage-2 judgment (zone_detection.zone) — RETROSPECTIVE
     # §5.3 classes park bounds as an analysis framing, and NB2026's 180→80 is
     # empirically not reachable by the threshold rule (see run_log band medians).
     detected, zdiag = zones.detect_zones(feat_series, cfg['zone_detection'])

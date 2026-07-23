@@ -14,7 +14,7 @@ are recorded CP-3 items.
 ## CP-3 corrections — R9 (2026-07-09, owner)
 
 Copy freezes at CP-3; these two owner corrections are recorded per the rule above
-(ledger: decisions/R9-owner-review.yaml):
+(ledger: ../decisions/R9-owner-review.yaml):
 
 1. **Upwind module note** — deleted the bolded sentence "And distance is not why
    Ragana finished last" (it undercut the chart it captioned). The quantified

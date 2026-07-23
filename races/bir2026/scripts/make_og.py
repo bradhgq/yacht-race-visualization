@@ -27,7 +27,7 @@ def path(lons, lats):
     return 'M' + ' L'.join(px(lo, la) for lo, la in zip(lons, lats) if lo is not None)
 
 def main():
-    D = json.loads((ROOT / 'out' / 'dashboard_data.FROZEN.json').read_text())
+    D = json.loads((ROOT / 'snapshot' / 'dashboard_data.json').read_text())
     ghosts = ''.join(
         f'<path d="{path(f["lon"], f["lat"])}" fill="none" stroke="rgba(120,140,155,0.20)" stroke-width="1"/>'
         for f in D['fleet'])

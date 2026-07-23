@@ -7,7 +7,7 @@ Run AFTER build_data.py, BEFORE the shell build:
 Only the genuinely race-specific analysis channels remain here; the original
 steps 1/2/5 (display-name groups, Daffodil removal, Windfall meta-only) are
 pipeline-native since the shell migration (config keys `groups.by_name/by_cls`,
-`exclude_boats`, `official_results.untracked` — config-gated in the pipeline).
+`exclude_boats`, `official_results.untracked_meta_only` — config-gated in the pipeline).
 
   1. meta.up1bi — authoritative raw-track distance sailed to the 1BI rounding,
      computed on the CLEANED track, trimmed to [race_start, official finish],
@@ -106,6 +106,6 @@ d['stats'].pop('rhumb', None)
 json.dump(d, open('out/dashboard_data.json', 'w'))
 print(f"postprocess: up1bi on {hits} finishers")
 print(f"  Ragana up1bi {b['Ragana']['meta']['up1bi']}  CD {b['Christopher Dragon XII']['meta']['up1bi']}  "
-      f"delta {d['stats']['upwind_extra_vs_cd']}  (golden 4.7)")
+      f"delta {d['stats']['upwind_extra_vs_cd']}  (pinned 4.7)")
 print(f"  race-window sailed: Ragana {d['stats']['sailed_ragana']}  CD {d['stats']['sailed_cd']}  "
       f"extra {d['stats']['extra_vs_cd']}")

@@ -18,7 +18,7 @@ This stage **is** the review loop, and the loop is the quality engine. Requires 
 | Module | Detection heuristic (defaults; provisional — calibrated on one race) |
 |---|---|
 | Slow-zone / park table | the stage-2 zone-detection heuristic fires |
-| Finish-spread strip | ≥ `min_boats` (10) finish within `noise_floor_min` (30) corrected, in-division |
+| Finish-spread strip | ≥ `finish_spread.min_boats` (10) finish within `finish_spread.window_min` (30) corrected, in-division |
 | Nav-log reconciliation | a paper or electronic log was supplied |
 | Current / tidal-gate analysis | the course crosses a documented current or gate AND crossing timing/geometry varies materially across the fleet |
 | Two-boat duel panel | two boats within ~15 min at ≥10 consecutive milestones |

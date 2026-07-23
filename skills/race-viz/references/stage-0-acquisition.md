@@ -55,14 +55,17 @@ repo root.
   from the organizer's site.
 
 ```
-python3 starter/acquisition/yachtscoring_download.py <eventId> --prefix <race>
-python3 starter/acquisition/yb_tracker_download.py <ybRaceId>
-# or one command: python3 starter/acquisition/fetch_race.py <eventId>
+# one command, straight into the race's raw/ dir:
+python3 starter/acquisition/fetch_race.py <eventId> --prefix <race> --out-dir races/<race>/raw/
+# or the single-source scripts (they write to the CURRENT dir — cd races/<race>/raw first):
+python3 ../../../starter/acquisition/yachtscoring_download.py <eventId> --prefix <race>
+python3 ../../../starter/acquisition/yb_tracker_download.py <ybRaceId>
 ```
 
-Outputs: `<race>_tracks.csv` (already canonical — the YB adapter maps it
-1:1), `<race>_scratch_sheet.csv` (ratings joined from results),
-`<race>_results.csv`, and a manifest. Report every warning the run produces.
+Outputs (in `races/<race>/raw/`): `<race>_tracks.csv` (already canonical — the
+YB adapter maps it 1:1), `<race>_scratch_sheet.csv` (ratings joined from
+results), `<race>_results.csv`, and a manifest. Without `--prefix` the files
+name themselves `ys<eventId>_*`. Report every warning the run produces.
 
 **Verification ritual — mandatory; its findings land in the stage-0 record:**
 - **Never trust a guessed YB id.** A valid-looking id can be a different race

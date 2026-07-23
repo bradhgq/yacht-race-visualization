@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """BIR2026 raw-track despike: remove isolated teleport pings.
 
-Rule (documented, CP-4 round 2): drop ping i when the path detours through it —
+Rule (documented at review round 2): drop ping i when the path detours through it —
 dist(prev,i) > 5 nm AND dist(i,next) > 5 nm AND dist(prev,next) < half the
 detour legs — i.e. an out-and-back single-point excursion the boat cannot have
 sailed. Iterates until stable (multi-ping bursts like Midnight Rider's double).

@@ -6,7 +6,7 @@ description: Turn yacht-race tracker data plus supporting documents into researc
 # race-viz — staged race analysis and visualization
 
 Three tiers, each a strict superset of the previous:
-1. **Fleet commentary** (public data: map, race shape, phases, duels, 1–2 race-unique metrics)
+1. **Fleet commentary** (public data: map, race shape, phases, 1–2 race-unique metrics)
 2. **Boat-annotated debrief** (+ client boat highlighted, log events on the track, log↔tracker reconciliation, benchmarks, private debrief)
 3. **Story site** (+ narrative post with embedded visualizations, hosted)
 
@@ -31,7 +31,7 @@ At every stage stop: (1) write the stage's deliverables as clickable artifacts; 
 ## Prime rules
 
 1. **Shipped numbers come only from the pipeline** — the one-command chain `.venv/bin/python starter/build_race.py races/<race>`, invocation logged in the stage record. Exploration is free.
-2. **Stage records are input dependencies** — each stage requires the previous stop's confirmed record (templates in `references/schemas.md`).
+2. **Stage records are input dependencies** — each stage requires the latest confirmed record (templates in `references/schemas.md`; stage 1's stop is soft — its brief needs an owner go, not a record).
 3. **Pinned once, then fixtures** (I16) — values pin at the stage-2 stop from official results + one hand-verified probe; changing a pinned value or the snapshot reference requires an explicit owner instruction in a `decisions/` ledger entry, never a silent rebuild.
 4. **Privacy: what the dashboard doesn't show is discarded** — private inputs (journals, nav logs, transcripts) never enter the repo; each derived item ships only by a case-by-case human decision flagged at the stop.
 5. **Every human-caught correction becomes a regression assertion** (where expressible) before stage 5 ships.
@@ -47,7 +47,7 @@ Read the stage's reference file before executing it; do not load ahead of need.
 | 2 Analysis | `references/stage-2-analysis.md` | stage-0 record | **hard** · findings memo + module list + pinned values |
 | 3 Synthesis | `references/stage-3-synthesis.md` | stage-2 record (+ research brief) | **hard** · corrections record over the narrative pack |
 | 4 Visualization | `references/stage-4-visualization.md` | stage-3 record + module list | **hard** · review-round log — hosted build, ≥1 owner round |
-| 5 Productionize & publish | `references/stage-5-handoff.md` | stage-4 record + green suite | publication ledger — public cut, live build |
+| 5 Productionize & publish | `references/stage-5-productionize.md` | stage-4 record + green suite | **hard** · publication ledger — public cut before anything goes live |
 
 Tier 1 may merge stage 3's stop into stage 2's, and stage 5's ledger into stage 4's sign-off; stage 0, stage 2, and stage 4's minimum one review round are mandatory at every tier. Resuming mid-project: find the latest confirmed record in `decisions/`, enter at the following stage; never skip past a missing stage-0 or stage-2 record.
 

@@ -28,8 +28,11 @@ this round resolved: delete the entry (compaction doctrine). Everything else:
 raise to the owner with an explicit call per item — resolve now, or punt;
 punts stay in the file, dated.
 
-## Publication — stage-5 ledger
+## Stage-5 stop — publication ledger (hard stop)
 
+Present the public cut per the stop mechanic before anything goes live.
+
+The ledger:
 - The per-item opt-in list for anything log-derived going public, plus
   explicit confirmation that everything else was discarded (prime rule 4 —
   private material never entered the repo).
@@ -54,8 +57,10 @@ punts stay in the file, dated.
   the global `dist/` ignore silently drops them from `git add -A` (BIR's
   first shell deploy served a page whose every script 404'd this way;
   `build_race.py` detects and warns).
-- **Hosting:** on silverbox, `races/<race>` maps to an nginx location aliased
-  to `${inputs.race-viz-site}/races/<race>/dist/` under the hgq.fyi vhost;
+- **Hosting:** on silverbox, each race gets a NAMED nginx location (e.g.
+  `/ragana-newport-bermuda-2026/` — the URL slug is per-race nginx config, not
+  the repo dir name) aliased to `${inputs.race-viz-site}/races/<race>/dist/`
+  under the hgq.fyi vhost;
   deploy = push monorepo main, then `nix flake update race-viz-site && sudo
   nixos-rebuild switch --flake .#silverbox`.
 - **Next race:** a fresh session in this repo, starting at stage 0

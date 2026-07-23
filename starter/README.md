@@ -43,8 +43,11 @@ hashes) next to every payload — shipped numbers come only from the pipeline
 
 Copy [`starter/template/`](template/) to `races/<race>/`, drop the tracker
 export / results / scratch sheet into `raw/`, fill `config.yaml` (facts only —
-narrative goes in `events.yaml`) plus `presentation.js`, then run the one-command
-chain. See the skill's
+narrative goes in `events.yaml`), `presentation.js`, and `copy.js`/`copy.md`
+(the narrative slots — the build refuses without copy.js). First build of a
+brand-new race: `starter/build_race.py races/<race> --bootstrap` (the harness
+gates on a built dist, which doesn't exist yet); pin values at the stage-2
+stop, then run the chain without the flag forever after. See the skill's
 stage files for the stop protocol; never skip the stage-0 or stage-2 stops.
 
 The repo's one living log is [`docs/OPEN_THREADS.md`](../docs/OPEN_THREADS.md)

@@ -25,3 +25,14 @@ introduction).
   exists to prevent), covers nb2026 only, and skips the bir2026 suite.
   Candidate fix: one job per race running `starter/build_race.py` after the
   unit suites, with dist left uncommitted.
+- **consistency_check covers only the NB-shaped pinned keys** (review,
+  2026-07-23): `starter/shell/build.py` cross-checks tz_probe, the three
+  endpoint keys, and `module_canaries.park` — BIR's `names_meta_only` and
+  `module_canaries.upwind_excess` can drift between config and
+  tests/regression.json unchecked. Fix: iterate whatever keys both sides
+  carry instead of a hardcoded list.
+- **Tier-1 (fleet-only) builds need a hero today** (review, 2026-07-23):
+  `build_data.py` pivots stats/groups/series on `client_boat` unconditionally
+  — a null client_boat crashes at the stats step, so true fleet-commentary
+  builds aren't possible yet. Docs now state the requirement (pick an
+  analysis pivot); a guarded hero-less path is the real fix.

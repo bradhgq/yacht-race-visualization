@@ -10,7 +10,7 @@
      division names. ratingBands kept — ORC ToT is a continuous scale and the
      hero-centred band is numerically ORC-only by construction (PHRF ratings
      are 90+ sec/mi and never fall in a ±0.05 window around 0.9425).
-   - group-button name lists are STATIC, generated from the frozen oracle
+   - group-button name lists are STATIC, generated from the snapshot reference
      (monolith computed them at runtime); 'All ORC' now includes Inisharon
      (ORC DNF with a track) per the class-selection-includes-DNF decision. */
 window.__RACE_CONFIG__ = {
@@ -30,7 +30,7 @@ window.__RACE_CONFIG__ = {
     dtfStartFallback: 188.7,             // routed polyline DTF at the start (app.js:24)
     startLabel: 'Start', finishLabel: 'Finish',
   },
-  // three-act structure (app.js ACTS_DEF) — drawn by overlays/acts.js on every
+  // three-act structure (the monolith ACTS_DEF) — drawn by overlays/acts.js on every
   // time chart and mapped into the lane module's own x-space
   acts: [
     ['2026-05-22 12:35', '2026-05-22 20:35', 'ACT 1 · OUT', 'rgba(78,121,167,0.06)'],
@@ -54,7 +54,7 @@ window.__RACE_CONFIG__ = {
     dnfKey: 'fleet_dnf', outsideKey: 'phrf', fallbackKey: 'orc_other',
     by_name_class6: ['Christopher Dragon XII', 'In Theory', 'Groupe 5', 'SqueeZeplay',
                      'Save the Sound', 'Zélée', 'Sleeper', 'Blue Skies'],
-    buttons: {                           // static lists generated from the frozen oracle
+    buttons: {                           // static lists generated from the snapshot reference
       'Class 6 ORC': ['Christopher Dragon XII', 'In Theory', 'Groupe 5', 'SqueeZeplay',
                       'Save the Sound', 'Zélée', 'Sleeper', 'Blue Skies'],
       'All ORC': ['Thin Man', 'Abilyn', 'Stratos', 'Eventyr', 'Velocity2', 'Christopher Dragon XII',
@@ -70,7 +70,7 @@ window.__RACE_CONFIG__ = {
       'Bermuda boats': ['Banter', 'Touch of Grey', 'Zélée'],
     },
   },
-  eventCategories: {                     // app.js:54-59 — ONE label per category (R9d):
+  eventCategories: {                     // app.js:54-59 — ONE label per category (owner review):
     crew:      { c: '#B9770E', sym: 'circle', label: 'Crew' },           // chips, table and
     systems:   { c: '#C0392B', sym: 'x', label: 'Systems' },             // hovers share these
     sail:      { c: '#0E5A8A', sym: 'triangle-up', label: 'Sails' },     // strings verbatim
@@ -89,8 +89,8 @@ window.__RACE_CONFIG__ = {
   race: {
     milestoneTop: 180, milestoneBottom: 10, milestoneStep: 10,   // app.js:487
     paceMinDone: 20,                                             // app.js:507 (done > 20)
-    startAnchor: 188.7,                                          // R9e: gap is 0 at the gun
-    divisionScoped: true,                                        // A2: corrected never crosses divisions
+    startAnchor: 188.7,                                          // owner review: gap is 0 at the gun
+    divisionScoped: true,                                        // division rule: corrected never crosses divisions
     crossCourse: ['Lucky'],                                      // Cows-finish variant: never compared
     // 'rating' not 'TCF': the one label serves both divisions' chip tooltips,
     // and PHRF ratings are sec/mi, not a ToT factor (band UI says 'ORC ToT')
@@ -99,7 +99,7 @@ window.__RACE_CONFIG__ = {
   charts: {
     dtf: { eventTopY: 183 },                                     // no yRange -> rangemode tozero
     sog: { yRange: [0, 11], eventTopY: 10.4,
-           clipPreStart: '2026-05-22 12:05',                     // R9f own-gun distance start
+           clipPreStart: '2026-05-22 12:05',                     // owner review: own-gun distance start
            metrics: { s: 'SOG', v: 'VMC (toward finish)' },
            vmcYRange: [-4, 11] },
     xte: { eventTopY: 5,                                         // shell xte: routed active-leg offset

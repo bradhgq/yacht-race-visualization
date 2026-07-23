@@ -52,7 +52,7 @@
   **DTF-at-the-gun ÷ official elapsed**, on the same DTF function the channel
   differentiates — the routed polyline for marks courses, NOT the official
   length (BIR: the routed basis measures 5.02 kt where the official length
-  predicts 4.96 — wider than the fixture’s ±0.06 kt tolerance; found at BIR M1).
+  predicts 4.96 — wider than the fixture’s ±0.06 kt tolerance; found at the BIR data migration).
   Guarded per-race by the pinned `vmc` values in `tests/regression.json`.
   Negatives are real — never clamp (35 NB2026 boats have them).
 - **I15 — Modules own their geometry.** A `kind:plot` module declares
@@ -81,9 +81,9 @@ optional field races may ignore — and each is recorded in this list when it
 lands. Breaking changes to the frozen ctx/registration shapes need an owner
 adjudication before they ship.
 
-- `overlay.mapLayer` ('under'|'over'|'top') — BIR M2: overlay map traces pick
+- `overlay.mapLayer` ('under'|'over'|'top') — BIR migration: overlay map traces pick
   their paint layer.
-- `overlay.bandAnnotations(ctx, mode)` — BIR M2: labelled x-bands (act titles)
+- `overlay.bandAnnotations(ctx, mode)` — BIR migration: labelled x-bands (act titles)
   on the same charts that consume `bands()`.
 - `ctx.copy` (2026-07-15 review) — the race's `window.__COPY__`. Shared shell
   modules read their per-race captions from `COPY.<module id>` slots (e.g.

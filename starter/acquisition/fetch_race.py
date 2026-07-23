@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """One-command race acquisition: YachtScoring results + scratch sheet, the YB
 tracker id parsed from satTrackingUrl, the full YB track history, a proposed
-YB↔YS name-join table, and a manifest with every CP-0-relevant warning.
+YB↔YS name-join table, and a manifest with every stage-0-relevant warning.
 
     python3 acquisition/fetch_race.py <ysEventId> [--yb <raceId>] [--prefix p] [--out-dir raw/]
     python3 acquisition/fetch_race.py --yb <raceId> [--prefix p] [--out-dir raw/]   # YB-only (e.g. Newport Bermuda)
 
 Stdlib only. NETWORK-DEPENDENT — never runs in CI. The join table is a
-PROPOSAL: review it at CP-0, never auto-merge (names are dirty, doctrine 4).
+PROPOSAL: review it at the stage-0 stop, never auto-merge (names are dirty, doctrine 4).
 """
 import argparse
 import hashlib
@@ -109,7 +109,7 @@ def propose_join(teams, entries, out_dir, prefix, warn):
         w.writerows(rows)
     if mismatches:
         warn(f'{mismatches} name-join row(s) need review in {path.name} '
-             f'(sail-only / ambiguous / unmatched) — the join is a PROPOSAL, confirm at CP-0')
+             f'(sail-only / ambiguous / unmatched) — the join is a PROPOSAL, confirm at the stage-0 stop')
     print(f'Wrote proposed name join ({len(rows)} rows, {mismatches} to review) to {path}')
     return path.name, mismatches
 
@@ -129,7 +129,7 @@ def main():
     warnings = []
     def warn(msg):
         warnings.append(msg)
-        print(f'\n*** CP-0 WARNING: {msg}\n', file=sys.stderr)
+        print(f'\n*** STAGE-0 WARNING: {msg}\n', file=sys.stderr)
 
     manifest = {'fetched': time.strftime('%Y-%m-%dT%H:%M:%S%z'), 'warnings': warnings}
     entries, results_count, division_starts = [], None, []
@@ -200,7 +200,7 @@ def main():
     mpath.write_text(json.dumps(manifest, indent=2))
     print(f'\nManifest: {mpath}')
     if warnings:
-        print(f'{len(warnings)} CP-0 warning(s) — carry them into the Scope Record:', file=sys.stderr)
+        print(f'{len(warnings)} stage-0 warning(s) — carry them into the Scope Record:', file=sys.stderr)
         for w in warnings:
             print(f'  - {w}', file=sys.stderr)
     else:

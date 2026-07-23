@@ -136,7 +136,7 @@ privacy:
   build: private
 output:
   dir: out/
-  generated: '2026-07-10'   # pinned at the M1 re-freeze for byte reproducibility
+  generated: '2026-07-10'   # pinned at the data re-pin (2026-07-10) for byte reproducibility
 pinned_values:
   tz_probe:
     epoch: 1779602689
@@ -150,8 +150,8 @@ pinned_values:
       boat: Ragana
       vs: Christopher Dragon XII
       nm: 4.7
-  # name lists reconciled with the snapshot reference at R9 (NF1/NF2 — ledger entry in
-  # decisions/R9-owner-review.yaml): the payload uses display names, and Windfall
+  # name lists reconciled with the snapshot reference at the owner review (ledger entry in
+  # ../decisions/R9-owner-review.yaml): the payload uses display names, and Windfall
   # ships meta-only (untracked PHRF finisher; required for the PHRF band = 23)
   names_present:
   - Ragana

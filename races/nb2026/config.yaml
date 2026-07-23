@@ -1,5 +1,5 @@
-# NB2026 / RAGANA — the frozen worked example (tier 3).
-# Schema of record: skill/race-viz/references/schemas.md. Golden values here are
+# NB2026 / RAGANA — the settled worked example (tier 3).
+# Schema of record: skills/race-viz/references/schemas.md. Pinned values here are
 # fixtures (prime rule 3): changing one requires a recorded user instruction.
 
 race:

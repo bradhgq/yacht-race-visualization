@@ -6,17 +6,17 @@ ildr2025) in the acquisition session of 2026-07-07; distilled from that
 session's retrospective.
 
 ```
-python3 acquisition/fetch_race.py <ysEventId> --out-dir races/<race>/raw/   # the one command
-python3 acquisition/fetch_race.py --yb nb2026 …                             # YB-only race
-python3 acquisition/yb_tracker_download.py <ybRaceId> [--include-dtf]       # tracks only
-python3 acquisition/yachtscoring_download.py <ysEventId> [--prefix p]       # results/scratch only
+python3 starter/acquisition/fetch_race.py <ysEventId> --out-dir races/<race>/raw/   # the one command
+python3 starter/acquisition/fetch_race.py --yb nb2026 …                             # YB-only race
+python3 starter/acquisition/yb_tracker_download.py <ybRaceId> [--include-dtf]       # tracks only
+python3 starter/acquisition/yachtscoring_download.py <ysEventId> [--prefix p]       # results/scratch only
 ```
 
 `fetch_race.py` chains YachtScoring → `satTrackingUrl` → YB, writes a
 `*_manifest.json` (ids, counts, coverage, per-division start times, sha256s)
 and a **proposed** `*_name_join.csv` (normalized name + sail). Every
-CP-0-relevant problem is printed loudly and recorded in the manifest. The join
-is a proposal — review at CP-0, never auto-merge (doctrine 4). All of this is
+stage-0-relevant problem is printed loudly and recorded in the manifest. The join
+is a proposal — review at the stage-0 stop, never auto-merge (doctrine 4). All of this is
 NETWORK-DEPENDENT and stays out of CI; the offline decoder regression in
 `tests/` is the CI-safe part.
 
@@ -74,7 +74,7 @@ above (which describe a data format, not decyb's code). Tracked in docs/OPEN_THR
   points against the known start area/time. Best source of truth: the
   YachtScoring `satTrackingUrl`.
 - **Public YB data can be a subset of the fleet** (ildr2025: 3 of ~36 boats).
-  A property of the data, not a bug — `fetch_race.py` flags it; surface at CP-0.
+  A property of the data, not a bug — `fetch_race.py` flags it; surface at the stage-0 stop.
 - The viewer HTML is a JS SPA — fetching the page tells you nothing.
 
 ### Verification ritual (repeat after any re-download)
@@ -126,7 +126,7 @@ alir25 a year on) — but snapshot races you care about; don't assume retention.
 
 ## Tests
 
-`python3 -m unittest discover -s acquisition/tests` — offline decoder
+`python3 -m unittest discover -s starter/acquisition/tests  # from the repo root` — offline decoder
 regression on a real 41 KB ildr2025 blob (3 boats, 5190 moments, expected
 endpoints pinned from a cross-checked independent download). CI-safe; the
 network paths above are not in CI by design.

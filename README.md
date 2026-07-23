@@ -62,7 +62,8 @@ New race: start a Claude Code session here and ask for race-viz on your race —
 stage 0 inventories what exists, asks for (or fetches) the rest, and stops for
 your sign-off before analysis. Mechanically it copies
 [`starter/template/`](starter/template/) to `races/<race>/` and fills
-`config.yaml` + `presentation.js`; never skip the stage-0 or stage-2 stops.
+`config.yaml`, `presentation.js`, and the `copy.js`/`copy.md` narrative slots
+(first build uses `--bootstrap`); never skip the stage-0 or stage-2 stops.
 
 See [`starter/README.md`](starter/README.md) for the engine doctrines. The
 `/race-viz` skill in [`skills/race-viz/`](skills/race-viz/SKILL.md) is the

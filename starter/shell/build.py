@@ -109,10 +109,10 @@ def consistency_check(race_dir, cfg):
 
 
 def park_copy_lint(race_dir, cfg, data):
-    """CP-3 amendment §4: the park KPI + section note quote numbers about the
+    """the park-copy amendment (2026-07-07): the park KPI + section note quote numbers about the
     DISPLAYED default selection — assert they match the payload so copy can't
     silently drift from data again. (The '3.3 kt dead core' claim is pooled
-    raw-sample math unavailable from the payload; covered by the CP-3 record.)"""
+    raw-sample math unavailable from the payload; covered by the amendment record (races/nb2026/decisions/).)"""
     if 'parkfair' not in cfg.get('modules', []):
         return
     pf = data['parkFair']

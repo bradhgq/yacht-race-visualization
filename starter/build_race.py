@@ -3,7 +3,7 @@
 (dist embeds out/, tests read dist; running steps out of order silently tests
 the previous build).
 
-    .venv/bin/python starter/build_race.py races/<race>
+    .venv/bin/python starter/build_race.py races/<race> [--bootstrap]
 
 Runs, in order, stopping on the first failure:
   1. pipeline/build_data.py  races/<race>/config.yaml
@@ -31,8 +31,11 @@ def run(desc, cmd, **kw):
 
 
 def main():
-    if len(sys.argv) != 2:
+    args = [a for a in sys.argv[1:] if a != '--bootstrap']
+    bootstrap = len(args) != len(sys.argv) - 1
+    if len(args) != 1:
         sys.exit(__doc__)
+    sys.argv = [sys.argv[0]] + args
     # resolve races/<race> against the CALLER'S cwd first, repo root second —
     # the same rule the chain's inner scripts follow, so one documented
     # invocation behaves identically from anywhere
@@ -48,11 +51,19 @@ def main():
         run('2/5 race postprocess', [PY, 'postprocess.py'], cwd=race_dir)
     else:
         print('\n══ 2/5 race postprocess — none ══')
-    run('3/5 shell build (harness-gated, TZ=America/New_York)',
-        [PY, str(REPO / 'starter/shell/build.py'), str(race_dir)])
-    run('4/5 harness under TZ=UTC',
-        ['node', str(REPO / 'starter/tests/test_dashboard.js'), str(race_dir)],
-        env={'TZ': 'UTC', 'PATH': __import__('os').environ['PATH']})
+    # --bootstrap: a brand-new race has no dist/ yet, so the harness (which
+    # reads dist/standalone.html) cannot gate the FIRST build — build once
+    # ungated, pin values at the stage-2 stop, then never use the flag again
+    if bootstrap:
+        run('3/5 shell build (BOOTSTRAP — harness gate skipped, first build only)',
+            [PY, str(REPO / 'starter/shell/build.py'), str(race_dir), '--skip-tests'])
+        print('\n══ 4/5 harness SKIPPED (bootstrap) — pin values, then rerun without --bootstrap ══')
+    else:
+        run('3/5 shell build (harness-gated, TZ=America/New_York)',
+            [PY, str(REPO / 'starter/shell/build.py'), str(race_dir)])
+        run('4/5 harness under TZ=UTC',
+            ['node', str(REPO / 'starter/tests/test_dashboard.js'), str(race_dir)],
+            env={'TZ': 'UTC', 'PATH': __import__('os').environ['PATH']})
     snapshot = race_dir / 'snapshot' / 'dashboard_data.json'
     if snapshot.exists():
         run('5/5 snapshot compare (tie-exempt)',
