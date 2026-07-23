@@ -1,0 +1,84 @@
+# ALIR 2025 — narrative events (data, never code). Naive official-TZ local times (I1).
+# Tier 1, public build: every entry here is public-by-decision at the stage-3 stop.
+# Sources: journal = owner's account from Daffodil's deck (participant-recollection,
+# given in-session 2026-07-23 for this project); transcript = Lenoble's published
+# first-person accounts (WindCheck + SailNet); analysis = derived from the pipeline.
+
+events:
+- t: "2025-07-24 13:30"
+  cat: insight
+  label: "The fleet turns east"
+  txt: "Ambrose Channel R\"14\" — the course's ONE mandatory mark — goes to port and the
+    ocean reach begins. The leaders round about 90 minutes after their guns; from here it
+    is 100+ nm of pressed reaching along the south shore."
+  source: analysis
+  visibility: public
+- t: "2025-07-24 20:00"
+  cat: insight
+  label: "A 31-footer among the 50s"
+  txt: "Mid-reach, Daffodil is holding the pace of the three fastest boats in the fleet —
+    she will traverse the ocean leg 4th of 43 (8¼ h; fleet median 12 h), behind only
+    Avalanche, Max and Wahoo, all far larger. This is what a Corsair F31R is for."
+  source: analysis
+  visibility: public
+- t: "2025-07-25 03:20"
+  cat: insight
+  label: "Montauk in the dark"
+  txt: "The mid-fleet rounds Montauk Point in the small hours (Sound's Great at 03:20,
+    matching her crew's published account to within ten minutes); the leaders had turned
+    before midnight. Next: Gardiners Bay, Plum Gut, and a Sound with fading wind."
+  source: analysis
+  visibility: public
+- t: "2025-07-25 09:00"
+  cat: insight
+  label: "The Sound turns upwind"
+  txt: "Friday morning's sou'wester sits 20-58 degrees off the westbound course (model
+    reanalysis — no working wind platform existed in the central Sound in 2025) and dies
+    from 11 kt toward 7. This beat is where Daffodil's race went: about 2 h conceded to
+    Habiru YCC on overlapping water, with more tacks and 6 nm more sailed."
+  source: analysis
+  visibility: public
+- t: "2025-07-25 12:26"
+  cat: insight
+  label: "Line honors: Wahoo"
+  txt: "The Naval Academy's Ker 50 is first home in 24:11:49 — the fastest boat around
+    the course by nearly two hours. On corrected time the handicap flips her behind Max
+    by 4:50, a margin inside rating noise."
+  source: analysis
+  visibility: public
+- t: "2025-07-25 14:15"
+  cat: insight
+  label: "Max finishes — the door is still open"
+  txt: "Max crosses at 14:15, the third and last boat home before the squall line enters
+    the Sound 80 minutes later — and hours before the post-frontal calm shuts the final
+    15 nm on everyone behind. The overall trophy is decided here, not in any margin."
+  source: analysis
+  visibility: public
+- t: "2025-07-25 15:36"
+  cat: insight
+  label: "Squall line enters the Sound"
+  txt: "Kings Point gusts 24.5 kt with a sharp direction reversal; NY Harbor 31.9 kt
+    at 16:40; offshore Islip 23.5 kt at 17:30 — the NWS logged a severe line crossing
+    Westchester/Fairfield into central Long Island 2:20-6:00 PM. Only three boats had
+    finished; Max was the last of them, 80 minutes earlier."
+  source: analysis
+  visibility: public
+- t: "2025-07-25 16:30"
+  cat: crew
+  label: "The squall hits Daffodil"
+  txt: "About 30 kt felt for roughly two minutes (buoy 44065 recorded a 31.9 kt gust
+    at 16:40). Main and jib down before/while it hit, jib-only after, then main back
+    up — 'a very needed push' in air that was ~2 kt either side of it. Owner's
+    account, corroborated by the buoy record and the track's near-stop at 16:20-16:50."
+  source: journal
+  visibility: public
+- t: "2025-07-26 00:15"
+  cat: insight
+  label: "Anchored 175 yards from the line"
+  txt: "Sound's Great, becalmed at midnight, anchored ~0.09 nm from the finish for
+    ~55 minutes until the new breeze arrived after 00:45 — the sharpest image of the
+    finish door shut. Published account (Lenoble), confirmed by the tracker."
+  source: transcript
+  visibility: public
+
+watches: []

@@ -1,0 +1,79 @@
+# stage-4 — Review-Round Log — ALIR 2025 — CONFIRMED (four rounds; approved to productionize)
+rounds: 4                        # 1 self-review · 2 owner (7 items) · 3 owner (map/milestones/speed) · 4 owner (chip row)
+defects:
+  - found: "door module drew 6 dots on the live page vs 43 in the harness — it read t/dtf series,
+      which the split build ships only for core boats until more.json loads (standalone embeds
+      everything, so the harness couldn't see it)"
+    fix: "postprocess.py computes meta.doorEnter/doorHrs for all 43 finishers (meta rides
+      core.json); door.js reads meta only. Snapshot refrozen for exactly that diff class
+      (86 diffs = 43 boats x 2 new meta keys; I16 ledger: this entry)."
+    assertion: "tests/extra.cjs door canary asserts 43 rendered dots + Daffodil at
+      (2025-07-25 14:30, 5.78 h) against the RENDERED trace"
+  - found: "the door chart's SQUALL and PARK band labels collided at narrow width"
+    fix: "narrow-aware labels (h.narrow() -> SQUALL / PARK short forms)"
+    assertion: "not expressible (visual layout; caught by screenshot round)"
+  - found: "the shell @rhumb pill drew the straight start->finish chord labeled 'Course line' —
+      on a marks course that is neither the course nor sailable (it crosses Long Island)"
+    fix: "new overlays/courseline.js draws the routed polyline (default on, magenta dashed,
+      'Scored course · 207 nm'); defaults.rhumb false; pill relabeled 'Direct line'; map note
+      corrected. Polyline in presentation.js mirrors config.yaml course (source of truth)."
+    assertion: "not expressible as a fixture; covered by the courseline overlay being default-on
+      and the map trace name 'Scored course · 207 nm' (verified in the served page)"
+  # ---- round 2: owner review, 2026-07-23 (screenshots of header/controls/map) ----
+  - found: "groups row empty; owner wants division comparison sets of 5-6 boats and no
+      straight-line pill"
+    fix: "four groups.buttons (Div 0, Div X, Daffodil's pace peers = unified 27-33, unified
+      podium) + hero-centred PHRF ratingBands (±15/±30 s/mi); @rhumb pill removed from controls.
+      classFilter NOT used: the shell's filter contract is numeric-only and ALIR has divisions
+      X and M — buttons cover all nine divisions instead."
+    assertion: "harness name-hygiene check asserts every groups.buttons name exists in the payload"
+  - found: "title-block result line rendered as broken prose"
+    fix: "rewritten as the shell's chip markup (<span>label <b>value</b></span> x4)"
+    assertion: "not expressible (visual)"
+  - found: "KPI '4:50 spread' reads as hours"
+    fix: "value now 00:04:50"
+    assertion: "not expressible (copy)"
+  - found: "map: legend should sit below at all widths; map deserves ~75% viewport height"
+    fix: "charts.map { heightScale: 1.6, legendBottom: true }; legendBottom is a new additive
+      config-gated engine hook in shell/app/charts/map.js (nb/bir unaffected)"
+    assertion: "not expressible (visual); verified in served layout.legend"
+  - found: "race chart milestones too coarse at 20 nm"
+    fix: "milestoneStep 5, milestoneBottom 5 (41 points inc. the official-endpoint anchor)"
+    assertion: "endpoint fixtures unchanged (endpoints ride meta, not milestones)"
+  - found: "race log rendered empty — event categories all defaulted OFF (the section looked
+      deletable; populating it honors the owner's intent of visible markers better than deleting)"
+    fix: "defaults.ev ['crew','insight']; six new verified insight events from the confirmed
+      research/analysis (east turn, the reach, Montauk, the Sound beat, line honors, Max and the
+      door) — nine public events total, all source-labeled"
+    assertion: "payload events==9; snapshot refrozen for exactly {events 3->9, meta.cls
+      compacted on 49 boats} — I16 ledger: this entry"
+  - found: "division labels were the raw 'Spinnaker Division X - Warning Signal 12:00' strings"
+    fix: "postprocess compacts meta.cls to Div 0/Div X/NS Div 1/DH Div 7/Multihull etc.; full
+      strings remain in config and raw results"
+    assertion: "covered by the same snapshot refreeze class"
+  - found: "clicking a group button showed only one boat (owner) — the handler added names to
+      the selection but never triggered the lazy more.json load, so boats without core-shipped
+      tracks silently drew nothing. nb/bir never hit it: their buttons only named core boats."
+    fix: "engine: group-button onclick now mirrors the filter path's ensureTracks pattern
+      (shell/app/core.js); one fetch covers every lazy boat. All three races' chains green."
+    assertion: "not expressible in the standalone harness (it embeds all tracks); verified in
+      the served split build — 6/6 pace peers render after click"
+  # ---- round 3: owner, 2026-07-23 ----
+  - found: "map heightScale 1.6 was a misread of '75% vertical space' — owner meant 0.75"
+    fix: "charts.map.heightScale 0.75"
+    assertion: "not expressible (visual)"
+  - found: "won-and-lost milestones too coarse at 5 nm"
+    fix: "every 1 nm (201 points/boat; render cost imperceptible)"
+    assertion: "endpoint fixtures unchanged"
+  - found: "speed chart had no commentary"
+    fix: "SOG-mode note (reach peak, Glen Cove drift, what 5-min pings record of a 2-min squall)
+      + the existing VMC note"
+    assertion: "not expressible (copy)"
+  # ---- round 4: owner, 2026-07-23 ----
+  - found: "chip row showed only the three quick-group boats; owner wants all defaults + extras"
+    fix: "groups.chipExtras (existing shell hook): Wahoo, Phantom, Dolcezza + Sound's Great and
+      Towhee (the documented boat and her rival — not default-selected). 8 chips + More(41)."
+    assertion: "chip row verified in the served build; no payload change"
+approved_to_productionize: true
+confirmed_by: "Brad"
+date: "2026-07-23"

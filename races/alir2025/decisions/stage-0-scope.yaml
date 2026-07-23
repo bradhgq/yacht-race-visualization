@@ -1,0 +1,336 @@
+# stage-0 — Scope Record — Around Long Island Regatta 2025 (48th), Sea Cliff YC — DRAFT
+# (awaiting owner confirmation)
+#
+# Every number below was recomputed from races/alir2025/raw/ and then independently
+# re-verified by adversarial review; claims that review REFUTED are retained as explicit
+# corrections rather than quietly deleted, so the ledger shows what was believed and why
+# it changed.
+
+acquisition:
+  command: "python3 starter/acquisition/fetch_race.py 50029 --yb alir25 --prefix alir2025
+    --out-dir races/alir2025/raw/   (run 2026-07-23T02:49:22-0400)"
+  yb_id_provenance: "satTrackingUrl is EMPTY in the YS event metadata (allowSatTracking false), so
+    the normal YS-hands-you-the-YB-id chain is BROKEN for this event a year on. The id came from the
+    owner's July-2025 acquisition session and was re-verified by the full ritual rather than trusted:
+    RaceSetup fleet == entry list, first pings in NY Harbor at 14:30Z Jul 24, per-division starts
+    == warning + 5 min."
+  warnings_raised: 2             # both resolved below, per 'report every warning the run produces'
+    # 1. "coverage: 50 tracked boats vs 57 active entries (74 incl. withdrawn)"
+    #    -> RESOLVED: the gap is exactly the 6 Around-the-Islands boats + the 2 DNCs.
+    #       Around-Long-Island-course coverage is COMPLETE.
+    # 2. "28 name-join row(s) need review — the join is a PROPOSAL"
+    #    -> RESOLVED: full composition in anomalies; every row class accounted for.
+  cross_source_conflicts: "NONE. The owner-provided July-2025 CSVs are row-for-row identical to the
+    2026-07-23 re-download (results 57/57, scratch 74/74, tracks 26,177/26,177)."
+  source_documents: "Course facts are taken from the 2025 ALIR Sailing Instructions
+    (2025_alir_si_v1.3_07.22.25_1200), obtained via the YachtScoring event-documents endpoint for
+    event 50029. The SI supplies the start line, the single mandatory mark, the finish line, and
+    the 207 nm scoring distance. INDEPENDENT CORROBORATION: the scoring arithmetic reproduces
+    official corrected times exactly at 207.0 nm for all 43 in-scope finishers, and at 250.0 nm for
+    the 6 Around-the-Islands boats — the distances are confirmed by the data, not only by the PDF."
+
+fleet_count:
+  entries_scratch: 74            # 57 ACTIVE + 17 INACTIVE (withdrawn pre-race)
+  results_rows: 57               # 51 ALIR-course rows (43 AOK + 6 RET + 2 DNC, 3 circles)
+                                 #  + 6 ATI-course rows (all AOK, 2 circles / 3 divisions)
+  tracked: 50                    # 49 racers + COMMITTEE BOAT
+  in_scope_expectation: 49       # ALIR-course racers with tracks: 43 finishers + 6 RET
+  untracked: ["Wind Song (Non-Spin Div 1, DNC)", "Rocksteady (Spin Div 0, DNC)",
+              "all 6 Around-the-Islands boats (different 250 nm course, out of scope)"]
+  pipeline_check: "A trial build on a scratch copy resolves exactly 43 scored boats + 6 fleet_dnf
+    (the RET boats, all tracked) + 6 name-misses (the ATI boats), 49 fleet ghost tracks. Matches."
+
+anomalies:
+  - "TZ MISLABEL (adjudicated): results finish_time_utc is EDT wall clock with a spurious Z suffix.
+     Probe: track finish-line crossings sit +4.00 h from claimed on 5 boats (Max, Daffodil, Habiru,
+     Wahoo, Dolcezza), each 0.05-0.09 nm from the Glen Cove Breakwater light.
+     YS races[].startTime carries the same mislabel; YB epochs are TRUE UTC.
+     Consequence: derive_results_columns.py strips the fake Z with NO offset shift."
+  - "Name-join composition, fully accounted for (74 rows): 45 matched by name, 1 by name+sail,
+     3 sail-only (the YCC suffix cases), 1 UNMATCHED-YB (COMMITTEE BOAT), 24 UNMATCHED-YS.
+     The 24 decompose as 16 INACTIVE withdrawn entries + 8 ACTIVE-but-untracked (the 6
+     Around-the-Islands boats + the 2 DNCs). Every results row resolves to a track or to an
+     explicit untracked reason; every tracked name but COMMITTEE BOAT resolves to a results row."
+  - "DUPLICATE ENTRY NAME (I4/doctrine 4): the scratch sheet's 74 rows carry only 73 unique names —
+     'Dolcezza' is entered twice by two different owners. The racing one is sail 53, Hunter Legend
+     37.5, Neill Parker Jr, Non-Spin Div 2, rating 144 — and she WON the Non-Spinnaker circle.
+     The withdrawn one is sail 0, Hunter 37, Victor Lee, no class or rating. This is why 16 of 17
+     INACTIVE entries appear unmatched: the join correctly bound the tracker to the ACTIVE boat by
+     name+sail. No shipped collision, but any future join must key on (name, sail), never name."
+  - "Suffix joins (sail-only, proposed and accepted): Habiru->Habiru YCC, Little Texas->Little
+     Texas YCC, Unbreakable->Unbreakable YCC (YB drops the Youth Challenge Cup suffix)."
+  - "Case-only differences (tracker mixed-case vs results ALL-CAPS): Pathfinder/PATHFINDER,
+     Duet/DUET, Actaea/ACTAEA, Acadia/ACADIA, Wanderer/WANDERER, Scapegoat/SCAPEGOAT. Handled by
+     name_overrides.display ONLY — the join normalizer casefolds, so a by_name entry would not help
+     the match while still rewriting the tracker name that ships as the fleet ghost's hover label
+     (it would read ACADIA beside a chip reading Acadia)."
+  - "'Smoke &Mirrors' missing space in BOTH sources -> display override 'Smoke & Mirrors'."
+  - "COMMITTEE BOAT present in tracks only -> exclude_boats."
+  - "Wind Song + Rocksteady: DNC, no track -> exclude_boats (run-log hygiene only; the payload is
+     byte-identical either way, since they would otherwise land in the report-only name-miss list)."
+  - "SCARLETT'S TRACKER WENT HOME OVERLAND (RESOLVED by trimming, not by exclusion). She turned back
+     off Fire Island on day 1 (RET), and the track then ran UP THE HUDSON: 07-25 06:30Z at
+     41.478/-73.996, 12:00Z at 41.922/-73.966 (~Kingston NY), parked there for a day — 468 pings
+     north of 41.3N, stretching the fleet bounding box by ~38 nm. She raced, so she is NOT excluded:
+     trim_tracks.py cuts her at her furthest point along the course (185.7 nm to go, 07-24 18:50Z),
+     keeping 49 genuine racing pings. Fleet max latitude 41.922N -> 41.281N."
+  - "438 duplicate (boat_id, epoch) ping rows (26,177 -> 25,739 unique; 434 duplicated keys).
+     437 are byte-identical re-emissions. ONE is a genuine position conflict: Pathfinder at
+     2025-07-24T19:00:02Z carries both 40.53069/-73.8461 and 40.53070/-73.8462 — 1.1 m apart,
+     immaterial; the first row is kept. Dropped by trim_tracks.py; all cadence statistics below
+     are computed AFTER dedup."
+  - "POST-FINISH TRACKER RUN-ON is fleet-wide, not just Scarlett: trackers stay on for the delivery
+     home, so the raw export carries motion that never happened during the race (Dolcezza kept
+     transmitting for 9.1 h after finishing). Resolved the same way — every boat is trimmed to
+     [division gun - 15 min, finish + 5 min]; boats with no finish are cut at their furthest point
+     along the course. Verified: all 43 finishers' trimmed tracks end within 5 min of their official
+     finish and start within 15 min of their gun. 26,177 -> 21,666 rows, 49 boats retained."
+  - "COURSE POLYLINE — two legs of the first draft ran over land, found by testing every leg
+     against the sailed fleet envelope rather than by eye. (a) spine->Montauk crossed the
+     Amagansett-Napeague ocean beach: ZERO of 1,198 outbound pings lay north of it, worst clearance
+     -1.5 nm. (b) mid-Sound->finish cut Centre Island/Bayville: no return ping lay south of it.
+     FIXED by inserting [40.8600,-72.1000] and [40.9250,-73.6250]. Re-verified: every leg now sits
+     seaward of the entire racing fleet, and the polyline improves from 203.63 nm (delta -3.37) to
+     205.84 nm (delta -1.16 vs the official 207.0)."
+  - "place_overall IS PER-CIRCLE, not fleet-wide. Three boats therefore carry overall rank 1
+     (Max in Spinnaker, Dolcezza in Non-Spinnaker, Daffodil in Multihull). The shell's ranked list
+     sorts on that field, so it would display '#1' three times. Stage-2 presentation decision:
+     rank the unified ladder, or scope the ranked list per circle."
+  - "divisions_in_scope has NO code consumer (documentation only). The 6 Around-the-Islands boats
+     are kept out solely by being untracked. They are scored over 250 nm, so if one ever acquired a
+     track or were added to untracked_meta_only, the pipeline would silently score it at 207 nm and
+     be wrong by rating x 43 s. GUARD: untracked_meta_only stays empty for this race."
+  - "XTE IS NOT AN OFF-COURSE METRIC ON THIS COURSE MODEL. The three south-shore spine waypoints are
+     drafted from the sailed median, not from marks anyone had to round, so legitimate racing tracks
+     reach +/-18 nm cross-track (Dark Star -18.0, Sound's Great +17.2, Maggie -15.3). Stage 2 must
+     not read XTE here as 'sailed extra distance' the way a point-to-point course allows."
+  - "CORRECTION (a claim this record previously carried, refuted on review): there is NO
+     Wanderer/Windancer duplicate-sail collision. WANDERER is sail 181, Windancer is USA25, and no
+     duplicate sail exists among the 57 ACTIVE entries. The real duplicate hazard is the name
+     Dolcezza, above."
+  - "CORRECTION (refuted on review): Kitli's and Vamonos' passages through The Race were NOT
+     post-retirement deliveries. Both crossed roughly 2 h after rounding Montauk WHILE RACING, with
+     routed distance-to-finish falling monotonically through the crossing (Kitli 89.6->75.7 nm,
+     Vamonos 88.8->75.0). It was a routing choice. Kitli's tracker simply stops in the eastern Sound
+     63.6 nm from the finish; Vamonos sailed the whole Sound to within ~5 nm of the line, then
+     parked on a mooring. Do not narrate either as having quit at the gate."
+  - "NOISE FLOOR IS LOAD-BEARING FOR THIS RACE'S HEADLINE. Measured corrected margins: Spinnaker
+     circle Max 27:02:56, Phantom +4:05, Wahoo +4:50 — three boats inside five minutes after 27
+     hours (0.25% of elapsed). Division margins: Spin 0 Max over Wahoo 4:50 · Spin X Habiru YCC over
+     ACADIA 6:43 · Non-Spin 2 Dolcezza over Smoke & Mirrors 3:54. The tightest gap anywhere is 37
+     seconds (Spin X, DUET over Lucky Luke). At the proposed 10-min floor, BOTH contested circle
+     titles and 3 of the 7 contested division titles are sub-floor. Doctrine 6 therefore binds the
+     copy: Max's overall win is OFFICIAL and stated as such, but the top three must read as a
+     rating-scale dead heat, never as a margin anyone sailed for."
+  - "Claims-in-circulation: WindCheck headline reads 'Sound's Great wins 2025 ALIR' while the
+     results show that boat 22nd overall in the Spinnaker circle and 1st in Division 5 — likely a
+     club/divisional trophy framing. Site is bot-walled (403 to plain fetch); resolve at stage 1
+     before it contaminates the narrative."
+
+focus_boats:                     # co-equal, NOT hero-and-challenger (see narrative_framing)
+  - { name: "Daffodil", why: "Corsair F31R trimaran, only multihull ENTERED, Division M winner;
+      owner aboard as watch captain. Also the pipeline pivot (config client_boat) — a mechanical
+      requirement, not a claim about protagonism. COPY HAZARD: her division win is 1-of-1 with no
+      margin and no rival; it must never be narrated as a contest won. Her measurable story lives
+      entirely on the unofficial unified ladder (30th of 43)." }
+  - { name: "Max", why: "Pogo 50, Division 0 winner and Spinnaker-circle overall winner (ALIR
+      Trophy); owner crews her from 2026. Narrated in parallel with Daffodil, never against her." }
+
+reference_boats:                 # each benchmarks a focus boat WITHIN its own division/circle,
+                                 # so no cross-hero duel is implied
+  - { name: "Habiru YCC",   why: "J/121, Div X winner + Youth Challenge Cup, 4th overall — owner-requested default highlight" }
+  - { name: "Wahoo",        why: "Ker 50 (US Naval Academy), monohull line honors, 3rd overall — Max's own-circle pace benchmark" }
+  - { name: "Phantom",      why: "J/105, 2nd overall corrected at +4:05 behind Max — the margin inside Max's circle" }
+  - { name: "Dolcezza",     why: "Hunter Legend 37.5, Non-Spinnaker circle winner — third-circle anchor for the unofficial unified ladder" }
+  # Daffodil's benchmark set is thin by construction: she was the ONLY multihull, so her
+  # comparisons run against the unified ladder and against boats of similar sailed pace,
+  # never against Max. Stage 2 proposes the specific set.
+
+tz:
+  official: "America/New_York (EDT, utc_offset -4)"
+  probe:
+    boat: "Max"
+    official_finish_local: "2025-07-25 14:15:50"
+    track_epoch_utc: 1753467303       # 2025-07-25T18:15:03Z, 0.14 nm from Glen Cove Breakwater light
+    offset: "-4h; confirmed on 5 boats, each within 0.05-0.09 nm of the finish light"
+
+start_method:
+  method: finish_minus_elapsed
+  verification: "Yields exactly ONE start per division, every one at warning + 5 min: Non-Spin 1
+    11:05 · Non-Spin 2 11:15 · Non-Spin 3 11:15 · Spin 4 11:25 · Spin 5 11:35 · Spin 6 11:35 ·
+    DH 8 11:45 · Spin 9 11:55 · Spin X 12:05 · Spin 0 12:15 · Multihull M 12:25 EDT. That is 11 of
+    12 division labels; Double-Handed Division 7 has no finisher and is not testable from results.
+    Cross-checks 1:1 against the nine distinct YB RaceSetup.teams[].start epochs
+    (1753369500..1753374300, 600 s apart = 11:05..12:25 EDT), which are TRUE UTC."
+  negative_result: "YS races[].startTime is UNUSABLE as a start source here: 10 unnamed rows
+    carrying only 7 distinct values, missing 12:05 and 12:15 entirely, and bearing the same
+    EDT-as-Z mislabel. YB is the corroborating source; finish-minus-elapsed is the method."
+  note: "Staggered per-division starts do NOT break the default method; no pursuit start."
+
+course_model: "marks (routed DTF via pipeline/route.py). Start [40.7028,-74.0367] — the SI line
+  ~0.25 nm NE of Ellis Island. South out of NY Harbor under the Verrazzano, leaving Ambrose Channel
+  Red Bell Q R '14' [40.5281,-74.0094] to port — the ONE mandatory mark; the SI says all other
+  government marks may be disregarded. East along the south shore (three spine waypoints drafted
+  from the sailed median, plus a Moriches/Shinnecock offing, because the direct Ambrose->Montauk
+  great circle crosses Long Island), round Montauk Point [41.0600,-71.8450], northwest to Plum Gut
+  [41.1680,-72.2150], down the Sound via a mid-Sound waypoint and a Matinecock offing, finishing
+  [40.8619,-73.6603] off the Glen Cove Breakwater light in Hempstead Harbour.
+  Polyline 205.84 nm vs the official scoring distance 207.0 (delta -1.16). All coordinates
+  DMS-checked against the SI to within ~5 m. The SI mandates NEITHER Plum Gut nor The Race — the
+  gate was the navigator's choice, and the fleet overwhelmingly chose Plum Gut (below)."
+
+sound_entry_gate: "42 of the 43 in-scope finishers passed within 0.52 nm of the Plum Gut
+  centerpoint (min 0.08 nm, Smoke & Mirrors). The ONE finisher that did not is Yopo, 3.69 nm off —
+  she took the SLUICEWAY, north of Plum Island and south of Great Gull Island (0.10-0.20 nm off the
+  gate midpoint at 15:05Z Jul 25), not The Race (3.90 nm). This is determined from the track, not
+  inferred. The only Race crossings in the fleet are Kitli (1.46 nm) and Vamonos (1.26 nm), both
+  later RET but both crossing while racing. Routing Yopo over the Plum Gut polyline produces no
+  DTF artifact: the abeam rule fires cleanly and her distance-remaining stays monotone; the honest
+  signal is her cross-track, which steps out to ~7 nm."
+
+divisions_in_scope:              # character-exact; must match config.yaml and results.class_name
+  - "Non-Spinnaker Division 1 - Warning  Signal 11:00"   # (sic — double space in the source)
+  - "Non-Spinnaker Division 2 - Warning Signal 11:10"
+  - "Spinnaker Division 4 - Warning Signal 11:20"
+  - "Spinnaker Division 5 - Warning Signal 11:30"
+  - "Double-Handed Division 7 - Warning Signal 11:40"
+  - "Spinnaker Division 9 - Warning Signal 11:50"
+  - "Spinnaker Division X - Warning Signal 12:00"
+  - "Spinnaker Division 0 - Warning Signal 12:10"
+  - "Multihull (NEMA) Division M - Warning Signal 12:20"
+# 9 divisions across 3 scored circles, but only 8 have finishers: Double-Handed Division 7's sole
+# entry (Ricky Bobby) retired, so it renders empty in any class filter. OUT of scope: the two
+# Around-the-Islands circles (250 nm course, untracked). Corrected times and place_overall are
+# PER-CIRCLE and never mixed; place_class is per class_name; class_name is meta.cls (the results
+# 'division' column is uniformly "PHRF" and carries no information).
+
+cross_circle_comparison: "PROPOSED: ship a unified UNOFFICIAL corrected ladder across all three
+  ALIR circles. Basis: every rating (incl. Daffodil's NEMA -20) is sec/mi on the identical 207.0 nm
+  ToD formula — verified EXACT (max error 0.000 s) for all 43 ALIR-course finishers. The 6
+  Around-the-Islands boats do NOT satisfy it and reproduce exactly at 250.0 nm instead, which
+  independently confirms they belong out of scope. Official scoring stays per-circle; the unified
+  view ships labeled unofficial.
+  WHY IT MATTERS MORE THAN USUAL HERE: Daffodil was the only multihull ENTERED, so her official
+  result is 1-of-1 and carries no comparison whatsoever. On the unified 43-boat ladder she places
+  30th, +5:57:46 behind the leader. Without this view she has no measurable peers; with it she has
+  42. Exploratory numbers — stage 2 re-derives everything through the pipeline."
+
+narrative_framing:               # owner directive, 2026-07-23 — binding on stages 2-4
+  dual_focus_not_duel: "Daffodil and Max are TWO SEPARATE FOCUSES, never a head-to-head.
+    Every chart and caption reads 'here is what Daffodil did in this period; here is what Max
+    did' — parallel accounts of the same phase, not a 1v1 matchup. No 'X beat Y' framing between
+    them, no gap-to-Max series for Daffodil (or the reverse) as a headline metric, no shared
+    duel module. They sailed different boats in different divisions with different problems;
+    the interest is what each did with the same water and weather.
+    Consequence for the module list at stage 2: the duel/delta module (if any) applies to
+    same-division comparisons (e.g. Max vs Wahoo, Daffodil vs the fleet's corrected pace),
+    never to the two heroes against each other. Loss-decomposition claims still name their
+    benchmark (doctrine 5) — that benchmark is a division rival, not the other hero."
+
+ping_cadence:                    # racing window only (start -> official finish), AFTER dedup
+  nominal: "300 s (5 min) — the median interval for all 49 tracked racers, no exceptions"
+  distribution: "22,809 in-race intervals: 0.42% <=60 s, 97.45% 61-300 s, 1.96% 301-600 s,
+    0.02% 601-1800 s, 0.16% >1800 s. There is NO 1-minute cadence tier — the ~95 sub-minute
+    intervals are scattered clock-realignment artifacts, not start/finish bursts (the start
+    window's modal interval is 300 s, the same as everywhere else)."
+  gaps: "Coverage of the scored fleet is effectively unbroken: across all 43 in-scope finishers the
+    single worst in-race gap is 900 s (Acadia, once, 07-25 16:00->16:15Z); the next worst is 600 s
+    (Yopo). Only two boats show any in-race gap over 30 min — Scarlett and Vamonos, both RET, both
+    after retirement."
+  focus_boats: "Daffodil max gap 10 min · Max 5 min · Habiru YCC 10 min — the boats carrying the
+    narrative have effectively unbroken coverage."
+  grid_justification: "grid.minutes 15 with interpolate_limit 4 (= 1 h of bridging) sits well above
+    the 5-min nominal cadence and covers every in-race gap with 3x margin. Default is correct."
+
+tier: 1                          # public data only; dual-focus presentation within Tier 1
+grid_minutes: 15                 # justified by ping_cadence above
+scoring:
+  system: tod
+  params: { rating_column: rating }   # the ToD distance comes from course.official_length_nm
+                                      # (build_data reads it there and passes it to scoring).
+                                      # Do NOT add distance_nm to scoring.params — no reader.
+  probe_boats: ["Max", "Daffodil"]    # trial build: both reproduce official corrected with 0.0 s
+                                      # error; all 43 in-scope finishers exact at 207.0 nm
+  noise_floor_min: 10
+  noise_floor_basis: "3 s/mi rating-assignment uncertainty x 207 nm = 621 s = 10:21. TWO CAVEATS:
+    this is rating-ASSIGNMENT uncertainty, not measurement noise (a different kind of claim than
+    the 30-min default encodes); and it applies to a PAIR of boats, so if two boats' rating errors
+    are independent the paired uncertainty exceeds the single-boat figure. 10 min is therefore the
+    permissive end of a defensible range, not a conservative one."
+
+weather_evidence:                # EXPERIMENTAL stage-0 extra (owner-requested)
+  landed: "races/alir2025/raw/weather/ — NDBC yearly 2025 stdmet for 44065, 44025, 44097 and KPTN6;
+    ERA5 hourly wind at 5 course points; CO-OPS current predictions for Plum Gut, The Race,
+    Matinecock Pt and Execution Rocks. Provenance, coverage and sha256 in raw/weather/MANIFEST.md."
+  verified: "Every file decompressed/parsed and its race-window coverage counted; all 17 sha256s
+    re-checked against disk. Working wind: 44065 (NY Harbor, 430 rows 1.2-11.0 m/s), 44025
+    (south-shore reach, 432 rows 3.7-10.8), KPTN6 (western Sound, 712 rows 0.0-10.1). Waves:
+    44065 (0.6-1.4 m), 44025 (0.6-1.5 m), 44097 Block Island (0.4-1.5 m). ERA5: 5 points x 72 h
+    in knots, grid drift <=0.063 deg. Currents: Plum Gut race-night ebb -2.91 kt (07-25 13:58)
+    and -2.89 kt (07-26 02:24), floods ~+2.0 kt."
+  gap: "TWO observation gaps, both binding on what may be claimed.
+    (1) MONTAUK CORNER HAS NO OBSERVED WIND: buoy 44017 has no 2025 file and shore station MTKN6's
+    2025 file contains ZERO wind rows all year (fetched, verified empty, deleted rather than kept
+    as false coverage). 44097 Block Island gives sea state only. Montauk wind is ERA5-model-only.
+    (2) CENTRAL LI SOUND HAS NO 2025 PLATFORM AT ALL (44039/44040/44022/44069 all dead) — exactly
+    where the fleet parked. ERA5's ~25 km grid smooths the micro-calms that decided the finish
+    order. Park-zone and Montauk wind claims must be labeled model-supported, never observed.
+    (44020 Nantucket Sound has wind but sits ~90 nm east — fetched, then discarded as too far to
+    inform this course honestly.)"
+  scope_guard: "evidence for stages 1-3 only; no pipeline number may depend on it; I18 (VMC never
+    VMG) stands — the tracker carries no wind, and any wind-referenced claim cites these files as
+    external evidence."
+  followup: "if the layer proves useful, bake weather acquisition into starter/acquisition/ + the
+    skill (docs/OPEN_THREADS.md entry)."
+
+owner_decisions:                 # ANSWERED by the owner, 2026-07-23
+  pivot: "Daffodil confirmed as client_boat. Owner notes there are MEANT to be two pivots, and that
+    the engine should learn to accept multiple if the single-pivot shape proves clunky — raised as
+    an OPEN_THREADS item, to be judged at stage 2/4 when the real cost shows up. Until then the
+    dual focus is carried by groups (hero + focus) rather than by the pivot mechanism."
+  unified_ladder: "SHIP IT. Confirmed — the unofficial cross-circle corrected ladder is what makes
+    any Daffodil-versus-monohull observation possible."
+  scarlett_and_retirees: "DO NOT EXCLUDE any genuine boat. Owner's instruction: trim every boat's
+    track to its own racing window instead, cutting pre-start noise and post-finish/post-retirement
+    delivery. Implemented as trim_tracks.py -> raw/alir2025_tracks_clean.csv, now the tracker input.
+    Scarlett keeps her 49 racing pings. Fleet max latitude falls 41.922N -> 41.281N without dropping
+    a single boat. Generalization requested and recorded (see stage_0_generalization below)."
+  dnc_boats: "Wind Song and Rocksteady (DNC, never started, no track): DROP. Confirmed — they stay
+    in exclude_boats."
+  noise_floor: "10 min confirmed. See the narrative consequence recorded under narrative_framing —
+    the floor redirects the Max story from margin to mechanism rather than muting it."
+  sounds_great: "RESOLVED — see claims_resolved below. Max won overall; Sound's Great's win was
+    divisional."
+
+claims_resolved:                 # stage-1 claims tested early because they were already circulating
+  sounds_great_headline:
+    claim: "WindCheck Magazine: 'Sound's Great wins 2025 Around Long Island Regatta', described as
+      a third consecutive win."
+    verdict: "PARTIAL — true divisionally, false as stated for the regatta overall."
+    evidence: "The organizer's own trophy page (alir.org/2025) awards the 'Around Long Island
+      Regatta Trophy (overall winner, Around Long Island course)' to MAX, helmed by Moritz Hilf.
+      Sound's Great does not appear anywhere on the 2025 trophy list. The results confirm the shape:
+      Sound's Great is 1st in Spinnaker Division 5 and 22nd of 32 on corrected time within the
+      Spinnaker circle, at 31:43:01 against Max's 27:02:56 — 4h 40m behind on corrected time.
+      The WindCheck article itself is bot-walled (403) and could not be read directly; the headline
+      is known only through search indexing, so its internal wording is NOT quoted or relied on."
+    consequence: "Copy must say Max won the regatta overall. Sound's Great may be credited with its
+      division win (and, if stage 1 can source it, its divisional three-peat) — never with the
+      regatta. Do not cite the WindCheck headline as a source for anything."
+  other_trophies_verified: "Same official page: John B. Thomson Trophy (Around the Islands overall)
+    to Halve Maen; First to Finish (Around Long Island Course) to Wahoo; First to Finish (Multihull)
+    to DAFFODIL; Youth Challenge Cup to Habiru. NOTE for copy: Daffodil's listed honour is
+    FIRST TO FINISH (MULTIHULL), which — as the only multihull entered — is the same 1-of-1 fact as
+    her division win, stated a second way. It is not an additional achievement."
+
+stage_0_generalization:          # owner asked to consider folding this into the skill
+  track_trimming: "The per-boat racing-window trim is generic, not ALIR-specific: every tracker
+    export carries pre-start milling and post-finish delivery, and the fix must never be to drop a
+    boat that actually raced. Added as a stage-0 procedure step in
+    skills/race-viz/references/stage-0-acquisition.md, with races/alir2025/trim_tracks.py as the
+    reference implementation (bir2026's despike.py is the precedent for a race-local cleaning
+    script). Promotion of the code itself into starter/pipeline/ is an OPEN_THREADS item, to happen
+    once a second race exercises it."
+
+confirmed_by: "Brad"
+date: "2026-07-23"
