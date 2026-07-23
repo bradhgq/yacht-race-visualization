@@ -89,9 +89,21 @@ divisions_in_scope:             # the Around Long Island course only; the two Ar
   - "Spinnaker Division X - Warning Signal 12:00"
   - "Spinnaker Division 0 - Warning Signal 12:10"
   - "Multihull (NEMA) Division M - Warning Signal 12:20"
-client_boat: "Daffodil"         # analysis pivot — PROPOSED, owner confirms at the stage-0 stop
-                                # (dual main characters: Daffodil crewed 2025, Max the 2026 ride)
-reference_boats: ["Max", "Habiru YCC", "Wahoo", "Phantom", "Dolcezza"]
+client_boat: "Daffodil"         # PIPELINE PIVOT ONLY (build_data pivots stats/groups on one boat;
+                                # OPEN_THREADS: hero-less builds unsupported today) — PROPOSED,
+                                # owner confirms at the stage-0 stop. Being the pivot does NOT
+                                # make Daffodil the protagonist Max is measured against: the two
+                                # are co-equal focuses (narrative_framing in the stage-0 record).
+reference_boats:                # documentation only (no pipeline consumer today — build_data
+                                # reads client_boat and groups). Max appears here as the SECOND
+                                # FOCUS, not as a benchmark for Daffodil; the rest benchmark a
+                                # focus boat inside its own circle. See the stage-0 record's
+                                # focus_boats vs reference_boats split.
+  - "Max"                       # co-focus
+  - "Habiru YCC"                # default highlight (owner)
+  - "Wahoo"                     # Max's own-circle pace benchmark
+  - "Phantom"                   # 2nd overall in Max's circle, +4:05
+  - "Dolcezza"                  # Non-Spinnaker circle winner — third-circle anchor
 tier: 1
 
 name_overrides:
@@ -115,10 +127,14 @@ name_overrides:
     "SCAPEGOAT": "Scapegoat"
     "Smoke &Mirrors": "Smoke & Mirrors"
 
-groups:
-  hero_key: hero
+groups:                         # dual-focus, NOT a duel (see decisions/stage-0-scope.yaml
+                                # narrative_framing): Max gets its own group key so it carries
+                                # the same visual weight as the hero rather than sitting in a
+                                # comparison bucket. Each chart narrates the two in parallel.
+  hero_key: hero                # Daffodil (client_boat / pipeline pivot)
   by_name:
-    spotlight: ["Max", "Habiru YCC"]   # always-on story boats besides the hero
+    focus: ["Max"]              # co-focus, equal billing with the hero
+    spotlight: ["Habiru YCC"]   # owner-requested default highlight
   by_cls: {}
   by_rank: {}
   default_key: fleet_other

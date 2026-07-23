@@ -48,14 +48,19 @@ anomalies:
      'Sound's Great wins 2025 ALIR' while results show 22nd overall Spinnaker circle / 1st Div 5
      — likely a club-trophy framing; resolve at stage 1."
 
-reference_boats:
-  - { name: "Max",          why: "Pogo 50, Spinnaker circle overall winner (ALIR Trophy) + Div 0 winner; main character #2 (owner crews her in ALIR 2026); finished before the park" }
+focus_boats:                     # co-equal, NOT hero-and-challenger (see narrative_framing)
+  - { name: "Daffodil", why: "Corsair F31R trimaran, only multihull entered, Division M winner; owner aboard as watch captain. Also the pipeline pivot (config client_boat) — a mechanical requirement, not a claim about protagonism" }
+  - { name: "Max",      why: "Pogo 50, Division 0 winner and Spinnaker-circle overall winner (ALIR Trophy); owner crews her from 2026. Narrated in parallel with Daffodil, never against her" }
+
+reference_boats:                 # comparison set — each benchmarks a focus boat WITHIN its own
+                                 # division/circle, so no cross-hero duel is implied
   - { name: "Habiru YCC",   why: "J/121, Div X winner + Youth Challenge Cup, 4th overall — owner-requested default highlight" }
-  - { name: "Wahoo",        why: "Ker 50 (US Naval Academy), monohull line honors, 3rd overall — pace benchmark for the leaders" }
-  - { name: "Phantom",      why: "J/105, 2nd overall corrected at +4:05 — the margin that frames Max's win" }
-  - { name: "Dolcezza",     why: "Hunter Legend 37.5, Non-Spinnaker circle overall winner — cross-circle comparison anchor" }
-  # client_boat / analysis pivot: Daffodil (Corsair F31R trimaran, only multihull, Div M winner,
-  # owner aboard) — PROPOSED; Max is the alternative pivot. Owner decides at this stop.
+  - { name: "Wahoo",        why: "Ker 50 (US Naval Academy), monohull line honors, 3rd overall — Max's own-circle pace benchmark" }
+  - { name: "Phantom",      why: "J/105, 2nd overall corrected at +4:05 behind Max — the margin inside Max's circle" }
+  - { name: "Dolcezza",     why: "Hunter Legend 37.5, Non-Spinnaker circle overall winner — third-circle anchor for the unofficial unified ladder" }
+  # Daffodil's benchmark set is thin by construction: she was the ONLY multihull, so her
+  # comparisons run against the unofficial unified corrected ladder and against boats of
+  # similar sailed pace, never against Max. Stage 2 proposes the specific set.
 
 tz:
   official: "America/New_York (EDT, utc_offset -4)"
@@ -84,7 +89,19 @@ cross_circle_comparison: "PROPOSED: ship a unified UNOFFICIAL corrected ladder a
   ToD formula — verified exact for all 45 AOK boats. Official scoring stays per-circle; the unified
   view is labeled unofficial. This is what lets Daffodil-vs-monohulls comparisons exist."
 
-tier: 1                          # public data only; dual-hero presentation within Tier 1
+narrative_framing:               # owner directive, 2026-07-23 — binding on stages 2-4
+  dual_focus_not_duel: "Daffodil and Max are TWO SEPARATE FOCUSES, never a head-to-head.
+    Every chart and caption reads 'here is what Daffodil did in this period; here is what Max
+    did' — parallel accounts of the same phase, not a 1v1 matchup. No 'X beat Y' framing between
+    them, no gap-to-Max series for Daffodil (or the reverse) as a headline metric, no shared
+    duel module. They sailed different boats in different divisions with different problems;
+    the interest is what each did with the same water and weather.
+    Consequence for the module list at stage 2: the duel/delta module (if any) applies to
+    same-division comparisons (e.g. Max vs Wahoo, Daffodil vs the fleet's corrected pace),
+    never to the two heroes against each other. Loss-decomposition claims still name their
+    benchmark (doctrine 5) — that benchmark is a division rival, not the other hero."
+
+tier: 1                          # public data only; dual-focus presentation within Tier 1
 grid_minutes: 15                 # 5-min pings (1-min near start/finish); default grid justified
 scoring:
   system: tod
