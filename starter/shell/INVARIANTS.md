@@ -45,7 +45,7 @@
   must render only after `ensureTracks` resolves *and* re-check the selection is
   still current (`app.js:284-289`, race guard at `:443-444`).
 
-## Round-2+ invariants (RETROSPECTIVE_ROUND2 §3; each one also earned)
+## Round-2+ invariants (each one also earned by a real bug)
 
 - **I14 — VMC integrates back to the course.** The `vmc` channel is the
   derivative of distance-remaining; its official-window time-mean must equal

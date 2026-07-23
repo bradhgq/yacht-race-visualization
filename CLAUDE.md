@@ -1,7 +1,10 @@
-# CLAUDE.md — rules in force (v0; owner will refine in a later architecture pass)
+# CLAUDE.md — rules in force
 
-Monorepo for race dashboards: `starter/` engine · `skills/race-viz/` process ·
-`docs/` specs+logs · `races/<race>/` per-race config, data, modules, dist.
+Monorepo for race dashboards: `starter/` engine (incl. `starter/template/`,
+the copy-me race skeleton) · `skills/race-viz/` process · `docs/` living logs
+only · `races/<race>/` per-race config, data, modules, dist. **Race-specific
+docs and decisions live in `races/<race>/docs|decisions/`** (as bir2026 does),
+never in top-level `docs/`; generalizable work lands in `starter/`.
 
 ## Build & verify — one command, always the full chain
 
@@ -35,8 +38,16 @@ numpy 1.26.4).
 - **Copy discipline**: propose microcopy freely; never author analysis claims;
   scope every set-dependent number to the set the section displays (the NB2026
   park-copy lesson). Narrative lives in `events.yaml`/`copy.md`, never code.
-- **Log as you go**: spec deltas → `docs/REPO_NOTES.md`; documentation gaps →
-  `docs/DOC_GAPS.md`. Suites green before and after each phase.
+- **Log, then compact**: standing decisions and open threads →
+  `docs/REPO_NOTES.md`; open documentation gaps → `docs/DOC_GAPS.md`. When an
+  item closes or its rule lands where it belongs (CLAUDE.md, the skill,
+  INVARIANTS.md, a code comment), **delete the entry — git history is the
+  archive**. Never append closure notes to a living doc. `docs/` holds living
+  documents only: review screenshots are PR material and leave the tree once
+  their round merges; retrospective insights get consolidated into the skill
+  and the retro file deleted; big binaries go to a GitHub release
+  (`archives-2026-07` is the precedent). Suites green before and after each
+  phase.
 
 ## Git & publication
 
