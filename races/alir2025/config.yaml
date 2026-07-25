@@ -197,6 +197,7 @@ privacy: { build: public }
 
 output:
   dir: out/
+  generated: '2026-07-23'   # pinned to the snapshot's build date (nb/bir precedent) — unpinned, any later-day rebuild fails the snapshot compare on meta.generated
 
 pinned_values:                  # PINNED at the stage-2 stop (prime rule 3) — from official results
                                 # + hand-verified probes; changing any requires a recorded owner
