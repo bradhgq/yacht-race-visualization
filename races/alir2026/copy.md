@@ -53,3 +53,6 @@ to ORC; the Triple-Number coefficient's reference base is unpublished. So: no
 conversion, ever. The internal strip = percent behind own scoring group's winner
 on corrected time; cross-group reads assume comparable winners (stated,
 unverifiable). Internal analysis only — never a unified ranking.
+
+Dist-vs-speed exclusion: Cool Change + Veronique (Sunday finishers) left off
+the chart, named in the caption; numbers remain in the ranked list.

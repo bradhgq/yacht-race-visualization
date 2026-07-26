@@ -1,5 +1,5 @@
 # stage-4 — Review-Round Log — ALIR 2026 — round 1 complete
-rounds: 1                        # owner phone round, 2026-07-26 evening
+rounds: 2                        # owner phone rounds, 2026-07-26 evening/night
 hosted: "launch config alir2026-dist -> http://localhost:8614 (dist committed on the branch)"
 built_from_owner_design: "2026-07-26 directives: course -> five stated theses -> won-and-lost
   cluster (race chart / distspeed / dual-basis phase ledger / powered-light split) ->
@@ -48,6 +48,20 @@ round_1:                         # owner feedback (phone) -> fixes, all rebuilt 
        above events; race log last", assertion: "layout string in presentation.js" }
   - { found: "phase-ledger P1-P7 tick labels unclear", fix: "axis rows now carry id + name
        + clock window (narrow keeps the id; note explains)", assertion: "aesthetic" }
+round_2:                         # owner screenshot (nightmap) + distspeed outliers
+  - { found: "nightmap still crammed: aspect lock opened empty water south of the fleet;
+       mid-chart labels piled on the finish cluster; Katara56 clipped at the right edge",
+       fix: "aspect lock dropped (lane chart, not nav chart — noted in code); ranges hug
+       the data; labels reduced to the story cast, hand-placed clear of the convergence
+       (others identify by hover); the 03:00 annotation pulled below-left",
+       assertion: "aesthetic — screenshot-reviewed" }
+  - { found: "dist-vs-speed axes stretched ~25% by the two Sunday finishers (Veronique
+       sailed 286 nm; Cool Change 3.07 kt)", fix: "additive cfg.distspeed.exclude
+       (INVARIANTS entry) — the two named in the caption, numbers still in the ranked
+       list; PLUS a generic two-sided outlier clamp (slow outliers now peel like fast
+       ones, edge-labelled)", assertion: "dot count 43 = 45 finishers - 2 exclusions,
+       checkable at re-pin; other races re-verified green under both shared-module
+       changes" }
 self_verified: "chain green both TZs (10/10 checks, snapshot compare green; snapshot
   2b3848f0… re-frozen after the amended-finish + module-data payload, per the stage-4
   refetch ledger); DOM verification: 16 sections render in order, five theses, all six

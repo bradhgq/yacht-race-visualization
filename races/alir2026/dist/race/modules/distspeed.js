@@ -36,6 +36,10 @@ registerModule({
     for (const nm of Object.keys(D.boats)) {
       const m = D.boats[nm].meta;
       if (!m.corr || m.sailedNm == null || m.avgKt == null) continue;
+      // cfg.distspeed.exclude (additive, ALIR 2026 round 2): names a race leaves
+      // off this chart (e.g. finishers whose extra days make the axes lie about
+      // the pack); the race's caption must say who and why.
+      if ((cfg.distspeed.exclude || []).includes(nm)) continue;
       // meta.corrAdj (additive, ALIR 2026): a race may ship a rescaled corrected
       // for cross-system display (methodology in that race's copy); official
       // corr is untouched everywhere else. Absent = old behavior.
@@ -49,19 +53,24 @@ registerModule({
     const xs = rows.map(r => r.x);
     const x0 = Math.min(rhumb, ...xs) - 10, x1 = Math.max(...xs) + 10;
 
-    // Mode-aware outlier clamp: a much-faster boat sits far above the pack on
-    // the ELAPSED axis and squashes everyone else; peel such points off the
-    // y-range and label them at the edge rather than let one dot flatten the
-    // comparison. Under CORRECTED time the fleet pulls together (handicap),
-    // so nothing peels.
+    // Mode-aware outlier clamp, BOTH directions (ALIR 2026 round 2 — the 76-hour
+    // Sunday finishers hang far below the pack exactly as a much-faster boat
+    // hangs above it): peel gap-isolated points off either end of the y-range
+    // and label them at the edge rather than let one dot flatten the comparison.
     const sortedY = rows.map(r => r.y).sort((a, b) => a - b);
     let hiCut = sortedY[sortedY.length - 1];
     for (let i = sortedY.length - 1; i > 2; i--) {
       const packSpread = sortedY[i - 1] - sortedY[0];
       if (sortedY[i] - sortedY[i - 1] > 0.8 * packSpread) hiCut = sortedY[i - 1]; else break;
     }
+    let loCut = sortedY[0];
+    for (let i = 0; i < sortedY.length - 3; i++) {
+      const packSpread = sortedY[sortedY.length - 1] - sortedY[i + 1];
+      if (sortedY[i + 1] - sortedY[i] > 0.8 * packSpread) loCut = sortedY[i + 1]; else break;
+    }
     const outliers = rows.filter(r => r.y > hiCut);
-    const inRange = rows.filter(r => r.y <= hiCut);
+    const loOutliers = rows.filter(r => r.y < loCut);
+    const inRange = rows.filter(r => r.y <= hiCut && r.y >= loCut);
     const y0 = Math.min(...inRange.map(r => r.y)) - 0.35, y1 = hiCut + 0.35;
 
     // a hero without scored meta (e.g. a DNF hero has no corr) simply has no
@@ -108,10 +117,14 @@ registerModule({
     if (rag) ann.push({ x: rag.x, y: rag.y, xref: 'x', yref: 'y', ax: 0, ay: -42, text: `${hero}`, showarrow: true,
       arrowhead: 0, arrowwidth: .7, arrowcolor: 'rgba(194,24,126,0.55)', standoff: 8,
       font: { ...h.AXFONT, size: 10, color: cfg.hero.color } });
-    // peeled outliers: labelled at the top edge so the pack keeps the full axis
+    // peeled outliers: labelled at the edge so the pack keeps the full axis
     for (const o of outliers)
       ann.push({ x: o.x, y: y1, xref: 'x', yref: 'y', text: `↑ ${o.nm} ${o.y} kts (off scale)`, showarrow: false,
         xanchor: 'right', yanchor: 'top', yshift: -2,
+        font: { ...h.AXFONT, size: 9, color: '#7A93A3' } });
+    for (const o of loOutliers)
+      ann.push({ x: o.x, y: y0, xref: 'x', yref: 'y', text: `↓ ${o.nm} ${o.y} kts (off scale)`, showarrow: false,
+        xanchor: 'right', yanchor: 'bottom', yshift: 2,
         font: { ...h.AXFONT, size: 9, color: '#7A93A3' } });
 
     // per-mode caption from the race's authored copy (swapped into the card's

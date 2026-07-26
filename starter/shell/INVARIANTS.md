@@ -102,3 +102,9 @@ adjudication before they ship.
   consumed ONLY by the dist-vs-speed module's corrected mode for cross-system
   display; official `meta.corr` remains the value everywhere else. Absent = old
   behavior; the shipping race documents its rescale method in copy.
+- dist-vs-speed outlier clamp is two-sided (2026-07-26, ALIR 2026) — the gap
+  heuristic peels slow outliers off the bottom exactly as fast ones off the top,
+  edge-labelled; dots stay in the trace data (scored-boat count unchanged).
+- `distspeed.exclude` (2026-07-26, ALIR 2026) — optional list of boats a race
+  leaves off the dist-vs-speed chart (axis-stretching multi-day finishers);
+  the shipping race's caption names them. Absent = old behavior.

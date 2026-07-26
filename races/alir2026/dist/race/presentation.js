@@ -88,6 +88,9 @@ window.__RACE_CONFIG__ = {
   ratingBands: { widths: [15, 30] },      // hero-centred: ±15 covers exactly Division 9's
                                           // -24..-15 spread; ±30 adds nothing until PHRF 12
   distspeed: {
+    exclude: ['Cool Change', 'Veronique'],   // the two Sunday finishers (76+ h, a third
+                                             // night the fleet never sailed) stretch both
+                                             // axes ~25% — left off; caption names them
     isoDays: [1.75, 2.1, 2.45],           // elapsed 42/50.4/58.8 h — brackets 40:33..~59h scored
     isoDaysCorr: [1.75, 2.1, 2.45],       // corrected 39:56..~58h scored so far (provisional)
     toggle: { key: 'distMode', default: 'h',

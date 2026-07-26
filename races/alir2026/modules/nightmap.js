@@ -63,12 +63,22 @@ registerModule({
       ann.push({ x: lx[n - 1], y: ly[n - 1], ax: lx[n - 2], ay: ly[n - 2],
         xref: 'x', yref: 'y', axref: 'x', ayref: 'y', showarrow: true,
         arrowhead: 2, arrowsize: 1.3, arrowwidth: hero ? 2 : 1.2, arrowcolor: col, text: '' });
-      const lab = { Max: [8, -10], Katara56: [8, 12], Beagle: [-46, -10], Crocodile: [8, -10] }[nm];
-      if (lab || !h.narrow()) {
-        ann.push({ x: lx[n - 1], y: ly[n - 1], xanchor: 'left', showarrow: false,
-          xshift: (lab ? lab[0] : 8), yshift: (lab ? lab[1] : -10),
+      // round 2 (owner screenshot): labels ONLY for the story cast, hand-placed
+      // clear of the mid-chart convergence; everyone else identifies by hover.
+      const LABELS = {
+        Max:       { at: 'end', dx: 10, dy: 14, anchor: 'left' },
+        Beagle:    { at: 'end', dx: 10, dy: -12, anchor: 'left' },
+        Katara56:  { at: 0.55, dx: 0, dy: 18, anchor: 'center' },
+        Crocodile: { at: 0.45, dx: 0, dy: -14, anchor: 'center' },
+        Lioness:   { at: 0.5, dx: 0, dy: 16, anchor: 'center' },
+      };
+      const Lb = LABELS[nm];
+      if (Lb) {
+        const i = Lb.at === 'end' ? n - 1 : Math.floor(n * Lb.at);
+        ann.push({ x: lx[i], y: ly[i], xanchor: Lb.anchor, showarrow: false,
+          xshift: Lb.dx, yshift: Lb.dy,
           text: nm + (((D.boats[nm].meta || {}).cls || '').includes('ORC') ? ' ■' : ''),
-          font: { size: 9.5, color: col, family: 'SF Mono, Menlo, monospace' } });
+          font: { size: 10, color: col, family: 'SF Mono, Menlo, monospace' } });
       }
     }
     // the 03:00 jibe marker on Max
@@ -76,14 +86,18 @@ registerModule({
     if (mb && mb.t) {
       const tj = Date.UTC(2026, 6, 24, 7, 0) / 1000;   // 03:00 EDT
       let best = 0; for (let i = 0; i < mb.t.length; i++) if (Math.abs(mb.t[i] - tj) < Math.abs(mb.t[best] - tj)) best = i;
-      if (mb.lat[best] != null) ann.push({ x: mb.lon[best], y: mb.lat[best], ax: 0, ay: -30,
-        showarrow: true, arrowwidth: 1, arrowcolor: h.boatColor['Max'],
-        text: '03:00 — the jibe back', font: { size: 9.5, color: h.boatColor['Max'], family: 'SF Mono, Menlo, monospace' } });
+      if (mb.lat[best] != null) ann.push({ x: mb.lon[best], y: mb.lat[best], ax: -55, ay: 42,
+        showarrow: true, arrowwidth: 1, arrowcolor: h.boatColor['Max'], standoff: 4,
+        text: '03:00 — the jibe back', xanchor: 'right',
+        font: { size: 9.5, color: h.boatColor['Max'], family: 'SF Mono, Menlo, monospace' } });
     }
     const layout = { ...h.BASE(), annotations: ann,
       margin: { ...h.BASE().margin, t: 24 },
-      xaxis: { ...h.GAX, range: [-73.10, -72.52], title: { text: 'longitude — 22:00 Thu → 08:00 Fri', font: h.AXFONT } },
-      yaxis: { ...h.GAX, range: [40.47, 40.82], scaleanchor: 'x', scaleratio: 1.32,
+      xaxis: { ...h.GAX, range: [-73.08, -72.46], title: { text: 'longitude — 22:00 Thu → 08:00 Fri', font: h.AXFONT } },
+      // no aspect lock (round 2): locking blew the frame open to empty water
+      // south of the fleet; this panel is a lane chart, not a nav chart, and
+      // the slight vertical stretch is the price of an uncrammed read.
+      yaxis: { ...h.GAX, range: [40.51, 40.80],
                title: { text: 'latitude', font: h.AXFONT } },
       showlegend: false };
     return { traces: tr, layout };

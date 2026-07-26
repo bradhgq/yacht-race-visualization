@@ -24,7 +24,7 @@ window.__COPY__ = {
   race: { notes: { h: 'Each boat\u2019s mid-race corrected uses her own scoring model (PHRF time-on-distance, ORC time-on-time). Gaps within a scoring group are like-for-like; gaps ACROSS the PHRF/ORC boundary are internal-comparison only \u2014 see the methodology footnote.', e: '' } },
   sog: {},
   distspeed: {
-    noteElapsed: 'Each dot is one boat: distance actually sailed against elapsed time. Rays are equal-finish-time guides.',
+    noteElapsed: 'Each dot is one boat: distance actually sailed against elapsed time. Rays are equal-finish-time guides. Cool Change and Veronique (the two Sunday finishers, 76+ hours) are left off — their extra days stretch both axes; their numbers live in the ranked list.',
     noteCorrected: 'Same dots on corrected time, ALL boats on the PHRF scale: ORC boats\u2019 corrected is rescaled by the ratio of the two winners (\u00d71.037) so the groups align — an INTERNAL method (no sanctioned conversion exists; see the footer footnote). Official standings are untouched.',
     refLine: 'course · 207 nm',
     vsRef: 'vs the 207 nm scored course',
