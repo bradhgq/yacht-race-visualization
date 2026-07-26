@@ -12,6 +12,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8613", "--directory", "races/alir2025/dist"],
       "port": 8613
+    },
+    {
+      "name": "alir2026-dist",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8614", "--directory", "races/alir2026/dist"],
+      "port": 8614
     }
   ]
 }

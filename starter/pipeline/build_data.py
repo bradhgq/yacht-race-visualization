@@ -76,6 +76,16 @@ def main():
     args = ap.parse_args()
     cfg_path = Path(args.config).resolve()
     race_dir = cfg_path.parent
+    # A race may supply its own scoring hook (scoring.system: custom ->
+    # scoring.params.hook: 'module:function'), which lives beside its config.
+    # Without the race dir on sys.path that documented escape hatch cannot
+    # resolve a race-local module. ALIR 2026 is the first to need it: ORC
+    # Division 0 scores time-on-time while every other division scores
+    # time-on-distance, so no single built-in system covers the fleet.
+    # APPEND, never insert: a race directory must not be able to shadow an
+    # engine or stdlib module by filename (races already carry postprocess.py,
+    # trim_tracks.py, despike.py and friends).
+    sys.path.append(str(race_dir))
     cfg = yaml.safe_load(cfg_path.read_text())
 
     utc_offset = cfg['time']['utc_offset']

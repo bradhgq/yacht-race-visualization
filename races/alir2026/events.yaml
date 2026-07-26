@@ -1,0 +1,89 @@
+# ALIR 2026 — narrative events.
+#
+# CURRENT CONTENT: analysis-sourced events ONLY (source: analysis) — milestones from
+# official/tracker data and insight notes derived from the pipeline + the public
+# weather evidence. None of these carries crew-log content.
+#
+# The crew-log-derived event set (sail changes, watch color, the 04:25 and 21:00
+# decision entries as EXPERIENCED aboard) remains OUT of the repo in the owner's
+# internal draft, per the stage-0 stop: the owner prunes it at a later stage, and
+# entries land here item-by-item with their own visibility flags (prime rule 4).
+#
+# visibility: public entries below are staged for the stage-5 publication ledger's
+# formal opt-in; they ship in the meantime on the hosted preview only.
+events:
+- t: "2026-07-23 13:55"
+  cat: milestone
+  label: "Division 9 start"
+  txt: "Max's gun off Ellis Island — warning 13:50 + 5, reproduced by finish-minus-elapsed for every scored division."
+  source: analysis
+  visibility: public
+- t: "2026-07-23 16:55"
+  cat: milestone
+  label: "Ambrose R“14”"
+  txt: "The course's one mandatory mark left to port; the fleet turns east along the south shore."
+  source: analysis
+  visibility: public
+- t: "2026-07-23 23:00"
+  cat: insight
+  label: "The peel begins"
+  txt: "Katara56 starts working offshore — 2.5 nm off the beach and heading out; by 02:00 she is 9.7 nm off while Max holds near 6. The whole ten-boat cluster was within 3 nm of Max at 22:00."
+  source: analysis
+  visibility: public
+- t: "2026-07-24 03:00"
+  cat: insight
+  label: "Max jibes back inshore"
+  txt: "The track turns toward the beach (~050M). The night itself costs Max ~1.5 nm against her ten nearest peers — the position it leaves her in costs far more at dawn."
+  source: analysis
+  visibility: public
+- t: "2026-07-24 08:00"
+  cat: insight
+  label: "The gradient takes over"
+  txt: "The cross-shore wind advantage flips offshore (buoy 44065 minus bay station 44069, sign and timing; magnitudes carry the bay-station caveat). From here every mile offshore is worth about +0.2 kt made good, along-course position controlled."
+  source: analysis
+  visibility: public
+- t: "2026-07-24 18:10"
+  cat: milestone
+  label: "Montauk rounded"
+  txt: "Max's closest approach to the point, 0.37 nm — turning north for Plum Gut against a building predicted ebb."
+  source: analysis
+  visibility: public
+- t: "2026-07-24 20:35"
+  cat: insight
+  label: "Last of her cohort through the Gut"
+  txt: "Max clears Plum Gut ~90 minutes before predicted peak ebb (-2.36 kt at 22:06). The 18:30-20:20 group ahead meets Saturday's new easterly first and compounds — entry time, not Sound side, decides the night."
+  source: analysis
+  visibility: public
+- t: "2026-07-25 02:30"
+  cat: insight
+  label: "The easterly arrives"
+  txt: "The Saturday rebuild fills from ahead. Boats already west ride it sooner; the fleet behind parks in the same water hours longer."
+  source: analysis
+  visibility: public
+- t: "2026-07-25 11:57"
+  cat: milestone
+  label: "Max finishes"
+  txt: "Tracker line-crossing 11:57:24; the official finish was AMENDED by the race committee to 11:57:18 after this project's query — six seconds from the marker. Three other boats' larger gaps remain unamended."
+  source: analysis
+  visibility: public
+- t: "2026-07-25 12:38"
+  cat: insight
+  label: "Two boats in one"
+  txt: "Across the 49 boats measurable through both wind regimes, Max ranks 4th for miles made in the powered phases and 35th in the light ones — a 31-place swing, the largest in the fleet. The Pogo 50 physics share the bill with every navigation call."
+  source: analysis
+  visibility: public
+watches:                        # the OWNER'S on-watch spans, RECONSTRUCTED from his crew
+                                # log's on/off entries (private input; ships in THIS build
+                                # only — the owner declared it the private opinionated cut,
+                                # 2026-07-26; the future public cut strips this layer).
+                                # Pattern: fixed 3h-on/3h-off, owner's starts 19/01/07/13.
+                                # Soft edges, owner to verify: Fri 04:25 'off shift' read as
+                                # handover overrun (span kept to 04:00); start->19:00 Thu
+                                # treated as all-hands and excluded.
+- ["2026-07-23 19:00", "2026-07-23 22:00"]
+- ["2026-07-24 01:00", "2026-07-24 04:00"]
+- ["2026-07-24 07:00", "2026-07-24 10:00"]
+- ["2026-07-24 13:00", "2026-07-24 16:00"]
+- ["2026-07-24 19:00", "2026-07-24 22:00"]
+- ["2026-07-25 01:00", "2026-07-25 04:00"]
+- ["2026-07-25 07:00", "2026-07-25 10:00"]

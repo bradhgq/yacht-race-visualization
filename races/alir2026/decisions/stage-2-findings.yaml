@@ -1,0 +1,17 @@
+# stage-2 — Findings & Modules Record — ALIR 2026 — DRAFT (awaiting owner confirmation)
+# Findings memo: docs/stage-2-findings-memo.md. Preliminary-pins ledger:
+# decisions/stage-2-snapshot-ledger.yaml. Data: mid-race snapshot (owner-authorized).
+modules_selected: []            # the stop picks from M1-M6 (memo §2); standard set
+                                # (map/dtf/race/distspeed/xte/sog+VMC) already building
+modules_vetoed: []
+reference_set_confirmed: false  # proposed: Katara56 (milestone ref), Zammermoos, Poseidon,
+                                # Habiru YCC, Lioness — per the confirmed stage-0 set, plus
+                                # per-phase spatial peer sets for navigation claims
+corrections: []
+values_pinned: true             # PRELIMINARY (recorded owner instruction; re-pin at the
+                                # final-results pass under a new I16 entry)
+pipeline_invocation: ".venv/bin/python starter/build_race.py races/alir2026
+  (bootstrap 2026-07-26, then gated: 10/10 checks under TZ=America/New_York and
+  TZ=UTC; snapshot compare active from the second gated run)"
+confirmed_by: ""
+date: ""

@@ -1,0 +1,43 @@
+# I16 ledger — ALIR 2026 third fetch (2026-07-26 ~14:00 EDT) and endpoint RE-PIN
+#
+# RECORDED INSTRUCTION: owner, 2026-07-26: "Refetch the data (hence redo stages 0
+# thru 3)... The proceed to stage 4."
+#
+# THE HEADLINE DIFF — THE HERO'S FINISH WAS AMENDED BY THE RACE COMMITTEE:
+#   Max finish 12:38:03 -> 11:57:18 EDT; elapsed 46:43:03 -> 46:02:18; corrected
+#   47:45:09 -> 47:04:24; place_overall (circle) 29 -> 28 (swapping with Velocita).
+#   The amended time sits SIX SECONDS from her YB line marker (11:57:24) and
+#   matches the owner's recollection ("we finished at 1157") — the stage-0
+#   discrepancy flag and the owner's RC query are vindicated and CLOSED for Max.
+#   DUET (+68.2 min), MARIE (+28.3), Ripple (+7.9) remain unamended — still open.
+#
+# PINS MOVED under this entry (derivations updated in tests/regression.json):
+#   endpoints corrected_min/elapsed_min 212.07 -> 171.32; pace 102.45 -> 82.76
+#   duration_roundtrip 46:43:03/168183 -> 46:02:18/165738
+#   (tz_probe unchanged — Katara56's row is byte-identical; names pins unchanged)
+#
+# Other diffs this fetch: Java scored RET (7 RET now; her tracker rode to the
+# finish area post-retirement — the min-DTF trim keeps that approach, noted as a
+# cosmetic ghost artifact, no scoring impact). Nomad (ATI) still absent from
+# results entirely and still moving at fetch (20 nm from the ALI finish on the
+# ALI polyline — meaningless for her course; excluded and labeled ATI).
+#
+# OWNER CLAIM VERIFIED, precisely: "finishing cutoff has been reached and
+# whatever boats didn't finish are treated as abandoned" — PARTIALLY. Every
+# ALI-course boat now carries a terminal status (45 AOK + 7 RET = all 52
+# starters), so the fleet IS fully resolved. But the mechanism is RET rows, not
+# an abandonment/cutoff marker: no ABN/DNF/TLE status appears, the event still
+# reads resultStatus=Preliminary / isCompleted=false, and Nomad has NO results
+# row rather than an abandoned one. Treat "the fleet is final except formal
+# ratification and Nomad" as the true statement.
+#
+# Owner display directive recorded: retired/unfinished boats present "on the
+# side" (the Retired chip group / morePanel side list — already the shell's
+# behavior) while their sailed segments REMAIN in every spatial-peer and
+# same-water comparison for the phases they sailed. Encoded in the stage-4
+# module specs.
+#
+# snapshot/dashboard_data.json REPLACED (sha256 a17f883468329615dc271591…, full
+# value in git). Chain green both TZs, 10/10 checks, compare green.
+confirmed_by: ""   # presented with the stage-4 review round
+date: "2026-07-26"

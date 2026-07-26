@@ -1,0 +1,43 @@
+# stage-3 — Corrections Record — ALIR 2026 — DRAFT (awaiting owner confirmation)
+# Narrative pack: docs/stage-3-narrative.md · storyboard: session artifact (module
+# selection pending) · discrepancy register: narrative pack §3.
+corrections:
+  - { before: "night 1 was fine — dead level with Katara56 at 04:00",
+      after: "the losing position was taken during night 1 (11/11 among water peers, -1.5 nm) and paid at the dawn build (+9.7 nm to Katara56)",
+      source: "owner reframing at the stage-0 stop; re-derived on the pipeline grid",
+      propagated_to: ["docs/stage-2-findings-memo.md", "docs/stage-3-narrative.md", "events.yaml", "storyboard M2/M3"] }
+  - { before: "corrected = elapsed for the Max-Katara56 pair",
+      after: "the GAPS are equal (212.07 min both scales); each boat's corrected is her elapsed + 62:06",
+      source: "owner correction, 2026-07-26",
+      propagated_to: ["tests/regression.json _comment", "config.yaml pinned_values comment", "docs/stage-3-narrative.md §2"] }
+  - { before: "time limit 12:00 Sunday",
+      after: "the SI's 1200-Sunday line is a notification requirement; Sunday-afternoon finishers scored AOK",
+      source: "stage-0 redo (Cool Change / Veronique scored at 76+ h)",
+      propagated_to: ["config.yaml header", "decisions/stage-0-redo-ledger.yaml", "docs/OPEN_THREADS.md wording"] }
+  - { before: "night-2 'CT side paid' (stage-0 exploratory h3)",
+      after: "entry order through Plum Gut carried the night; side signal null (partial +0.07, n=13); Max residual -3.2 nm unattributed",
+      source: "stage-2 F3 on the pipeline grid",
+      propagated_to: ["docs/stage-3-narrative.md §3/§4", "storyboard M5", "events.yaml 20:35 entry"] }
+spine_approved: false            # acts in narrative pack §1; owner reviews with the storyboard
+labeling_decisions:              # owner directives 2026-07-26, binding on stage 4
+  ranks: "PHRF #x vs ORC #x always distinguished; chip/rank surfaces must carry the
+    scoring system (stage-4 implementation item — the shell currently shows the
+    results' per-circle overall rank unqualified)"
+  ati_course: "Nomad (Spinnaker Division 6, Around the Islands course — rounds Block
+    Island, different distance) is excluded from every comparison and labeled 'ATI
+    course' wherever her ghost appears"
+  orc_inclusion: "ORC boats join every on-the-water comparison (same course/water:
+    positions, elapsed, phases, cohorts) and are marked (shape/label); corrected
+    time never crosses the PHRF/ORC boundary"
+  cross_weather: "Sunday finishers and wide entry-spread DTF segments carry explicit
+    cross-weather caveats (storyboard M8's ±h badges are the pattern)"
+events_note: "events.yaml now carries the ANALYSIS-sourced layer only (10 entries:
+  4 milestones + 6 insights). Crew-log-derived events remain out of the repo; owner
+  prunes the internal draft at a later stage (owner: 'event pruning waits until at
+  least next stage')."
+snapshot_note: "I16: snapshot/dashboard_data.json REPLACED once more when the events
+  layer + final-data copy landed (sha256 8ac3b4c938c442da45160932…, full value in
+  git; diff class: events[] 0 -> 10 + meta only). Chain green, both TZs, 10/10,
+  compare green. Same recorded owner instruction as the stage-0 redo ledger."
+confirmed_by: ""
+date: ""

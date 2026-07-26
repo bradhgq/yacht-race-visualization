@@ -1,0 +1,100 @@
+{
+  "fetched": "2026-07-26T14:12:40-0400",
+  "warnings": [
+    "YB decoded 54 tracked boats but RaceSetup lists 56 \u2014 public track data is a SUBSET of the fleet (the Ida Lewis case)",
+    "6 name-join row(s) need review in alir2026_name_join.csv (sail-only / ambiguous / unmatched) \u2014 the join is a PROPOSAL, confirm at the stage-0 stop"
+  ],
+  "race": {
+    "name": "2026 Around Long Island Regatta (49th Annual)",
+    "dates": "July 23 - 26, 2026",
+    "venue": null,
+    "ys_event_id": 50645,
+    "yb_race_id": "alir26"
+  },
+  "files": {
+    "alir2026_results.csv": 52,
+    "alir2026_scratch_sheet.csv": 59,
+    "alir2026_tracks.csv": 53351
+  },
+  "name_join": {
+    "file": "alir2026_name_join.csv",
+    "rows_to_review": 6
+  },
+  "coverage": {
+    "tracked_boats": 54,
+    "ping_rows": 53351,
+    "raceSetup_teams": 56,
+    "entries": 59,
+    "results_rows": 52
+  },
+  "start_times": {
+    "yb_team_starts_epoch": [
+      1784826000,
+      1784826600,
+      1784827200,
+      1784827800,
+      1784828400,
+      1784829000,
+      1784829600,
+      1784830500
+    ],
+    "ys_division_starts": [
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2026-07-23T14:05:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2026-07-23T13:45:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2026-07-23T13:25:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2026-07-23T13:05:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2026-07-23T13:05:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2026-07-23T14:15:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2026-07-23T13:55:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2026-07-23T13:45:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2026-07-23T13:35:00.000Z"
+      },
+      {
+        "race_number": 1,
+        "name": null,
+        "start_time": "2026-07-23T13:25:00.000Z"
+      }
+    ],
+    "note": "cross-check config start_method (finish \u2212 elapsed) against these"
+  },
+  "sha256": {
+    "alir2026_results.csv": "8a49c8377bf4e1b14b7fda03a7e84541261e79023392dea83f0636b9c745fc9e",
+    "alir2026_scratch_sheet.csv": "e73d7ba170f56d35110a1077e3873dbc111cbf2c3092dbc668673ff14df31f79",
+    "alir2026_tracks.csv": "ae5c3fe0978beac34630bf6726503fe340cb8264504a151b7b0bb39e70c59524"
+  }
+}

@@ -1,0 +1,45 @@
+# stage-5 — Publication Ledger — ALIR 2026 — DRAFT, REFRAMED by owner declaration
+# (2026-07-26 night): THE CURRENT BUILD IS THE PRIVATE OPINIONATED CUT — it now
+# carries the watch layer (crew-log-derived spans, reconstructed and pending the
+# owner's verification) and the watch-performance module. The PUBLIC cut is a
+# FUTURE pass with its own ledger; the opt-in list below is its checklist.
+# FUTURE-PUBLIC-CUT EXCLUSIONS (mechanical: set privacy.build public, remove
+# 'watches' overlay + 'watchperf' module + events.yaml watches spans, rebuild):
+#   - the watch layer and watch-performance chart (crew-log-derived; private)
+#
+# PRIME RULE 4 CONFIRMATION: the owner's crew log NEVER entered the repo. It was
+# read in-session; the derived internal events draft exists only in the session
+# scratchpad and is DISCARDED with the session unless the owner pulls items in
+# (his standing instruction: pruning waits; the tier-2 crew layer ships in a
+# later pass, item by item, each with its own opt-in under a new ledger entry).
+# The two crew-log quotations embedded in analysis records
+# (decisions/stage-0-scope.yaml: the 04:25 and 21:00 decision entries) are the
+# load-bearing evidence for verdicts the owner directed; they are in decisions/,
+# not in any shipped page, and are listed here for explicit confirmation.
+public_items:                    # everything below is ANALYSIS-derived (no crew-log bodies)
+  - { item: "events.yaml: 4 milestone events (start, Red 14, Montauk, finish w/ amendment note)", opted_in: true }
+  - { item: "events.yaml: 6 insight events (the peel, the jibe, the gradient flip, the gate, the easterly, two-boats-in-one)", opted_in: true }
+  - { item: "COPY.theses: the five stated opinions", opted_in: true }
+  - { item: "finish-amendment disclosure (footer + finish event): Max 12:38:03 -> 11:57:18 after this project's query; three other gaps open", opted_in: true }
+  - { item: "internal cross-system methodology (corrAdj x1.037 in dist-vs-speed + footer footnote; never a ranking)", opted_in: true }
+  - { item: "weather/current evidence constants in modules (observed / archived forecast / predicted classes, attributed: NDBC public domain, Open-Meteo CC-BY 4.0, NOAA CO-OPS)", opted_in: true }
+  - { item: "decisions/ crew-log quotations (04:25, 21:00) remain in the committed analysis records — NOT on any shipped page", opted_in: true }
+private_confirmed: true          # everything not listed: discarded or never entered
+regression: green                # 12/12 checks, TZ=America/New_York and TZ=UTC, snapshot compare green
+artifact:
+  hash: "dist/standalone.html sha256 e091f3f8385e21d1… · snapshot d68e1ac29eedb6fa… (pre-og build; full values in git at the stage-5 commit)"
+  url: "PROPOSED slug: hgq.fyi/max-around-long-island-2026/ — nginx location + flake bump are
+    OWNER-ONLY actions (nix-config: add the location under the hgq.fyi vhost aliased to
+    races/alir2026/dist, then nix flake update race-viz-site && rebuild). Until then the
+    build is served as the session artifact (claude.ai) and localhost previews."
+notes: "Productionization jobs: og.png generated (scripts/make_og.py, single-hero card);
+  mobile = shell breakpoints + round-1 decramming (narrow tick fallbacks in modules);
+  perf = the split build (core/more/fleet) is the shell default, standalone 1.8 MB for
+  the artifact copy; accessibility = shell defaults, no custom interactions added.
+  Round-1 defect->assertion additions landed: vmc fixture (harness-measured 4.46, I14
+  basis recovers to 0.01 kt) + expected_checks 12. OPEN_THREADS scanned end to end this
+  stop: ALIR items compacted into the post-publication maintenance list; non-ALIR punts
+  (decyb, OPINIONS_NB, NB finish-line provenance, consistency_check breadth, tier-1 hero)
+  stand, dated."
+confirmed_by: ""                 # owner (confirm the reframe + the future public-cut checklist)
+date: ""

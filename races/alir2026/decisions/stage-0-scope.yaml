@@ -1,0 +1,524 @@
+# stage-0 — Scope Record — Around Long Island Regatta 2026 (49th), Sea Cliff YC
+# CONFIRMED by the owner 2026-07-26 with the amendments recorded in
+# owner_stop_decisions at the end of this file. The exploratory verdicts under
+# hypotheses_to_test are RETRACTED to hypothesis status by owner instruction —
+# opinions form at stages 1-2, not stage 0. The hypotheses and their preliminary
+# signals are retained below as the ledger of what was believed and why; nothing
+# in them may be cited as a finding until stage 2 re-derives it.
+#
+# Every number below was computed from races/alir2026/raw/. Exploratory figures are
+# labelled as such: NO number here is a pinned value, and none has been through the
+# pipeline (prime rule 1). Claims the data REFUTED are kept as explicit corrections
+# rather than deleted, so the ledger shows what was believed and why it changed.
+
+snapshot_status:                 # THE defining fact about this record
+  race_state: "STILL RUNNING at acquisition. Data fetched 2026-07-26T00:58 EDT; the
+    time limit is 12:00 EDT 2026-07-26 and 7 ALI-course boats were still at sea.
+    Protest hearings open 11:00 Sunday 2026-07-26, so EVERY official number here is
+    PROVISIONAL."
+  hero_unaffected: "Max and all three of her Division 9 rivals finished, so the hero's
+    own analysis is complete and stable. What is incomplete is the FLEET tail (8
+    unscored boats) and any fleet-wide ranking or spread statistic."
+  required_followup: "Re-fetch results + tracks after final scoring, re-run the whole
+    stage-0 ritual, and diff. Recorded in docs/OPEN_THREADS.md. Do NOT pin values
+    (prime rule 3) from this snapshot — pin them at the stage-2 stop after the
+    re-fetch, or pin explicitly-labelled preliminary values with the owner's recorded
+    instruction."
+
+acquisition:
+  command: "python3 starter/acquisition/fetch_race.py 50645 --yb alir26 --prefix alir2026
+    --out-dir races/alir2026/raw/   (run 2026-07-26T00:58:13-0400)"
+  ys_event_id: 50645
+  yb_race_id: alir26
+  yb_id_provenance: "satTrackingUrl is EMPTY in the YS event metadata (the 2025 situation
+    repeats), and neither alir.org nor its /tracking page publishes the YB link, so the
+    normal YS-hands-you-the-YB-id chain is BROKEN. The id 'alir26' was formed on the
+    alir25 precedent and then VERIFIED by the full ritual before use, never trusted:
+      - RaceSetup.title = 'Around Long Island Regatta', 56 teams
+      - team names match the YachtScoring entry list (53 ACTIVE entries; every results
+        row resolves to a track)
+      - first pings cluster at 40.60-40.74N / -74.07..-74.00 — NY Harbor, the SI start box
+      - the 8 distinct team start epochs are 07-23 13:00..14:15 EDT, exactly the SI's
+        13:00 first warning + 10-minute groups
+      - the tracked committee marker 'STARTING LINE (+ FINISH)' sits at 40.7018,-74.0365
+        (0.06 nm from the SI start coordinate) for the first two days, then anchors at
+        40.8609,-73.6640 by the finish light. The tracker itself confirms both ends of
+        the course."
+  warnings_raised: 2             # per 'report every warning the run produces'
+    # 1. "YB decoded 54 tracked boats but RaceSetup lists 56 — public track data is a
+    #    SUBSET of the fleet (the Ida Lewis case)"
+    #    -> RESOLVED, and it is NOT the Ida Lewis case. The two are Avalanche and Gup E,
+    #       both INACTIVE (withdrawn) on the scratch sheet: they were entered, given YB
+    #       ids, and never sailed. Coverage of the boats that actually raced is COMPLETE
+    #       (53 of 53). See coverage_matrix.
+    # 2. "6 name-join row(s) need review"
+    #    -> RESOLVED; full composition in anomalies. 1 sail-only (Little Texas),
+    #       1 UNMATCHED-YB (the committee marker), 4 UNMATCHED-YS (3 withdrawn entries
+    #       + the Habiru duplicate-entry pair).
+  source_documents:
+    si: "Final 2026 ALIR SI, YachtScoring event-documents endpoint
+      (api.yachtscoring.com/v1/public/event/50645/docs -> documentType SI, docName
+      'Final 2026 ALIR SI', 399,787 bytes, updated 2026-07-26T04:46Z).
+      sha256 7f78a273c66999c03befd7f07efc7ff0ff8b8e7575f3278792d3feeb9cdbaf36.
+      Supplies verbatim: start line 40°42'10\"N/74°02'12\"W ~0.25 nm NE of Ellis Island;
+      the ONE mandatory mark, Ambrose Channel Red Bell Q R '14' 40°31'41\"N/74°00'34\"W to
+      port; 'east to Montauk Point, northwest to Long Island Sound, west to the finish';
+      finish line between the finish vessel ~0.075 nm due W of the Glen Cove Breakwater
+      light 40°51'43\"N/73°39'37\"W and the breakwater; and 'This course will be considered
+      207 nm for scoring purposes'."
+    si_internal_conflict: "The SI states the Around-the-Islands course distance TWICE and
+      DISAGREES with itself: the COURSES section says 242 nm, the SCORING & TIME ALLOWANCES
+      section says 230 nm. Immaterial here (the single ATI boat, Nomad, is out of scope and
+      unscored at snapshot) but it must not be silently averaged or picked — flag to the
+      organizer, and if an ATI boat is ever brought in scope, resolve it first."
+    si_stale_dates: "The SI carries two 2025 dates in boilerplate ('by 1200 hours on Sunday,
+      July 27, 2025' for the time limit; protests 'Sunday, July 27, 2025'). The 2026
+      calendar makes these Jul 26; treated as clerical, not as evidence about the time
+      limit. Do not quote SI dates in copy without this caveat."
+  cross_source_conflicts: "One, material and UNRESOLVED — see finish_time_discrepancies."
+
+coverage_matrix:
+  scratch_entries: 59            # 53 ACTIVE + 6 INACTIVE (withdrawn)
+  yb_racesetup_teams: 56         # 54 boats + committee marker + Avalanche/Gup E (withdrawn)
+  decoded_tracks_racing: 53      # every ACTIVE entry
+  results_rows: 45               # 42 AOK + 3 RET
+  tracked_unscored: 8            # the race was still running; see unscored_boats
+  scored_untracked: 0            # NOTHING scored lacks a track -> untracked_meta_only stays []
+  verdict: "Around-Long-Island-course coverage is COMPLETE for every boat that started.
+    The 8 unscored boats are a TIME artifact (race in progress), not a data gap."
+
+unscored_boats:                  # tracked, ACTIVE, no results row at snapshot
+  - { boat: "WANDERER", div: "Spinnaker Division 8", state: "FINISHED BUT UNSCORED — her
+      routed distance-to-finish reaches 0.0 nm and YB records a finish-line marker at
+      2026-07-25 18:33:59 EDT at 40.86104,-73.66351 (0.03 nm from the light), the same
+      signature every scored finisher carries. She had simply not been entered in
+      YachtScoring when the snapshot was taken." }
+  - { boat: "Veronique",   div: "Non-Spin 2", dtf_at_snapshot_nm: 7.4,  state: "still racing" }
+  - { boat: "Cool Change", div: "Non-Spin 1", dtf_at_snapshot_nm: 8.3,  state: "still racing" }
+  - { boat: "Athena",      div: "Spinnaker 5", dtf_at_snapshot_nm: 14.2, state: "still racing" }
+  - { boat: "Avatar",      div: "Spinnaker 7", dtf_at_snapshot_nm: 37.7, state: "still racing" }
+  - { boat: "Java",        div: "Non-Spin 1", dtf_at_snapshot_nm: 44.2, state: "still racing" }
+  - { boat: "Yopo",        div: "Non-Spin 1", dtf_at_snapshot_nm: 52.9, state: "still racing" }
+  - { boat: "Nomad",       div: "Spinnaker 6 (AROUND THE ISLANDS course)", dtf_at_snapshot_nm: 70.5,
+      state: "still racing; OUT OF SCOPE — different course and distance" }
+
+anomalies:
+  - "TZ MISLABEL PERSISTS FROM 2025 (adjudicated): results finish_time_utc is EDT wall
+     clock carrying a spurious Z. Probe: for 36 of 40 finishers YB's own finish marker
+     sits at the claimed wall-clock time +4.00 h, each marker within 0.03-0.15 nm of the
+     Glen Cove light. Consequence: derive_results_columns.py strips the fake Z and applies
+     NO offset shift, exactly as in 2025."
+  - "MIXED SCORING SYSTEMS — NEW IN 2026 and the single biggest structural change from
+     2025. ORC Division 0 (6 boats) scores time-on-TIME on a multiplier; every other
+     division scores PHRF time-on-DISTANCE at 207.0 nm. config scoring.system is
+     therefore 'custom' with hook scoring_alir:corrected, dispatching on rating value
+     (ORC 0.8312-0.9625; PHRF integer -24..171 sec/mi; nothing in (0,2), so the bands
+     cannot collide). Verified: all 42 AOK rows reproduce official corrected within 1 s
+     (36 ToD + 6 ToT). CONSEQUENCE FOR COPY: corrected times are NEVER comparable across
+     the ORC/PHRF boundary. A cross-division 'unofficial unified ladder' — which ALIR
+     2025 shipped and which worked there because every division shared one ToD formula —
+     is NOT available this year. Do not build one."
+  - "DUPLICATE ENTRY NAME, the 2025 Dolcezza lesson in a new costume: the scratch sheet
+     carries BOTH 'Habiru' (INACTIVE, withdrawn) and 'Habiru YCC' (ACTIVE, ORC Division 0
+     winner) on the SAME sail number USA61124. The tracker calls her 'Habiru'. The join
+     must bind the tracker to the ACTIVE entry — handled by name_overrides.by_name
+     Habiru -> 'Habiru YCC'. Keying on name alone would bind a live boat to a withdrawn
+     row. Any future join keys on (name, sail), never name."
+  - "SUFFIX DIRECTION REVERSED vs 2025: this year YB carries 'Little Texas YCC' and
+     YachtScoring carries 'Little Texas' (2025 was the other way round). Handled by
+     by_name; the join matched it on sail number alone, which is why it appeared in the
+     6-row review list. Betelgeuse and Valiant carry 'YCC' in BOTH sources and need
+     no override."
+  - "CASE-ONLY differences (tracker mixed-case vs results ALL-CAPS): ACTAEA, ARGOS, DUET,
+     MARA, MARIE, SCAPEGOAT, WANDERER, VICITAN. Handled by name_overrides.display ONLY —
+     the join normalizer casefolds, so a by_name entry would not help the match while
+     still rewriting the tracker name that ships as the fleet ghost's hover label
+     (the 2025 'ACADIA beside a chip reading Acadia' finding)."
+  - "526 duplicate (boat, epoch) ping rows, 7 of them genuine position conflicts (the rest
+     byte-identical re-emissions). All dropped by trim_tracks.py, first row kept. The 7
+     conflicts are sub-metre and immaterial; 2025 had exactly one."
+  - "PING CADENCE CHANGED BETWEEN YEARS: 2025 was a uniform 5-minute feed; 2026 carries a
+     ~1-minute tier — 40.3% of intervals are <=60 s, 58.7% are 61-300 s, median 300 s.
+     This broke the inherited trim heuristic (see trim_adjustments) and it will affect any
+     analysis that assumes a fixed cadence. grid.minutes 15 with interpolate_limit 4
+     remains comfortably above the cadence and covers every in-race gap."
+  - "COMMITTEE MARKER IN THE TRACK DATA: 'STARTING LINE (+ FINISH)' is a race-committee
+     position beacon, not a boat — 207 pings, stationary at the start line then at the
+     finish. It is the ONLY exclude_boats entry. It is also genuinely useful evidence: it
+     independently confirms both course endpoints (above)."
+  - "COURSE POLYLINE INHERITED FROM 2025 AND RE-VERIFIED, not assumed. The SI's three
+     quoted coordinates are character-identical to 2025, so the 2025 marks list is reused;
+     it was then re-checked against the 2026 fleet envelope — routed distance-to-finish is
+     monotone for every finisher and no leg passes inshore of any racing track. Polyline
+     205.84 nm vs the official 207.0 (delta -1.16), as in 2025."
+  - "XTE IS NOT AN OFF-COURSE METRIC ON THIS COURSE MODEL (carried forward from 2025): the
+     three south-shore spine waypoints are drafted from the 2025 sailed median, not from
+     marks anyone had to round, so legitimate racing tracks reach large cross-track values.
+     Stage 2 must not read XTE here as 'sailed extra distance'."
+  - "place_overall IS PER-CIRCLE, not fleet-wide (as in 2025): Dolcezza, Habiru YCC and
+     Zammermoos all carry rank 1. The shell's ranked list sorts on that field and would
+     display '#1' three times. Stage-2 presentation decision: rank per circle, or scope
+     the ranked list."
+
+finish_time_discrepancies:       # the one material cross-source conflict — FLAGGED, NOT SMOOTHED
+  finding: "YB writes an off-cadence finish marker at the line for every finisher. For 36
+    of 40 it matches the official finish time within 1.6 min (most within 10 s), which is
+    strong evidence the two sources share the race committee's finish log. FOUR boats
+    disagree by far more, and one of them is the hero:
+      DUET   marker 07-25 10:53:54, official 12:02:08   (+68.2 min)
+      Max    marker 07-25 11:57:24, official 12:38:03   (+40.6 min)
+      MARIE  marker 07-25 17:41:15, official 18:09:33   (+28.3 min)
+      Ripple marker 07-25 17:31:45, official 17:39:41   (+7.9 min)
+    In each case the marker sits 0.03-0.07 nm from the finish light with the same
+    signature as every clean finish. After her marker, Max drifts south, wanders for
+    ~30 min and is STATIONARY 0.47 nm inside the harbour from 12:25 — she is not moving
+    at her official 12:38:03. MARIE is 1.98 nm NORTH of the line, sailing away, at hers."
+  candidate_explanations: "(a) provisional scoring — the race was still being scored and
+    these four rows may yet be corrected; (b) finish times taken by VHF hail (the SI asks
+    boats to hail the finish vessel) and logged late in light air; (c) the boats touched
+    the line area without validly finishing and were recorded later. NOT resolvable from
+    the data in hand."
+  disposition: "Official results remain the endpoint authority (doctrine 2) — the pipeline
+    uses the published values unchanged, and derive_results_columns.py passes them through
+    untouched. The conflict is recorded, not averaged away."
+  owner_question: "OWNER CAN SETTLE THIS DIRECTLY — he sailed on Max. Did Max cross the
+    finish line at ~11:57 or ~12:38 EDT on Saturday?"
+  owner_answer: "ANSWERED at the stage-0 stop (2026-07-26): 'we finished at 1157 and will
+    contact RC for clarity.' Crew testimony agrees with the YB marker against the published
+    12:38:03. Official results REMAIN the pipeline authority until the RC responds or a
+    results amendment lands; the 11:57 crossing is now testimony + tracker, the 12:38 is
+    official-provisional. Re-check on the post-race re-fetch."
+  sensitivity: "MATERIAL to the headline number, immaterial to the story. Max's elapsed is
+    46:43:03 as published (gap to Katara56 212.1 min); on the YB marker it would be
+    46:02:24 (gap 171.4 min). The loss decomposition below is computed from POSITIONS
+    DURING the race and is unchanged either way — both decisive windows close before
+    Saturday morning."
+
+fleet_count:
+  entries_active: 53
+  results_rows: 45               # 42 AOK + 3 RET (Three Little Birds, MARA, Elizabeth)
+  tracked: 53
+  divisions_with_finishers: 9    # of 10 in scope
+  note: "Multihull (NEMA) Division M has ONE entry, Three Little Birds, and she RETIRED —
+    so the division renders empty in any class filter. The 2025 hazard of a 1-of-1
+    division win narrated as a contest does not arise this year."
+
+tz:
+  official: "America/New_York (EDT, utc_offset -4)"
+  probe:
+    boat: "Katara56"
+    official_finish_local: "2026-07-25 09:05:59"
+    track_epoch_utc: 1784984761   # 2026-07-25T13:06:01Z, 0.03 nm from the Glen Cove light
+    offset: "-4h; +4.00 h confirmed on 36 of 40 finishers"
+  probe_boat_choice: "DELIBERATELY NOT THE HERO. Max is one of the four
+    finish_time_discrepancies boats, so using her as the timezone probe would bake an
+    unresolved conflict into the time base. Katara56 is the cleanest available probe and
+    is also the analysis benchmark (same rating as Max)."
+
+start_method:
+  method: finish_minus_elapsed
+  verification: "Yields exactly ONE start per division, every one at warning + 5 min:
+    Non-Spin 1 and 2 13:05 · Spin 3 13:15 · Spin 5 13:25 · Spin 7 13:35 · Spin 8 and
+    ORC 0 13:45 · Spin 9 13:55 · Multihull M 14:05 (from the RET row) · DH 4 14:15.
+    That is every division with a finisher."
+  yb_cross_check: "YB RaceSetup.teams[].start carries EIGHT distinct epochs, 07-23
+    13:00..14:15 EDT. These are the WARNING signals for most divisions, not the guns —
+    they agree with the SI's published warning schedule, and finish-minus-elapsed lands 5
+    min later, exactly as the SI's start sequence prescribes. YB is corroboration for the
+    SCHEDULE; finish-minus-elapsed is the method for the GUN."
+
+course_model: "marks (routed DTF via pipeline/route.py) — identical to 2025. Start
+  [40.7028,-74.0367] ~0.25 nm NE of Ellis Island. South out of NY Harbor under the
+  Verrazzano, leaving Ambrose Channel Red Bell Q R '14' [40.5281,-74.0094] to port (the ONE
+  mandatory mark). East along the south shore on a spine drafted from the sailed median
+  (the direct Ambrose->Montauk great circle crosses Long Island), round Montauk Point
+  [41.0600,-71.8450], northwest to Plum Gut [41.1680,-72.2150], down the Sound, finishing
+  [40.8619,-73.6603] off the Glen Cove Breakwater light. Polyline 205.84 nm vs official
+  207.0."
+
+sound_entry_gate: "Plum Gut again, and by a wider margin than 2025. Of the boats checked,
+  Max, Katara56, Zammermoos, Poseidon and Habiru YCC all passed within 0.08-0.31 nm of the
+  Plum Gut centrepoint. Lioness (2.26 nm off) and Della Aurora (1.69 nm off) took a
+  different line — the Sluiceway/Gull passage rather than The Race, on the 2025 pattern.
+  Full per-boat gate table is a stage-2 deliverable; the numbers here are exploratory."
+
+hypotheses_to_test:              # doctrine 7 — the stakeholder's hypothesis is TESTED before
+                                 # any view is built, and ships with the verdict in its caption.
+                                 # Everything below is EXPLORATORY (not pipeline output).
+  owner_hypothesis:
+    as_stated: "'In retrospect I think we made some not great choices navigation wise in the
+      first night' — owner, crewing on Max."
+    verdict: "REFUTED AS STATED, and replaced by a sharper finding the data does support.
+      The first night was Max's BEST phase of the race. Measured against Katara56 — who
+      carries the IDENTICAL -18 rating, so elapsed gap == corrected gap — Max was DEAD
+      LEVEL at 04:00 Friday after a whole night of sailing (gap 0.0 -> +0.2 nm in Max's
+      favour). Against the eventual division winner Zammermoos she was 4.3 nm down, and
+      against Poseidon 3.3 nm, over ~14 hours: real but modest, and the smallest deficits
+      she would carry all race."
+    where_it_actually_went: "Two windows, both AFTER the first night, account for 97% of a
+      21.0 nm deficit to Katara56 (time-aligned: both boats measured at the same instant,
+      so no phase-offset artifact):
+        gun -> 04:00 Fri  (start + night 1)              +0.2 nm   Max marginally AHEAD
+        04:00 -> 12:00 Fri (dawn transition + park exit)  -9.7 nm   <=== decisive
+        12:00 -> 20:00 Fri (rebuild, Montauk, Plum Gut)   +2.3 nm   Max gains
+        20:00 Fri -> 02:00 Sat (night 2, the Sound)      -10.7 nm   <=== decisive
+        02:00 -> 06:00 Sat (pre-dawn Sound)               -3.1 nm
+      A 21 nm deficit at 06:00 Saturday, at Max's ~6.3 kt closing pace over the final
+      hours, is ~200 min — against a published official gap of 212 min. The decomposition
+      closes. (Cross-checked against a spatial gate decomposition, which reconciles to
+      within 0.1 min of the official delta but whose per-leg values are contaminated once
+      the boats are hours apart and no longer in the same weather — the time-aligned form
+      above is the honest one.)"
+  h1_offshore_at_dawn:
+    claim: "Being further offshore paid at the Friday-dawn transition — the crew's own
+      04:25 log entry ('we may benefit from being away from shore. Others not as
+      concerned tho')."
+    verdict: "CONFIRMED, and it is the crew's own call. Regressing 3-hour VMC on offshore
+      distance AND along-course position (to remove the confound that leaders were both
+      further east and in more breeze) over the 36 boats within +/-8 nm of Max's
+      distance-to-finish at 05:00 Friday:
+        VMC = 12.03 + 0.214 * offshore_nm - 0.0735 * dtf0   R2 = 0.487
+        partial corr(offshore, VMC | dtf0) = +0.640
+      Every extra mile offshore was worth +0.21 kt. Max was 4.9 nm offshore; Katara56, at
+      effectively the same distance-to-finish, was 8.2 nm offshore and made 3.91 kt to
+      Max's 1.61 kt over those three hours, converting a level match into a 6.4 nm lead
+      by 08:00."
+    important_caveat: "The SAME regression run over the night ITSELF (22:00 Thu -> 05:00
+      Fri) gives the OPPOSITE sign — partial corr -0.270, R2 only 0.09. Offshore did not
+      pay during the night; it paid at dawn."
+    why_it_flipped: "THE OBSERVATIONS EXPLAIN THE SIGN CHANGE, and this is the strongest
+      result in the whole record because it is observed rather than modelled. Differencing
+      the two NDBC stations that bracket the fleet cross-shore — 44065 (NY Harbor
+      entrance, ~15 nm offshore) minus 44069 (inside Great South Bay) — the gradient
+      REVERSES at almost exactly the hour the fleet regression reverses:
+        02:00 -0.2   03:00 -0.8   04:00 -2.8   05:00 -1.9   06:00 -0.5   07:00 -0.3 kn
+        08:00 +0.0   09:00 +2.4   10:00 +2.9   11:00 +1.8 kn
+      Negative = the inshore station had more wind. Overnight the northerly land breeze
+      favoured the beach; from ~08:00 the advantage swung offshore and stayed there.
+      That is a textbook land-breeze-to-gradient transition, and it means BOTH regression
+      results are correct for their own hours. Max committed inshore at 04:25 — right for
+      the next three hours, wrong for the window that decided the race."
+    caveat_on_the_caveat: "44069 sits INSIDE Great South Bay, behind Fire Island, so it is
+      a sheltered-bay station, not an inshore-ocean one. Treating it as 'inshore ocean
+      wind' is a stretch and the magnitudes should not be quoted as a true cross-shore
+      gradient. What is defensible is the SIGN CHANGE and its timing, which independently
+      corroborates the fleet data. Any caption must name the two stations and say the
+      gradient is inferred from a two-station difference, one of them in a bay."
+  h2_boatspeed_not_just_position:
+    claim: "Position alone does not explain Max's dawn loss."
+    verdict: "SUPPORTED. In the dawn-transition regression Max has the WORST residual of
+      all 36 boats in the band: -1.10 kt slower than her own position predicts. Over the
+      wider 05:00-12:00 park exit she is 3rd worst at -0.54 kt. Something beyond
+      cross-shore placement was costing her — light-air mode, sail crossover, or current.
+      The crew log records A2 up, then A3 raised at 09:00, then doused for the jib at
+      11:00, which is consistent with a boat hunting for a mode. STAGE-2 WORK: separate
+      position from speed properly, and check the Fire Island / Moriches tidal set before
+      attributing any of it to trim."
+  h3_night_2_sound_side:
+    claim: "The Sound side chosen on night 2 cost Max more than the first night did."
+    verdict: "SUPPORTED, and it is the larger of the two losses (-10.7 nm vs -9.7 nm).
+      Regression over the 14 boats within +/-14 nm of Max, 21:00 Fri -> 03:00 Sat:
+        VMC = 11.48 + 0.119 * dist_from_LI_north_shore_nm - 0.131 * dtf0   R2 = 0.784
+        partial corr = +0.503   (RAW corr is -0.020 — the confound completely masks it)
+      Distance from the Long Island (NY) shore paid at +0.12 kt per mile. Max spent the
+      night 2.0 nm off the NY shore — the crew log records the decision at 21:00:
+      'Slightly more wind on CT side but not a lot, and later NY side may have sea breeze.
+      team decided not worth the distance to go over, and would hug the land for land
+      breeze.' The fleet data says the mid-Sound/CT option was the faster one."
+    confidence: "MODERATE, NOT HIGH — n=14, two predictors, and Lioness is a clear
+      counter-example (northernmost AND fastest). The raw correlation is zero and only the
+      partial correlation carries the signal, which makes this claim entirely dependent on
+      the confound model being right. Stage 2 must re-derive it through the pipeline with
+      a larger band before any caption states it."
+  h4_pattern_across_both_nights:
+    claim: "The same decision shape appears twice: the crew identified the correct side
+      and declined to commit to it."
+    verdict: "PROPOSED — this is the candidate spine for the tier-3 narrative, and it is
+      the strongest thing in the race. It rests on pairing the crew log against the fleet
+      data at two moments (04:25 Friday, 21:00 Friday). It is ALSO the claim most exposed
+      to hindsight bias and to the small-n weakness in h3. It must not ship until stage 2
+      re-derives both regressions through the pipeline, and it must be written as what the
+      fleet did, never as what the crew should have known at the time — the 04:25 entry
+      itself records that the information was ambiguous and that others read it
+      differently."
+
+weather_evidence:
+  landed: "races/alir2026/raw/weather/ — see MANIFEST.md and weather_manifest.json there
+    for verified coverage, evidence classes, rejections and sha256s."
+  new_capability_this_race: "ARCHIVED FORECASTS as a distinct evidence class. 2025 carried
+    observed (NDBC), model reanalysis (ERA5) and predicted current (CO-OPS). 2026 adds what
+    the models were SAYING during the race — archived HRRR and ECMWF runs, plus
+    previous-run (lead-time) views — because the owner's question is explicitly a
+    forecast-versus-reality question ('forecasts change wildly. always try to get the
+    latest model and verify with reality', crew log 04:25). This is the evidence that can
+    turn h1's dawn finding from 'offshore paid' into 'here is what the models promised, here
+    is what verified, and here is what a navigator could have known at 04:25'."
+  scope_guard: "UNCHANGED AND NON-NEGOTIABLE: weather files are stage-1/2/3 evidence only.
+    No pipeline number may depend on them; the pipeline consumes tracks/results/scratch
+    exclusively. I18 stands — VMC, never VMG. Every wind-referenced claim cites these files
+    as external evidence and never implies the tracker measured wind."
+  forecast_verification:         # EXPLORATORY; the owner's own question, answered with numbers
+    question: "The crew log records the navigator's working belief at 04:25 Friday: 'HRRR
+      model (more in line w what has happened and navigators seem to trust it more for
+      short term forecasts)'. Did HRRR in fact verify better?"
+    answer: "SPLIT — and the split is the useful part. Scored against 44065, the only
+      offshore wind observation near the course, over 7/24 02:00-11:00 EDT:
+        HRRR   mean signed error +2.1 kn, mean absolute error 2.3 kn  (over-forecast)
+        ECMWF  mean signed error -1.4 kn, mean absolute error 1.4 kn  (under-forecast)
+      ECMWF was the better SPEED forecast — HRRR promised 8.9 kn at 04:00 and 7.3 kn at
+      08:00 where the buoy recorded 3.6 and 3.9. But HRRR tracked DIRECTION much better:
+      its N-to-NE veer (011° -> 050°) matches the observed 321° -> 033°, while ECMWF
+      wandered to 111° by 10:00 against an observed 033°.
+      So the crew read HRRR correctly for the shift they acted on, and HRRR was right
+      about it — while over-forecasting pressure by roughly 60%, which is exactly the
+      error that makes a light-air park look survivable."
+    night_2: "Same pattern in the western Sound. KPTN6 observed 10.0 kn at 19:00 collapsing
+      to 1.3-1.7 kn from 22:00-00:00, then rebuilding from the EAST (070-092°) after 01:00.
+      HRRR held 2.9-3.9 kn through the collapse from 171-184°; ECMWF gave 2.1-3.3 kn and
+      caught the easterly backing (090° at 00:00, 055° at 01:00). HRRR over-forecast the
+      western Sound — the side Max chose — for a second time."
+    limitation_to_fix_at_stage_1: "The five model points are strung ALONG the course, so
+      they cannot resolve either cross-course gradient — the very axis both decisive
+      findings turn on. Stage 1 must fetch paired cross-course points: an inshore/offshore
+      pair off the south shore for the dawn window, and a CT-side/NY-side pair for the
+      Sound. Until then the cross-shore story rests on the two NDBC stations and on the
+      fleet's own behaviour, and the captions must say so."
+
+trim_adjustments:                # the inherited 2025 trimmer misfired on 2026 data; both
+                                 # fixes are recorded because each was a real near-miss
+  - "PRE-START SPIKE ate a whole boat. Elizabeth (RET) carries a GPS spike before her gun;
+    the 2025 rule scanned from the first ping, found 'vehicle speed' at 16:26Z on day one,
+    and cut her END before her START — dropping all 967 pings of a boat that raced. FIX:
+    scan only pings at or after start_cut. Elizabeth now keeps 582."
+  - "ONE-MINUTE CADENCE broke the vehicle-speed rule. 2026's ~1-minute tier makes ordinary
+    GPS jitter read as 26-91 kt for a single interval, and the 2025 rule cut on the first
+    such interval — truncating five boats that were still racing (Cool Change, Avatar,
+    Yopo, WANDERER, Three Little Birds) in the middle of the race. FIX: require THREE
+    consecutive over-threshold intervals. A glitch gives at most two (out and back); a car
+    or tow is fast for many. Verified: all five now retain full tracks to the snapshot."
+  - "Net effect 51,421 -> 45,608 rows, 53 racing boats retained, none dropped. The
+    still-racing boats end at the snapshot (00:45 EDT 07-26) as they should."
+  generalization_note: "Both fixes are generic, not ALIR-specific — any tracker feed can
+    carry a pre-start spike or a sub-minute cadence. They strengthen the case in
+    docs/OPEN_THREADS.md for promoting trim_tracks.py into starter/pipeline/ now that a
+    second race has exercised it."
+
+ping_cadence:
+  nominal: "median 300 s, but bimodal — 40.3% of intervals <=60 s, 58.7% 61-300 s,
+    0.8% 301-600 s, 0.07% 601-1800 s, 0.16% >1800 s (n=50,841)"
+  focus_boats: "Max max in-race gap 5 min; Katara56, Zammermoos, Poseidon all <=10 min.
+    The boats carrying the narrative have effectively unbroken coverage."
+  grid_justification: "grid.minutes 15 with interpolate_limit 4 (1 h of bridging) sits well
+    above the cadence and covers every in-race gap. Default is correct."
+
+tier: 3                          # FIRST tier-3 build in the repo (owner-requested)
+tier_note: "Tier 3 = story site: narrative post with embedded visualizations, hosted. It is
+  a strict superset of tier 2, so it REQUIRES the tier-2 layer — client boat highlighted,
+  log events on the track, log<->tracker reconciliation. The crew log supplies that layer;
+  see privacy below. The tier-3 spine proposed for owner review is h4 (the two-nights
+  pattern), told through h1 and h3 with the archived-forecast evidence carrying the
+  'what could we have known' question."
+grid_minutes: 15
+scoring:
+  system: custom                 # mixed ORC ToT + PHRF ToD; hook scoring_alir:corrected
+  params: { rating_column: rating, hook: "scoring_alir:corrected" }
+  probe_boats: ["Max", "Habiru YCC", "Zammermoos"]
+  probe_result: "all 42 AOK rows reproduce official corrected within 1 s (36 ToD + 6 ToT)"
+  noise_floor_min: 10
+  noise_floor_basis: "~3 s/mi rating-assignment uncertainty x 207 nm ~ 10 min, the 2025
+    basis, and it applies to the ToD divisions only. Division 9's margins are far above it
+    (57:49 winner-to-second; Max 3:32:04 behind Katara56), so unlike 2025 the floor is NOT
+    load-bearing for the hero's story. It IS load-bearing for any ORC claim, where the
+    floor is a different quantity entirely — state it separately or not at all."
+
+client_boat: "Max"               # hero AND pipeline pivot; the owner crewed her.
+                                 # No dual-focus complication this year (Daffodil not entered).
+reference_boats:
+  - { name: "Katara56", why: "X-Yacht 56, Division 9 third — and the analytical spine of the
+      whole build: IDENTICAL -18 rating, so her elapsed gap to Max IS the corrected gap.
+      Every loss claim in this record is benchmarked against her (doctrine 5)." }
+  - { name: "Zammermoos", why: "Club Swan 42, Division 9 winner — the class benchmark" }
+  - { name: "Poseidon", why: "Swan 45, Division 9 second" }
+  - { name: "Habiru YCC", why: "J/121, ORC Division 0 winner; the 2025 default-highlight
+      boat, so she carries continuity between the two dashboards" }
+  - { name: "Lioness", why: "Spinnaker Division 8 winner and the standout PHRF corrected
+      performance; ALSO the counter-example to h3 — northernmost in the Sound on night 2
+      and still fastest. A reference set that omitted her would be flattering the
+      hypothesis." }
+
+divisions_in_scope:              # character-exact; must match config.yaml and results.class_name
+  - "Non-Spinnaker Division 1 - Warning Signal 13:00"
+  - "Non-Spinnaker Division 2 - Warning Signal 13:00"
+  - "Spinnaker Division 3 - Warning Signal 13:10"
+  - "Spinnaker Division 5 - Warning Signal 13:20"
+  - "Spinnaker Division 7 - Warning Signal 13:30"
+  - "Spinnaker Division 8 - Warning Signal 13:40"
+  - "Spinnaker Division 9 - Warning Signal 13:50"
+  - "ORC Division 0 - Warning Signal 13:40"
+  - "Double-Handed Division 4 - Warning Signal 14:10"
+  - "Multihull (NEMA) Division M - Warning Signal 14:00"
+# OUT of scope: the Around-the-Islands course (Nomad, still racing at snapshot, scored over
+# a different distance the SI states inconsistently). GUARD, carried from 2025:
+# untracked_meta_only stays EMPTY — an ATI boat given a track would be silently scored at
+# 207 nm and be wrong.
+
+privacy:                         # prime rule 4
+  crew_log: "The owner's crew log is a PRIVATE input and does not enter the repo. It was
+    read in-session for hypothesis generation and for the tier-2 events layer, and this
+    record quotes it only where a quotation is load-bearing for a verdict (the 04:25 and
+    21:00 decision entries). events.yaml ships as a placeholder in this draft; the
+    log-derived event proposal is presented AT the stage-0 stop and enters the repo
+    item-by-item on the owner's explicit opt-in, each with a visibility flag."
+  build: public
+
+owner_decisions_needed:          # the stage-0 stop — these gate everything downstream
+  - "FINISH TIME: did Max cross at ~11:57 or ~12:38 EDT Saturday? (finish_time_discrepancies)"
+  - "SNAPSHOT vs FINAL: build the preliminary dashboard on this in-progress snapshot now and
+    re-fetch later, or wait for final results? (Recommendation: build now — the hero's own
+    race is complete and stable; treat fleet-tail statistics as provisional and re-run
+    stage 0 after final scoring.)"
+  - "TIER-3 SPINE: is h4 (the two-nights pattern) the story, or does the owner want the
+    forecast-vs-reality axis as the spine with the two nights as its evidence?"
+  - "CREW-LOG EVENTS: which log entries may ship publicly, and under which category?"
+  - "REFERENCE SET: confirm or amend the five boats above."
+  - "H3 CONFIDENCE: the Sound-side claim rests on n=14 and a partial correlation. Ship it
+    with an explicit hedge, or hold it until stage 2 can widen the band?"
+
+owner_stop_decisions:            # the stage-0 stop outcome, owner's words paraphrased —
+                                 # each is BINDING on stages 1-4
+  opinions_held: "Stage 0 does not form opinions. The exploratory verdicts above are
+    retracted to hypothesis status; verdict-forming happens at stages 1-2 with more
+    research. Nothing above ships or is cited until re-derived there."
+  phase_boundaries: "The 21-mile decomposition's clock-window segments are REJECTED as
+    presented. Stage 2 must segment on the race's NATURAL transitions as the crew
+    experienced them: (1) the start and beat before the Ambrose turn; (2) the turn onto
+    the reach, 'where we caught a lot of boats'; (3) the first night's dying breeze;
+    (4) the rebuild through Montauk and Plum Gut; (5) the Sound night; (6) the final
+    day to the finish. Boundaries must be derived from the data (turn points, wind-phase
+    changes), not from round clock hours."
+  peer_sets: "Katara56 alone is NOT an adequate benchmark. Each phase gets its own peer
+    set: the boats PHYSICALLY CLOSEST to Max during that phase — regardless of division,
+    and not necessarily the same boats phase to phase — because only boats in the same
+    water and weather support an apples-to-apples judgment of the human calls. The
+    division-scoped comparison remains for corrected-time claims; the navigation story
+    uses spatial peers."
+  night1_reframed: "Owner's sharpened hypothesis, replacing the original: Katara56 went
+    offshore during the first night and Max did not — the ground was lost, or the losing
+    position was taken, DURING night 1 even if the distance-to-finish gap only opened at
+    the morning build. Stage 2 must separate contemporaneous loss from positional setup,
+    and visualize the divergence rather than assert it."
+  build_timing: "Proceed with stages 1+ NOW on the in-progress snapshot; owner re-fetches
+    final data tomorrow (2026-07-27). The re-fetch diff re-runs the stage-0 ritual."
+  tier3_spine: "DEFERRED — re-ask at a later stage with concrete alternatives and details."
+  crew_log: "Build an INTERNAL (non-public) events version first; the owner prunes it
+    before anything ships. AND: treat the crew log itself with a grain of salt — it is
+    one tired, self-described-inexperienced crew member's recollection, not ground truth.
+    Research and synthesize more objective data; where the log and instruments/tracker/
+    weather evidence disagree, the log yields."
+  reference_boats: "Same directive as peer_sets — the named five stand for division-level
+    scoring comparisons, but navigation-phase comparisons draw from spatial proximity."
+  finish_time: "Owner confirms Max crossed at ~11:57; RC contact initiated. See
+    finish_time_discrepancies.owner_answer."
+
+confirmed_by: "Brad"
+date: "2026-07-26"

@@ -90,3 +90,21 @@ adjudication before they ship.
   `COPY.distspeed.noteElapsed/noteCorrected/refLine/vsRef/xNote`); narrative
   never lives in shared module code. Found shipping NB2026 claims on the BIR
   page.
+- `presentation.coreData` (2026-07-26, ALIR 2026) — optional list of race-specific
+  top-level payload keys (postprocess-computed module tables) the split build
+  carries into core.json and the standalone embed. Absent list = exactly the old
+  behavior; a declared key missing from the payload fails the build loudly.
+- `race.correctedModel: 'mixed'` (2026-07-26, ALIR 2026) — optional third value for
+  fleets scoring PHRF ToD and ORC ToT in one event: each boat's partial corrected
+  uses her own model, dispatched on the rating value (multipliers in (0,2) = ToT).
+  'tot'/'tod' behavior unchanged.
+- `meta.corrAdj` (2026-07-26, ALIR 2026) — optional per-boat rescaled corrected time
+  consumed ONLY by the dist-vs-speed module's corrected mode for cross-system
+  display; official `meta.corr` remains the value everywhere else. Absent = old
+  behavior; the shipping race documents its rescale method in copy.
+- dist-vs-speed outlier clamp is two-sided (2026-07-26, ALIR 2026) — the gap
+  heuristic peels slow outliers off the bottom exactly as fast ones off the top,
+  edge-labelled; dots stay in the trace data (scored-boat count unchanged).
+- `distspeed.exclude` (2026-07-26, ALIR 2026) — optional list of boats a race
+  leaves off the dist-vs-speed chart (axis-stretching multi-day finishers);
+  the shipping race's caption names them. Absent = old behavior.

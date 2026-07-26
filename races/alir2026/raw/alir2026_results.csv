@@ -1,0 +1,53 @@
+race_number,circle,division,class_name,place_class,place_overall,boat_name,sail_number,design,owner,rating,finish_status,finish_time_utc,elapsed_sec,corrected_sec,elapsed_hms,corrected_hms
+1,Around Long Island Course - Multihull,PHRF,Multihull (NEMA) Division M - Warning Signal 14:00,2,2,Three Little Birds,USA52985,PT11 Trimaran,Peter Malloy,,RET,,,,,
+1,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 1 - Warning Signal 13:00,1,1,Dolcezza,53,Hunter Legend 37.5,Neill Parker Jr,150,AOK,2026-07-25T23:03:29.000Z,208709,177659,57:58:29,49:20:59
+1,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 1 - Warning Signal 13:00,2,5,Cool Change,121,Hunter 39,James Sheed,144,AOK,2026-07-26T17:13:54.000Z,274134,244326,76:08:54,67:52:06
+1,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 1 - Warning Signal 13:00,5,9,Java,279,Jeanneau 36.2 SO,Marc Grill,,RET,,,,,
+1,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 1 - Warning Signal 13:00,5,9,Yopo,103,Contest,Artur Jasinski,,RET,,,,,
+1,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 2 - Warning Signal 13:00,1,2,Shooting Star,USA20802,Peterson 34,David Kingsbury,117,AOK,2026-07-25T21:23:08.000Z,202688,178469,56:18:08,49:34:29
+1,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 2 - Warning Signal 13:00,2,3,YES 4X,393,Beneteau Oceanis 46.1,Henryk Walerys,135,AOK,2026-07-26T00:23:50.000Z,213530,185585,59:18:50,51:33:05
+1,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 2 - Warning Signal 13:00,3,4,Palomino,USA61107,C&C 37,Eugenio Silvestrini,129,AOK,2026-07-26T00:03:27.000Z,212307,185604,58:58:27,51:33:24
+1,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 2 - Warning Signal 13:00,4,6,Veronique,60141,Beneteau first 345,Bert Rubin de Cervens,135,AOK,2026-07-26T17:13:14.000Z,274094,246149,76:08:14,68:22:29
+1,Around Long Island Course - Spinnaker,ORC,ORC Division 0 - Warning Signal 13:40,1,1,Habiru YCC,USA61124,J 121,Steve Losik,0.9597,AOK,2026-07-25T07:22:21.000Z,149841,143802,41:37:21,39:56:42
+1,Around Long Island Course - Spinnaker,ORC,ORC Division 0 - Warning Signal 13:40,2,2,Ohana,435,Arcona 435 MkII,Ken Wisdom,0.9625,AOK,2026-07-25T08:44:17.000Z,154757,148954,42:59:17,41:22:34
+1,Around Long Island Course - Spinnaker,ORC,ORC Division 0 - Warning Signal 13:40,3,3,Della Aurora,USA27,XR41,James Bistis,0.9505,AOK,2026-07-25T09:42:58.000Z,158278,150443,43:57:58,41:47:23
+1,Around Long Island Course - Spinnaker,ORC,ORC Division 0 - Warning Signal 13:40,4,4,Surface Tension,52556,Beneteau First 44.7,Lou Melillo / Mike Bermann,0.9474,AOK,2026-07-25T10:22:36.000Z,160656,152205,44:37:36,42:16:45
+1,Around Long Island Course - Spinnaker,ORC,ORC Division 0 - Warning Signal 13:40,5,5,Imagine,USA108,X382,Matt Blake,0.8312,AOK,2026-07-25T17:08:10.000Z,184990,153764,51:23:10,42:42:44
+1,Around Long Island Course - Spinnaker,ORC,ORC Division 0 - Warning Signal 13:40,6,6,Beagle,USA44007,J/44,Willets Meyer,0.9526,AOK,2026-07-25T13:09:18.000Z,170658,162569,47:24:18,45:09:29
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 3 - Warning Signal 13:10,1,4,Golden-Eye,USA1937,Rhodes,Michael Emmert,171,AOK,2026-07-25T16:58:18.000Z,186198,150801,51:43:18,41:53:21
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 3 - Warning Signal 13:10,2,7,ACTAEA,USA3815,Bermuda 40,Michael M Cone,153,AOK,2026-07-25T16:35:31.000Z,184831,153160,51:20:31,42:32:40
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 3 - Warning Signal 13:10,3,9,Tynaje,USA2222,Ohlson 38,Daniel Fisher,144,AOK,2026-07-25T16:54:02.000Z,185942,156134,51:39:02,43:22:14
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 3 - Warning Signal 13:10,4,18,Midnight Rider - PMP Strategy,511,J/30,Denis Lafarge,141,AOK,2026-07-25T18:06:45.000Z,190305,161118,52:51:45,44:45:18
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 3 - Warning Signal 13:10,5,21,Scarlett,USA332,J Boat,David Wightman,147,AOK,2026-07-25T18:49:06.000Z,192846,162417,53:34:06,45:06:57
+1,Around Long Island Course - Spinnaker,PHRF,Double-Handed Division 4 - Warning Signal 14:10,1,2,Abilyn,USA25559,J 120,Josh Reisberg,39,AOK,2026-07-25T10:02:19.000Z,157639,149566,43:47:19,41:32:46
+1,Around Long Island Course - Spinnaker,PHRF,Double-Handed Division 4 - Warning Signal 14:10,2,5,Thin Man,USA24,J/99,Todd Aven,72,AOK,2026-07-25T12:39:49.000Z,167089,152185,46:24:49,42:16:25
+1,Around Long Island Course - Spinnaker,PHRF,Double-Handed Division 4 - Warning Signal 14:10,3,10,Halve Maen,USA075,TARTAN 33,Walther van Stipriaan,156,AOK,2026-07-25T18:38:40.000Z,188620,156328,52:23:40,43:25:28
+1,Around Long Island Course - Spinnaker,PHRF,Double-Handed Division 4 - Warning Signal 14:10,4,31,Windancer,USA25,J 37,Kenneth Horvath,72,AOK,2026-07-25T18:41:18.000Z,188778,173874,52:26:18,48:17:54
+1,Around Long Island Course - Spinnaker,PHRF,Double-Handed Division 4 - Warning Signal 14:10,5,33,First Rate,40819,Tartan 34-2,Marek Antkowiak,141,AOK,2026-07-26T00:20:33.000Z,209133,179946,58:05:33,49:59:06
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,1,13,Mayhem,18,Frers 30,Mark May,132,AOK,2026-07-25T16:49:40.000Z,185080,157756,51:24:40,43:49:16
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,2,17,Ripple,USA32685,S2 9.1,Michael Colucci,135,AOK,2026-07-25T17:39:41.000Z,188081,160136,52:14:41,44:28:56
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,3,19,Random,USA51362,Sabre 362,Robert Millstein,126,AOK,2026-07-25T17:27:10.000Z,187330,161248,52:02:10,44:47:28
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,4,20,MARIE,42832,Tartan 372,Paul Eliea,135,AOK,2026-07-25T18:09:33.000Z,189873,161928,52:44:33,44:58:48
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,5,24,Peggy-O,43895,Sabre,Pedro Escandon,129,AOK,2026-07-25T18:25:50.000Z,190850,164147,53:00:50,45:35:47
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,9,38,MARA,P39,Pearson 39-2,Alexander Malochka,,RET,,,,,
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,9,38,Elizabeth,46294,Catalina,Tom Hurter,,RET,,,,,
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,9,38,Athena,36,Catalina 38,christopher Berg,,RET,,,,,
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,1,11,The Rover,USA93310,Swan 44 MKII,S. Steven Yang,75,AOK,2026-07-25T13:34:03.000Z,172743,157218,47:59:03,43:40:18
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,2,14,Phantom,USA444,J/105,Max Hafen,87,AOK,2026-07-25T14:34:01.000Z,176341,158332,48:59:01,43:58:52
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,3,16,BETELGEUSE YCC,43392,J/36,Ben Cohen,81,AOK,2026-07-25T14:33:16.000Z,176296,159529,48:58:16,44:18:49
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,4,23,Valiant YCC,408,J/105,Stamford Yacht Club Juniors,75,AOK,2026-07-25T15:18:45.000Z,179025,163500,49:43:45,45:25:00
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,5,26,Little Texas,USA169,J/105,The Waterfront Center,93,AOK,2026-07-25T16:51:23.000Z,184583,165332,51:16:23,45:55:32
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,6,27,SCAPEGOAT,USAUSA 619,J/105,James Reichel,78,AOK,2026-07-25T16:56:24.000Z,184884,168738,51:21:24,46:52:18
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,7,29,Velocita,USA319,J/109,Marc De Souter,69,AOK,2026-07-25T16:50:22.000Z,184522,170239,51:15:22,47:17:19
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,8,30,ARGOS,1543,Dufour 44,Rad Kurek,87,AOK,2026-07-25T18:25:30.000Z,190230,172221,52:50:30,47:50:21
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,10,38,Avatar,USA61971,Beneteau First 42,Janusz Kedzierski,,RET,,,,,
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 8 - Warning Signal 13:40,1,3,Lioness,USA38007,Sydney 38,Lion Sailing Sailmakers,24,AOK,2026-07-25T08:58:42.000Z,155622,150654,43:13:42,41:50:54
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 8 - Warning Signal 13:40,2,8,Crocodile,USA61150,Beneteau First 50,Scott Ward,12,AOK,2026-07-25T09:13:33.000Z,156513,154029,43:28:33,42:47:09
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 8 - Warning Signal 13:40,3,12,DUET,USA51445,J/120,Andrian Lubimov,45,AOK,2026-07-25T12:02:08.000Z,166628,157313,46:17:08,43:41:53
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 8 - Warning Signal 13:40,4,22,Exuberance,51506,X-442,Rich Spitzenberger,48,AOK,2026-07-25T13:55:28.000Z,173428,163492,48:10:28,45:24:52
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 8 - Warning Signal 13:40,5,25,VICITAN,USA19,FIGARO 2,NEKA SAILING,57,AOK,2026-07-25T14:48:14.000Z,176594,164795,49:03:14,45:46:35
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 8 - Warning Signal 13:40,6,32,WANDERER,181,Hanse 458,Stefano Basilico,60,AOK,2026-07-25T18:33:52.000Z,190132,177712,52:48:52,49:21:52
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 9 - Warning Signal 13:50,1,1,Zammermoos,Uni4224,Club Swan 42,David Fass,-15,AOK,2026-07-25T06:28:13.000Z,145993,149098,40:33:13,41:24:58
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 9 - Warning Signal 13:50,2,6,Poseidon,USA52059,Swan 45,Nico Martinez,-24,AOK,2026-07-25T06:54:59.000Z,147599,152567,40:59:59,42:22:47
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 9 - Warning Signal 13:50,3,15,Katara56,CAY61887,X-Yacht 56,Daniel Griffin,-18,AOK,2026-07-25T09:05:59.000Z,155459,159185,43:10:59,44:13:05
+1,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 9 - Warning Signal 13:50,4,28,Max,USA75050,Pogo 50,Moritz Hilf,-18,AOK,2026-07-25T11:57:18.000Z,165738,169464,46:02:18,47:04:24

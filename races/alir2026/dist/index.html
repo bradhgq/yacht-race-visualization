@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALIR 2026 — Around Long Island Regatta</title>
+<meta name="description" content="Around Long Island Regatta 2026 — 207 nm, NY Harbor to Hempstead Harbor. Fleet analysis.">
+<link rel="canonical" href="https://hgq.fyi/max-around-long-island-2026/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ALIR 2026 — Around Long Island Regatta">
+<meta property="og:description" content="ALIR 2026: two parks, one reach — 42 finishers (and counting) around Long Island.">
+<meta property="og:url" content="https://hgq.fyi/max-around-long-island-2026/">
+<meta property="og:image" content="https://hgq.fyi/max-around-long-island-2026/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ALIR 2026 — Around Long Island Regatta">
+<meta name="twitter:description" content="ALIR 2026: two parks, one reach — 42 finishers (and counting) around Long Island.">
+<meta name="twitter:image" content="https://hgq.fyi/max-around-long-island-2026/og.png">
+<link rel="icon" href="favicon.svg?v=d8d16fa2f2" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css?v=d8d16fa2f2">
+<link rel="stylesheet" href="styles.css?v=d8d16fa2f2">
+<!-- DATA:FETCH — start the core payload download before the deferred scripts arrive -->
+<script>window.__CORE_FETCH=fetch('data/core.json?v=d8d16fa2f2').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});</script>
+<!-- /DATA:FETCH -->
+<script src="app/helpers.js?v=d8d16fa2f2" defer></script>
+<script src="app/tokens.js?v=d8d16fa2f2" defer></script>
+<script src="app/core.js?v=d8d16fa2f2" defer></script>
+<script src="app/charts/map.js?v=d8d16fa2f2" defer></script>
+<script src="app/charts/dtf.js?v=d8d16fa2f2" defer></script>
+<script src="app/charts/race.js?v=d8d16fa2f2" defer></script>
+<script src="app/charts/xte.js?v=d8d16fa2f2" defer></script>
+<script src="app/charts/sog.js?v=d8d16fa2f2" defer></script>
+<script src="race/presentation.js?v=d8d16fa2f2" defer></script>
+<script src="race/copy.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/distspeed.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/theses.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/ledger.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/split.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/watchperf.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/nightmap.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/nightone.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/plumgut.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/soundnight.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/forecast.js?v=d8d16fa2f2" defer></script>
+<script src="race/overlays/courseline.js?v=d8d16fa2f2" defer></script>
+<script src="race/overlays/arrows.js?v=d8d16fa2f2" defer></script>
+<script src="race/overlays/timedots.js?v=d8d16fa2f2" defer></script>
+<script src="race/overlays/watches.js?v=d8d16fa2f2" defer></script>
+<script src="vendor/plotly-basic-2.35.2.min.js" id="plotlyjs" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<header class="titleblock">
+  <div class="tb-eyebrow">Chart of the Race · 49th Around Long Island Regatta · July 23–26, 2026 · 207 NM</div>
+  <h1><span class="mag">Max</span> · Around Long Island 2026</h1>
+  <div class="tb-sub">Ellis Island, under the Verrazzano, east to Montauk, through Plum Gut, down the Sound to Sea Cliff.</div>
+  <div class="tb-result">PHRF Spinnaker Division 9: 4th of 4 · elapsed 46:02:18 (amended by the race committee) · 45 finishers, 7 retired. Results labeled preliminary by the organizer.</div>
+  <div class="tzn">All times EDT. Finish times verified against the tracker; see the notes for one open discrepancy.</div>
+</header>
+
+<noscript>
+  <div class="appstate err">This dashboard is interactive and needs JavaScript to draw its charts. The underlying data is plain JSON in <a href="data/core.json">data/core.json</a> if you'd rather read it raw.</div>
+</noscript>
+
+<main>
+
+<div class="appstate" id="appstate" role="status">Loading the race record…</div>
+
+<section class="controls" id="controls" aria-label="Boat and overlay controls" hidden>
+  <div class="ctl-head">
+    <span class="ctl-title">Compare boats &amp; overlays</span>
+    <button type="button" class="ctl-collapse" id="ctlCollapse" aria-expanded="true">Hide controls ▲</button>
+  </div>
+  <div id="ctlBody">
+    <div class="ctl-row"><div class="ctl-label big">Groups</div><div class="chips big" id="grpbtns"></div></div>
+    <div class="ctl-row" id="filterRow"><div class="ctl-label">Filter</div><div class="chips" id="filterctl"></div></div>
+    <div class="ctl-row"><div class="ctl-label">Boats</div><div class="chips" id="chips"></div></div>
+    <div id="morePanel" style="display:none;margin:2px 0 10px;padding-top:10px;border-top:1px dashed var(--rule)"></div>
+    <div class="ctl-row"><div class="ctl-label">Overlays</div><div class="chips" id="overlays"></div></div>
+    <div class="ctl-row">
+      <div class="ctl-label">Time axis</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="axis-toggle" id="axisToggle">
+          <button type="button" data-ax="t">By clock time</button>
+          <button type="button" data-ax="d">By distance to finish</button>
+        </div>
+        <span class="ctl-hint">Sets the x-axis on the offset, speed, and won-and-lost charts. <b>Distance</b> lines every boat up on the same water; <b>clock</b> shows what was happening when.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- phone-width only: the controls live in a bottom sheet behind this bar -->
+<div id="scrim" hidden></div>
+<button type="button" id="sheetBar" aria-controls="controls" aria-expanded="false" hidden>
+  <span class="dot" aria-hidden="true"></span><span id="sheetBarLabel">Boats &amp; overlays</span>
+</button>
+
+<section class="kpis" id="kpis" aria-label="Key results"></section>
+
+<section class="card">
+  <h2>The course</h2>
+  <div class="note" id="map_note">The scored course is the routed 207 nm line; every government mark except Ambrose R“14” may be disregarded.</div>
+  <div id="map" class="plot"></div>
+  <div class="tapnote" id="tap_map"></div>
+</section>
+
+<section class="card" id="sec_theses" hidden>
+  <h2></h2>
+  <div class="note"></div>
+  <div id="theses" data-mount></div>
+  <div class="tapnote" id="tap_theses"></div>
+</section>
+
+<section class="card">
+  <div class="hd"><h2>The race</h2><span class="tools">x-axis: clock time</span></div>
+  
+  <div id="dtf" class="plot"></div>
+  <div class="tapnote" id="tap_dtf"></div>
+</section>
+
+<section class="card">
+  <div class="hd">
+    <h2>Where the race was won and lost — vs <span id="refname" style="color:var(--magenta)"></span></h2>
+    <span class="tools">
+      <button type="button" class="modebtn" id="mode_h">Corrected (handicap)</button>
+      <button type="button" class="modebtn" id="mode_e">Elapsed (boat-for-boat)</button>
+      &nbsp;·&nbsp;
+      <button type="button" class="modebtn" id="view_p">Pace (min/100nm)</button>
+      <button type="button" class="modebtn" id="view_t">Total (min)</button>
+      &nbsp;·&nbsp; <label for="refsel">Reference</label> <select id="refsel"></select>
+    </span>
+  </div>
+  <div class="note" id="racenote"></div>
+  <div id="race" class="plot"></div>
+  <div class="tapnote" id="tap_race"></div>
+</section>
+
+<section class="card" id="sec_distspeed" hidden>
+  <div class="hd"><h2></h2><span class="tools"><button type="button" class="modebtn" id="mtog_distspeed_e">Elapsed</button><button type="button" class="modebtn" id="mtog_distspeed_h">Corrected</button></span></div>
+  <div class="note"></div>
+  <div id="distspeed" data-mount></div>
+  <div class="tapnote" id="tap_distspeed"></div>
+</section>
+
+<section class="card" id="sec_ledger" hidden>
+  <h2></h2>
+  <div class="note"></div>
+  <div id="ledger" data-mount></div>
+  <div class="tapnote" id="tap_ledger"></div>
+</section>
+
+<section class="card" id="sec_split" hidden>
+  <h2></h2>
+  <div class="note"></div>
+  <div id="split" data-mount></div>
+  <div class="tapnote" id="tap_split"></div>
+</section>
+
+<section class="card" id="sec_watchperf" hidden>
+  <h2></h2>
+  <div class="note"></div>
+  <div id="watchperf" data-mount></div>
+  <div class="tapnote" id="tap_watchperf"></div>
+</section>
+
+<section class="card" id="sec_nightmap" hidden>
+  <h2></h2>
+  <div class="note"></div>
+  <div id="nightmap" data-mount></div>
+  <div class="tapnote" id="tap_nightmap"></div>
+</section>
+
+<section class="card" id="sec_nightone" hidden>
+  <h2></h2>
+  <div class="note"></div>
+  <div id="nightone" data-mount></div>
+  <div class="tapnote" id="tap_nightone"></div>
+</section>
+
+<section class="card" id="sec_plumgut" hidden>
+  <h2></h2>
+  <div class="note"></div>
+  <div id="plumgut" data-mount></div>
+  <div class="tapnote" id="tap_plumgut"></div>
+</section>
+
+<section class="card" id="sec_soundnight" hidden>
+  <h2></h2>
+  <div class="note"></div>
+  <div id="soundnight" data-mount></div>
+  <div class="tapnote" id="tap_soundnight"></div>
+</section>
+
+<div class="two">
+<section class="card">
+  <div class="hd"><h2>Distance from the course line</h2><span class="tools" id="xte_axnote"></span></div>
+  <div class="note" id="xte_note">The south-shore spine is drafted from the sailed median, not marks — offsets here are position, not error.</div>
+  <div id="xte" class="plot"></div>
+  <div class="tapnote" id="tap_xte"></div>
+</section>
+<section class="card">
+  <div class="hd"><h2>Speed over ground</h2><span class="tools"><button type="button" class="modebtn" id="sogm_s">SOG</button><button type="button" class="modebtn" id="sogm_v">VMC (toward finish)</button>&nbsp;·&nbsp;<span id="sog_axnote"></span></span></div>
+  
+  <div id="sog" class="plot"></div>
+  <div class="tapnote" id="tap_sog"></div>
+</section>
+</div>
+
+<section class="card" id="sec_forecast" hidden>
+  <h2></h2>
+  <div class="note"></div>
+  <div id="forecast" data-mount></div>
+  <div class="tapnote" id="tap_forecast"></div>
+</section>
+
+<section class="card">
+  <h2>Race log — every marked moment</h2>
+  <div class="note"></div>
+  <div id="eventtable" style="max-height:520px;overflow-y:auto"></div>
+</section>
+
+</main>
+
+<footer class="foot">
+<h3>How to read this</h3>
+  <ul><li>PRIVATE ANALYSIS CUT — the crew-facing version (watch layer included); the public cut follows its own review. Data captured 10:00 EDT July 26 with every Around-Long-Island boat resolved (45 finishers, 6 retired); the organizer still labels results preliminary. Nomad (Around-the-Islands course — a different course around Block Island) is out of scope and unscored.</li>
+  <li>Corrected times are division-scoped. PHRF divisions score time-on-distance at 207 nm; the new ORC Division 0 scores time-on-time. The two are never compared across the boundary.</li>
+  <li>Finish-time note: Max&#8217;s official finish was amended by the race committee to 11:57:18 — six seconds from her tracker&#8217;s line marker — after this project&#8217;s query. Three other boats&#8217; official times still sit 8–68 minutes after their tracker line-crossings; official values are used throughout.</li></ul>
+  <h3>Sources &amp; method</h3>
+  <ul><li>YB Tracking race alir26 (position history, decoded); YachtScoring event 50645 (entries, provisional results); Final 2026 ALIR SI (course, 207 nm, scoring).</li>
+  <li>Weather evidence: NDBC observations, NOAA CO-OPS current predictions, archived HRRR/ECMWF forecasts via Open-Meteo (CC-BY 4.0) — evidence for the narrative only; no chart number depends on it.</li>
+  <li>CROSS-SYSTEM METHODOLOGY (the internal comparison strip and any PHRF-vs-ORC read): no governing body sanctions a PHRF&#8596;ORC conversion. Regional PHRF authorities publish time-on-time conversions of their OWN ratings (TCF = A/(B+PHRF), constants varying by region) and ORC&#8217;s ToD/ToT forms are internally equivalent (ToT &#8776; 600/ToD) — but the ORC Triple-Number coefficient&#8217;s reference base is not published, so no cross-system corrected arithmetic is defensible. This dashboard therefore never converts: each boat is measured against her own scoring group&#8217;s winner (percent behind, corrected), and cross-group comparisons rest on the stated assumption that each group&#8217;s winner sailed comparably well. Internal analysis only; official standings remain per division.</li></ul>
+  <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the race record · build 2026-07-26</div>
+</footer>
+
+</div>
+</body>
+</html>
