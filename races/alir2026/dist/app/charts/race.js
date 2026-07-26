@@ -50,10 +50,14 @@ function buildRace() {
       // 'tod' subtracts rating (sec/nm) x distance DONE — at m=0 both agree
       // with the official corrected delta the endpoint assertion pins (I2).
       // R.correctedModel defaults to 'tot' (nb2026/bir2026, unchanged).
+      // 'mixed' (additive, ALIR 2026): a fleet scoring BOTH systems at once —
+      // each boat's partial corrected uses HER OWN model, dispatched on the
+      // rating value (ToT multipliers live in (0,2); ToD sec/mi never do).
+      const corrP = (t, f) => (R.correctedModel === 'mixed')
+        ? ((f > 0 && f < 2) ? t * f : t - f * (rhumb - m))
+        : (R.correctedModel === 'tod' ? t - f * (rhumb - m) : t * f);
       let v = S.raceMode === 'h'
-        ? (R.correctedModel === 'tod'
-            ? ((mine - theirs) - (tcf - refTCF) * (rhumb - m)) / 60
-            : (mine * tcf - theirs * refTCF) / 60)
+        ? (corrP(mine, tcf) - corrP(theirs, refTCF)) / 60
         : (mine - theirs) / 60;
       if (pace) { const done = rhumb - m; if (done < R.paceMinDone) { xs.push(raceX(m)); ys.push(null); return; } v = v / done * 100; }
       xs.push(raceX(m)); ys.push(v);

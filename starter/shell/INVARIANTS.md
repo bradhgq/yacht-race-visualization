@@ -94,3 +94,7 @@ adjudication before they ship.
   top-level payload keys (postprocess-computed module tables) the split build
   carries into core.json and the standalone embed. Absent list = exactly the old
   behavior; a declared key missing from the payload fails the build loudly.
+- `race.correctedModel: 'mixed'` (2026-07-26, ALIR 2026) — optional third value for
+  fleets scoring PHRF ToD and ORC ToT in one event: each boat's partial corrected
+  uses her own model, dispatched on the rating value (multipliers in (0,2) = ToT).
+  'tot'/'tod' behavior unchanged.

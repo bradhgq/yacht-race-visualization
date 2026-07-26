@@ -44,3 +44,12 @@ the stage-3 corrections stop. No analysis claims until confirmed at a stop.
 6. XTE on this course model is position, not error (median-drafted spine).
 7. Set-scoped numbers name their set ("of the boats scored so far", "among the
    ten boats within three miles that night").
+
+## Cross-system methodology footnote (footer; binds the fairladder module)
+
+No sanctioned PHRF↔ORC conversion exists. Regional PHRF ToT conversions
+(TCF = A/(B+PHRF)) cover only their own ratings; ORC's ToT ≈ 600/ToD is internal
+to ORC; the Triple-Number coefficient's reference base is unpublished. So: no
+conversion, ever. The internal strip = percent behind own scoring group's winner
+on corrected time; cross-group reads assume comparable winners (stated,
+unverifiable). Internal analysis only — never a unified ranking.

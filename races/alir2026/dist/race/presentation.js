@@ -68,19 +68,15 @@ window.__RACE_CONFIG__ = {
     ev: ['insight', 'milestone'], ref: 'Katara56',   // ref = the identical -18 rating
                                           // makes her the like-for-like benchmark (doctrine 5)
     fleet: true, rhumb: false,            // marks course — the chord misleads; courseline carries it
-    overlays: {},
+    overlays: { arrows: true, timedots: true },
     raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'vmc',
   },
   race: { height: '430px', milestoneTop: 200, milestoneBottom: 1, milestoneStep: 1,
-          correctedModel: 'tod',   // PHRF time-on-distance for the mid-race corrected traces.
-                                   // KNOWN LIMIT (stage-2 finding, owner decides at the stop):
-                                   // the six ORC Division 0 boats score time-on-TIME; one global
-                                   // model cannot fit both, so their MID-RACE corrected traces
-                                   // render ~elapsed (ToD at 0.83-0.96 sec/mi subtracts almost
-                                   // nothing) — up to ~4% high vs their true ToT corrected.
-                                   // Endpoint values are exact (read from official results).
-                                   // Options at the stop: per-boat model dispatch in the shell
-                                   // (same 0<r<2 rule as scoring_alir.py) or an ORC caption.
+          correctedModel: 'mixed', // per-boat dispatch (owner request): PHRF boats ToD,
+                                   // ORC boats ToT (shell 'mixed' model, INVARIANTS entry
+                                   // 2026-07-26). Endpoints stay official; cross-system
+                                   // mid-race gaps are internal-comparison flavor and the
+                                   // race chart caption says so.
           paceMinDone: 15, eventRowY: 19, ratingLabel: 'PHRF / ORC' },
   charts: {
     map: { heightScale: 0.75, legendBottom: true },   // 2025 owner preferences, same water
@@ -112,9 +108,9 @@ window.__RACE_CONFIG__ = {
     [70, 'PLUM GUT', -10, -26],
   ],
   controls: { pills: ['@ghosts'] },       // scored course always on (2025 owner decision)
-  layout: ['map', '@theses', 'dtf', 'race', '@distspeed', '@ledger', '@split',
-           '@nightone', '@plumgut', '@soundnight', 'two:xte,sog', 'events', '@forecast'],
-  modules: ['distspeed', 'theses', 'ledger', 'split', 'nightone', 'plumgut', 'soundnight', 'forecast'],
+  layout: ['map', '@theses', 'dtf', 'race', '@distspeed', '@ledger', '@split', '@fairladder',
+           '@nightmap', '@nightone', '@plumgut', '@soundnight', 'two:xte,sog', 'events', '@forecast'],
+  modules: ['distspeed', 'theses', 'ledger', 'split', 'fairladder', 'nightmap', 'nightone', 'plumgut', 'soundnight', 'forecast'],
   coreData: ['ledger', 'nightone', 'plumgut', 'soundgate'],   // postprocess tables the modules render from
-  overlays: ['courseline'],
+  overlays: ['courseline', 'arrows', 'timedots'],
 };

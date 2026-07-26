@@ -144,6 +144,42 @@ def main():
             m["note"] = f"{system} · {div} · retired"
         b["meta"] = m
 
+    # 1b. internal fair-comparison metric (owner, stage-4 round 1): percent behind
+    # own SCORING GROUP's winner on official corrected seconds. Groups follow the
+    # organizer's own place_overall universes (PHRF spinnaker circle incl. DH, ORC
+    # Division 0, Non-Spinnaker circle). NO cross-system conversion exists that a
+    # governing body sanctions, so none is attempted — the cross-group read rests
+    # on the stated assumption that each group's winner sailed comparably well.
+    # INTERNAL ANALYSIS ONLY (module fairladder + footer methodology footnote).
+    import re as _re
+    def _group(cls):
+        if not cls:
+            return None
+        if "ORC" in cls:
+            return "orc"
+        if "Non-Spinnaker" in cls:
+            return "nonspin"
+        if "Multihull" in cls:
+            return "multi"
+        return "phrf_spin"          # Spinnaker + Double-Handed PHRF circle
+    def _secs(hms):
+        if not hms:
+            return None
+        parts = [int(x) for x in hms.split(":")]
+        return parts[0] * 3600 + parts[1] * 60 + parts[2]
+    gw = {}
+    for nm, b in boats.items():
+        m = b.get("meta") or {}
+        g = _group(m.get("cls")); cs = _secs(m.get("corr"))
+        if g and cs:
+            gw[g] = min(gw.get(g, 10 ** 9), cs)
+    for nm, b in boats.items():
+        m = b.get("meta") or {}
+        g = _group(m.get("cls")); cs = _secs(m.get("corr"))
+        if g and cs and g in gw:
+            m["fairPct"] = round((cs - gw[g]) / gw[g] * 100, 1)
+            b["meta"] = m
+
     # 2+3. phase ledger + powered/light meta ---------------------------------------
     ledger = []
     pow_light = {}

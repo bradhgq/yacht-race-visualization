@@ -21,7 +21,7 @@ window.__COPY__ = {
     sog:    { title: 'Speed over ground', note: '', noteVmc: 'VMC is closing speed on the finish computed from positions — the tracker carries no wind, so this is not VMG.' },
     events: { title: 'Race log — every marked moment', note: '' },
   },
-  race: { notes: { h: 'Corrected standings are division-scoped: PHRF divisions correct on time-on-distance; ORC Division 0 scores time-on-time and its mid-race traces here are approximate (endpoints exact).', e: '' } },
+  race: { notes: { h: 'Each boat\u2019s mid-race corrected uses her own scoring model (PHRF time-on-distance, ORC time-on-time). Gaps within a scoring group are like-for-like; gaps ACROSS the PHRF/ORC boundary are internal-comparison only \u2014 see the methodology footnote.', e: '' } },
   sog: {},
   distspeed: {
     noteElapsed: 'Each dot is one boat: distance actually sailed against elapsed time. Rays are equal-finish-time guides.',
@@ -52,6 +52,7 @@ window.__COPY__ = {
   <li>Finish-time note: Max&#8217;s official finish was amended by the race committee to 11:57:18 — six seconds from her tracker&#8217;s line marker — after this project&#8217;s query. Three other boats&#8217; official times still sit 8–68 minutes after their tracker line-crossings; official values are used throughout.</li></ul>
   <h3>Sources &amp; method</h3>
   <ul><li>YB Tracking race alir26 (position history, decoded); YachtScoring event 50645 (entries, provisional results); Final 2026 ALIR SI (course, 207 nm, scoring).</li>
-  <li>Weather evidence: NDBC observations, NOAA CO-OPS current predictions, archived HRRR/ECMWF forecasts via Open-Meteo (CC-BY 4.0) — evidence for the narrative only; no chart number depends on it.</li></ul>
+  <li>Weather evidence: NDBC observations, NOAA CO-OPS current predictions, archived HRRR/ECMWF forecasts via Open-Meteo (CC-BY 4.0) — evidence for the narrative only; no chart number depends on it.</li>
+  <li>CROSS-SYSTEM METHODOLOGY (the internal comparison strip and any PHRF-vs-ORC read): no governing body sanctions a PHRF&#8596;ORC conversion. Regional PHRF authorities publish time-on-time conversions of their OWN ratings (TCF = A/(B+PHRF), constants varying by region) and ORC&#8217;s ToD/ToT forms are internally equivalent (ToT &#8776; 600/ToD) — but the ORC Triple-Number coefficient&#8217;s reference base is not published, so no cross-system corrected arithmetic is defensible. This dashboard therefore never converts: each boat is measured against her own scoring group&#8217;s winner (percent behind, corrected), and cross-group comparisons rest on the stated assumption that each group&#8217;s winner sailed comparably well. Internal analysis only; official standings remain per division.</li></ul>
   <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the race record · build 2026-07-26</div>`,
 };

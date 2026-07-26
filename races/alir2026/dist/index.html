@@ -17,31 +17,35 @@
 <meta name="twitter:title" content="ALIR 2026 — Around Long Island Regatta">
 <meta name="twitter:description" content="ALIR 2026: two parks, one reach — 42 finishers (and counting) around Long Island.">
 <meta name="twitter:image" content="https://hgq.fyi/max-around-long-island-2026/og.png">
-<link rel="icon" href="favicon.svg?v=1954e0f69b" type="image/svg+xml">
-<link rel="stylesheet" href="tokens.css?v=1954e0f69b">
-<link rel="stylesheet" href="styles.css?v=1954e0f69b">
+<link rel="icon" href="favicon.svg?v=1ce205a72b" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css?v=1ce205a72b">
+<link rel="stylesheet" href="styles.css?v=1ce205a72b">
 <!-- DATA:FETCH — start the core payload download before the deferred scripts arrive -->
-<script>window.__CORE_FETCH=fetch('data/core.json?v=1954e0f69b').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});</script>
+<script>window.__CORE_FETCH=fetch('data/core.json?v=1ce205a72b').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});</script>
 <!-- /DATA:FETCH -->
-<script src="app/helpers.js?v=1954e0f69b" defer></script>
-<script src="app/tokens.js?v=1954e0f69b" defer></script>
-<script src="app/core.js?v=1954e0f69b" defer></script>
-<script src="app/charts/map.js?v=1954e0f69b" defer></script>
-<script src="app/charts/dtf.js?v=1954e0f69b" defer></script>
-<script src="app/charts/race.js?v=1954e0f69b" defer></script>
-<script src="app/charts/xte.js?v=1954e0f69b" defer></script>
-<script src="app/charts/sog.js?v=1954e0f69b" defer></script>
-<script src="race/presentation.js?v=1954e0f69b" defer></script>
-<script src="race/copy.js?v=1954e0f69b" defer></script>
-<script src="race/modules/distspeed.js?v=1954e0f69b" defer></script>
-<script src="race/modules/theses.js?v=1954e0f69b" defer></script>
-<script src="race/modules/ledger.js?v=1954e0f69b" defer></script>
-<script src="race/modules/split.js?v=1954e0f69b" defer></script>
-<script src="race/modules/nightone.js?v=1954e0f69b" defer></script>
-<script src="race/modules/plumgut.js?v=1954e0f69b" defer></script>
-<script src="race/modules/soundnight.js?v=1954e0f69b" defer></script>
-<script src="race/modules/forecast.js?v=1954e0f69b" defer></script>
-<script src="race/overlays/courseline.js?v=1954e0f69b" defer></script>
+<script src="app/helpers.js?v=1ce205a72b" defer></script>
+<script src="app/tokens.js?v=1ce205a72b" defer></script>
+<script src="app/core.js?v=1ce205a72b" defer></script>
+<script src="app/charts/map.js?v=1ce205a72b" defer></script>
+<script src="app/charts/dtf.js?v=1ce205a72b" defer></script>
+<script src="app/charts/race.js?v=1ce205a72b" defer></script>
+<script src="app/charts/xte.js?v=1ce205a72b" defer></script>
+<script src="app/charts/sog.js?v=1ce205a72b" defer></script>
+<script src="race/presentation.js?v=1ce205a72b" defer></script>
+<script src="race/copy.js?v=1ce205a72b" defer></script>
+<script src="race/modules/distspeed.js?v=1ce205a72b" defer></script>
+<script src="race/modules/theses.js?v=1ce205a72b" defer></script>
+<script src="race/modules/ledger.js?v=1ce205a72b" defer></script>
+<script src="race/modules/split.js?v=1ce205a72b" defer></script>
+<script src="race/modules/fairladder.js?v=1ce205a72b" defer></script>
+<script src="race/modules/nightmap.js?v=1ce205a72b" defer></script>
+<script src="race/modules/nightone.js?v=1ce205a72b" defer></script>
+<script src="race/modules/plumgut.js?v=1ce205a72b" defer></script>
+<script src="race/modules/soundnight.js?v=1ce205a72b" defer></script>
+<script src="race/modules/forecast.js?v=1ce205a72b" defer></script>
+<script src="race/overlays/courseline.js?v=1ce205a72b" defer></script>
+<script src="race/overlays/arrows.js?v=1ce205a72b" defer></script>
+<script src="race/overlays/timedots.js?v=1ce205a72b" defer></script>
 <script src="vendor/plotly-basic-2.35.2.min.js" id="plotlyjs" defer></script>
 </head>
 <body>
@@ -154,6 +158,20 @@
   <div class="tapnote" id="tap_split"></div>
 </section>
 
+<section class="card" id="sec_fairladder" hidden>
+  <h2></h2>
+  <div class="note"></div>
+  <div id="fairladder" data-mount></div>
+  <div class="tapnote" id="tap_fairladder"></div>
+</section>
+
+<section class="card" id="sec_nightmap" hidden>
+  <h2></h2>
+  <div class="note"></div>
+  <div id="nightmap" data-mount></div>
+  <div class="tapnote" id="tap_nightmap"></div>
+</section>
+
 <section class="card" id="sec_nightone" hidden>
   <h2></h2>
   <div class="note"></div>
@@ -212,7 +230,8 @@
   <li>Finish-time note: Max&#8217;s official finish was amended by the race committee to 11:57:18 — six seconds from her tracker&#8217;s line marker — after this project&#8217;s query. Three other boats&#8217; official times still sit 8–68 minutes after their tracker line-crossings; official values are used throughout.</li></ul>
   <h3>Sources &amp; method</h3>
   <ul><li>YB Tracking race alir26 (position history, decoded); YachtScoring event 50645 (entries, provisional results); Final 2026 ALIR SI (course, 207 nm, scoring).</li>
-  <li>Weather evidence: NDBC observations, NOAA CO-OPS current predictions, archived HRRR/ECMWF forecasts via Open-Meteo (CC-BY 4.0) — evidence for the narrative only; no chart number depends on it.</li></ul>
+  <li>Weather evidence: NDBC observations, NOAA CO-OPS current predictions, archived HRRR/ECMWF forecasts via Open-Meteo (CC-BY 4.0) — evidence for the narrative only; no chart number depends on it.</li>
+  <li>CROSS-SYSTEM METHODOLOGY (the internal comparison strip and any PHRF-vs-ORC read): no governing body sanctions a PHRF&#8596;ORC conversion. Regional PHRF authorities publish time-on-time conversions of their OWN ratings (TCF = A/(B+PHRF), constants varying by region) and ORC&#8217;s ToD/ToT forms are internally equivalent (ToT &#8776; 600/ToD) — but the ORC Triple-Number coefficient&#8217;s reference base is not published, so no cross-system corrected arithmetic is defensible. This dashboard therefore never converts: each boat is measured against her own scoring group&#8217;s winner (percent behind, corrected), and cross-group comparisons rest on the stated assumption that each group&#8217;s winner sailed comparably well. Internal analysis only; official standings remain per division.</li></ul>
   <div style="margin-top:10px;font-family:var(--mono);font-size:11px">Built from the race record · build 2026-07-26</div>
 </footer>
 
