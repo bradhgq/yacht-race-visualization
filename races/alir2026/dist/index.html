@@ -17,35 +17,34 @@
 <meta name="twitter:title" content="ALIR 2026 — Around Long Island Regatta">
 <meta name="twitter:description" content="ALIR 2026: two parks, one reach — 42 finishers (and counting) around Long Island.">
 <meta name="twitter:image" content="https://hgq.fyi/max-around-long-island-2026/og.png">
-<link rel="icon" href="favicon.svg?v=1ce205a72b" type="image/svg+xml">
-<link rel="stylesheet" href="tokens.css?v=1ce205a72b">
-<link rel="stylesheet" href="styles.css?v=1ce205a72b">
+<link rel="icon" href="favicon.svg?v=15a2751dab" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css?v=15a2751dab">
+<link rel="stylesheet" href="styles.css?v=15a2751dab">
 <!-- DATA:FETCH — start the core payload download before the deferred scripts arrive -->
-<script>window.__CORE_FETCH=fetch('data/core.json?v=1ce205a72b').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});</script>
+<script>window.__CORE_FETCH=fetch('data/core.json?v=15a2751dab').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});</script>
 <!-- /DATA:FETCH -->
-<script src="app/helpers.js?v=1ce205a72b" defer></script>
-<script src="app/tokens.js?v=1ce205a72b" defer></script>
-<script src="app/core.js?v=1ce205a72b" defer></script>
-<script src="app/charts/map.js?v=1ce205a72b" defer></script>
-<script src="app/charts/dtf.js?v=1ce205a72b" defer></script>
-<script src="app/charts/race.js?v=1ce205a72b" defer></script>
-<script src="app/charts/xte.js?v=1ce205a72b" defer></script>
-<script src="app/charts/sog.js?v=1ce205a72b" defer></script>
-<script src="race/presentation.js?v=1ce205a72b" defer></script>
-<script src="race/copy.js?v=1ce205a72b" defer></script>
-<script src="race/modules/distspeed.js?v=1ce205a72b" defer></script>
-<script src="race/modules/theses.js?v=1ce205a72b" defer></script>
-<script src="race/modules/ledger.js?v=1ce205a72b" defer></script>
-<script src="race/modules/split.js?v=1ce205a72b" defer></script>
-<script src="race/modules/fairladder.js?v=1ce205a72b" defer></script>
-<script src="race/modules/nightmap.js?v=1ce205a72b" defer></script>
-<script src="race/modules/nightone.js?v=1ce205a72b" defer></script>
-<script src="race/modules/plumgut.js?v=1ce205a72b" defer></script>
-<script src="race/modules/soundnight.js?v=1ce205a72b" defer></script>
-<script src="race/modules/forecast.js?v=1ce205a72b" defer></script>
-<script src="race/overlays/courseline.js?v=1ce205a72b" defer></script>
-<script src="race/overlays/arrows.js?v=1ce205a72b" defer></script>
-<script src="race/overlays/timedots.js?v=1ce205a72b" defer></script>
+<script src="app/helpers.js?v=15a2751dab" defer></script>
+<script src="app/tokens.js?v=15a2751dab" defer></script>
+<script src="app/core.js?v=15a2751dab" defer></script>
+<script src="app/charts/map.js?v=15a2751dab" defer></script>
+<script src="app/charts/dtf.js?v=15a2751dab" defer></script>
+<script src="app/charts/race.js?v=15a2751dab" defer></script>
+<script src="app/charts/xte.js?v=15a2751dab" defer></script>
+<script src="app/charts/sog.js?v=15a2751dab" defer></script>
+<script src="race/presentation.js?v=15a2751dab" defer></script>
+<script src="race/copy.js?v=15a2751dab" defer></script>
+<script src="race/modules/distspeed.js?v=15a2751dab" defer></script>
+<script src="race/modules/theses.js?v=15a2751dab" defer></script>
+<script src="race/modules/ledger.js?v=15a2751dab" defer></script>
+<script src="race/modules/split.js?v=15a2751dab" defer></script>
+<script src="race/modules/nightmap.js?v=15a2751dab" defer></script>
+<script src="race/modules/nightone.js?v=15a2751dab" defer></script>
+<script src="race/modules/plumgut.js?v=15a2751dab" defer></script>
+<script src="race/modules/soundnight.js?v=15a2751dab" defer></script>
+<script src="race/modules/forecast.js?v=15a2751dab" defer></script>
+<script src="race/overlays/courseline.js?v=15a2751dab" defer></script>
+<script src="race/overlays/arrows.js?v=15a2751dab" defer></script>
+<script src="race/overlays/timedots.js?v=15a2751dab" defer></script>
 <script src="vendor/plotly-basic-2.35.2.min.js" id="plotlyjs" defer></script>
 </head>
 <body>
@@ -158,13 +157,6 @@
   <div class="tapnote" id="tap_split"></div>
 </section>
 
-<section class="card" id="sec_fairladder" hidden>
-  <h2></h2>
-  <div class="note"></div>
-  <div id="fairladder" data-mount></div>
-  <div class="tapnote" id="tap_fairladder"></div>
-</section>
-
 <section class="card" id="sec_nightmap" hidden>
   <h2></h2>
   <div class="note"></div>
@@ -208,17 +200,17 @@
 </section>
 </div>
 
-<section class="card">
-  <h2>Race log — every marked moment</h2>
-  <div class="note"></div>
-  <div id="eventtable" style="max-height:520px;overflow-y:auto"></div>
-</section>
-
 <section class="card" id="sec_forecast" hidden>
   <h2></h2>
   <div class="note"></div>
   <div id="forecast" data-mount></div>
   <div class="tapnote" id="tap_forecast"></div>
+</section>
+
+<section class="card">
+  <h2>Race log — every marked moment</h2>
+  <div class="note"></div>
+  <div id="eventtable" style="max-height:520px;overflow-y:auto"></div>
 </section>
 
 </main>

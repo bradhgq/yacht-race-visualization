@@ -98,3 +98,7 @@ adjudication before they ship.
   fleets scoring PHRF ToD and ORC ToT in one event: each boat's partial corrected
   uses her own model, dispatched on the rating value (multipliers in (0,2) = ToT).
   'tot'/'tod' behavior unchanged.
+- `meta.corrAdj` (2026-07-26, ALIR 2026) — optional per-boat rescaled corrected time
+  consumed ONLY by the dist-vs-speed module's corrected mode for cross-system
+  display; official `meta.corr` remains the value everywhere else. Absent = old
+  behavior; the shipping race documents its rescale method in copy.

@@ -49,7 +49,7 @@ registerModule({
   deps: ['boats'],
   section: {
     kind: 'plot',
-    height: 'min(460px, 95vw)',
+    height: 'min(560px, 115vw)',
     title: 'Plum Gut — one gate, three tides',
     note: '<b>One gate, three prices: the 18:10–18:30 group rode +1 kt of flood through at ~8.8 kt; ' +
       '<span class="mag">Max</span> arrived 20:35, half an hour into the ebb; the group behind paid up to ' +

@@ -36,9 +36,12 @@ registerModule({
     for (const nm of Object.keys(D.boats)) {
       const m = D.boats[nm].meta;
       if (!m.corr || m.sailedNm == null || m.avgKt == null) continue;
+      // meta.corrAdj (additive, ALIR 2026): a race may ship a rescaled corrected
+      // for cross-system display (methodology in that race's copy); official
+      // corr is untouched everywhere else. Absent = old behavior.
       // y = distance sailed ÷ the chosen time base; corrected divides by the
       // official corrected time (compressed by the boat's handicap).
-      const y = corrected ? m.sailedNm / (h.parseDur(m.corr) / 3600) : m.avgKt;
+      const y = corrected ? m.sailedNm / (h.parseDur(m.corrAdj || m.corr) / 3600) : m.avgKt;
       rows.push({ nm, x: m.sailedNm, y: +y.toFixed(2), sdl: m.sdl, el: m.el, corr: m.corr });
     }
     if (!rows.length) return null;

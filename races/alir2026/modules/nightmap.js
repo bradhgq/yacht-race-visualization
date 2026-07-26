@@ -11,7 +11,7 @@ registerModule({
   deps: ['boats'],
   section: {
     kind: 'plot',
-    height: 'min(520px, 96vw)',
+    height: 'min(600px, 110vw)',
     title: 'Night one on the water — the peel, the jibe, the dead lane',
     note: '<b>Dots are one hour apart — where they bunch, the boat is parked.</b> ' +
       'Katara56 peels offshore from 23:00 and keeps her spacing through dawn; ' +
@@ -33,7 +33,7 @@ registerModule({
       line: { color: '#8898A6', width: 1, dash: 'dot' }, hoverinfo: 'skip', showlegend: false,
     }];
     const ann = [{
-      x: -73.02, y: 40.705, xref: 'x', yref: 'y', showarrow: false,
+      x: -72.93, y: 40.71, xref: 'x', yref: 'y', showarrow: false,
       text: 'LONG ISLAND — south shore', textangle: -8,
       font: { size: 9, color: '#8898A6', family: 'SF Mono, Menlo, monospace' },
     }];
@@ -82,8 +82,8 @@ registerModule({
     }
     const layout = { ...h.BASE(), annotations: ann,
       margin: { ...h.BASE().margin, t: 24 },
-      xaxis: { ...h.GAX, range: [-73.36, -72.28], title: { text: 'longitude — 22:00 Thu → 08:00 Fri', font: h.AXFONT } },
-      yaxis: { ...h.GAX, range: [40.40, 40.92], scaleanchor: 'x', scaleratio: 1.32,
+      xaxis: { ...h.GAX, range: [-73.10, -72.52], title: { text: 'longitude — 22:00 Thu → 08:00 Fri', font: h.AXFONT } },
+      yaxis: { ...h.GAX, range: [40.47, 40.82], scaleanchor: 'x', scaleratio: 1.32,
                title: { text: 'latitude', font: h.AXFONT } },
       showlegend: false };
     return { traces: tr, layout };

@@ -1,5 +1,5 @@
 # stage-4 — Review-Round Log — ALIR 2026 — OPEN (awaiting the owner's first click round)
-rounds: 0                        # minimum 1 before stage 5; the hosted build is ready
+rounds: 1                        # owner phone round, 2026-07-26 evening
 hosted: "launch config alir2026-dist -> http://localhost:8614 (dist committed on the branch)"
 built_from_owner_design: "2026-07-26 directives: course -> five stated theses -> won-and-lost
   cluster (race chart / distspeed / dual-basis phase ledger / powered-light split) ->
@@ -27,6 +27,27 @@ defects:                         # found during build/self-verification, before 
        presentation.coreData declares race keys; build.py fails loudly on a declared key
        missing from the payload; recorded in shell/INVARIANTS.md", assertion: "the loud
        assert in build.py IS the guard; nb/bir/alir2025 chains re-verified green" }
+round_1:                         # owner feedback (phone) -> fixes, all rebuilt + verified
+  - { found: "'all boats in one strip' chart rejected", fix: "fairladder module VETOED and
+       removed; its internal cross-system normalization moved into dist-vs-speed",
+       assertion: "vetoed modules stay vetoed (skill rule); recorded here" }
+  - { found: "dist-vs-speed corrected mode not apples-to-apples across ORC/PHRF", fix:
+       "meta.corrAdj (additive shell field, INVARIANTS entry): ORC corrected rescaled by
+       the winners ratio x1.037 so groups align in THAT chart only; official corr
+       untouched; methodology in the caption + footer footnote (no sanctioned
+       conversion exists — internal method)", assertion: "possible fixture at re-pin:
+       distspeed dot for Habiru YCC vs hand value" }
+  - { found: "NIGHT ONE ON THE WATER and Plum Gut crammed", fix: "nightmap zoomed to the
+       night box + height 600px; plumgut height 560px", assertion: "aesthetic — not
+       expressible" }
+  - { found: "VMC values clipped outside the displayed range", fix: "vmcYRange widened to
+       [-5.5, 14] (fleet actual -5.4..13.6)", assertion: "DEFERRED to stage 5: the vmc
+       integral fixture (I14) needs the harness-exact basis re-derivation after the
+       finish amendment before a number is pinned" }
+  - { found: "forecast report card buried after the race log", fix: "layout: forecast
+       above events; race log last", assertion: "layout string in presentation.js" }
+  - { found: "phase-ledger P1-P7 tick labels unclear", fix: "axis rows now carry id + name
+       + clock window (narrow keeps the id; note explains)", assertion: "aesthetic" }
 self_verified: "chain green both TZs (10/10 checks, snapshot compare green; snapshot
   2b3848f0… re-frozen after the amended-finish + module-data payload, per the stage-4
   refetch ledger); DOM verification: 16 sections render in order, five theses, all six

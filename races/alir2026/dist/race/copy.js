@@ -25,7 +25,7 @@ window.__COPY__ = {
   sog: {},
   distspeed: {
     noteElapsed: 'Each dot is one boat: distance actually sailed against elapsed time. Rays are equal-finish-time guides.',
-    noteCorrected: 'Same dots on corrected time — division-scoped; ORC and PHRF corrected times are not comparable across the boundary.',
+    noteCorrected: 'Same dots on corrected time, ALL boats on the PHRF scale: ORC boats\u2019 corrected is rescaled by the ratio of the two winners (\u00d71.037) so the groups align — an INTERNAL method (no sanctioned conversion exists; see the footer footnote). Official standings are untouched.',
     refLine: 'course · 207 nm',
     vsRef: 'vs the 207 nm scored course',
     xNote: 'distance sailed, nm',

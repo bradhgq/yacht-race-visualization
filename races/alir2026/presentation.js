@@ -82,7 +82,7 @@ window.__RACE_CONFIG__ = {
     map: { heightScale: 0.75, legendBottom: true },   // 2025 owner preferences, same water
     dtf: { eventTopY: 200, height: '280px' },
     sog: { height: '340px', yRange: [0, 12], eventTopY: 11,   // fleet max SOG 10.0 kt
-           metrics: { s: 'SOG', v: 'VMC (toward finish)' }, vmcYRange: [-3, 12] },
+           metrics: { s: 'SOG', v: 'VMC (toward finish)' }, vmcYRange: [-5.5, 14] },   // fleet VMC spans -5.4..13.6 — round-1 defect: values clipped
     xte: { eventTopY: 8, height: '340px' },
   },
   ratingBands: { widths: [15, 30] },      // hero-centred: ±15 covers exactly Division 9's
@@ -108,9 +108,9 @@ window.__RACE_CONFIG__ = {
     [70, 'PLUM GUT', -10, -26],
   ],
   controls: { pills: ['@ghosts'] },       // scored course always on (2025 owner decision)
-  layout: ['map', '@theses', 'dtf', 'race', '@distspeed', '@ledger', '@split', '@fairladder',
-           '@nightmap', '@nightone', '@plumgut', '@soundnight', 'two:xte,sog', 'events', '@forecast'],
-  modules: ['distspeed', 'theses', 'ledger', 'split', 'fairladder', 'nightmap', 'nightone', 'plumgut', 'soundnight', 'forecast'],
+  layout: ['map', '@theses', 'dtf', 'race', '@distspeed', '@ledger', '@split',
+           '@nightmap', '@nightone', '@plumgut', '@soundnight', 'two:xte,sog', '@forecast', 'events'],
+  modules: ['distspeed', 'theses', 'ledger', 'split', 'nightmap', 'nightone', 'plumgut', 'soundnight', 'forecast'],
   coreData: ['ledger', 'nightone', 'plumgut', 'soundgate'],   // postprocess tables the modules render from
   overlays: ['courseline', 'arrows', 'timedots'],
 };

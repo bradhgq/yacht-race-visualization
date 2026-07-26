@@ -144,41 +144,34 @@ def main():
             m["note"] = f"{system} · {div} · retired"
         b["meta"] = m
 
-    # 1b. internal fair-comparison metric (owner, stage-4 round 1): percent behind
-    # own SCORING GROUP's winner on official corrected seconds. Groups follow the
-    # organizer's own place_overall universes (PHRF spinnaker circle incl. DH, ORC
-    # Division 0, Non-Spinnaker circle). NO cross-system conversion exists that a
-    # governing body sanctions, so none is attempted — the cross-group read rests
-    # on the stated assumption that each group's winner sailed comparably well.
-    # INTERNAL ANALYSIS ONLY (module fairladder + footer methodology footnote).
-    import re as _re
-    def _group(cls):
-        if not cls:
-            return None
-        if "ORC" in cls:
-            return "orc"
-        if "Non-Spinnaker" in cls:
-            return "nonspin"
-        if "Multihull" in cls:
-            return "multi"
-        return "phrf_spin"          # Spinnaker + Double-Handed PHRF circle
+    # 1b. cross-system display rescale (owner, stage-4 round 1, revised: the
+    # standalone "one strip" chart is VETOED; the dist-vs-speed chart instead
+    # shows all boats apples-to-apples on the PHRF corrected scale). Method —
+    # internal, NOT sanctioned by any governing body (none exists; footer
+    # footnote): ORC boats' corrected is rescaled by the ratio of the two
+    # groups' winners (PHRF spinnaker circle winner / ORC winner), which puts
+    # the winners level and preserves every within-group gap proportionally.
+    # meta.corrAdj feeds ONLY the dist-vs-speed corrected mode (additive shell
+    # field); official meta.corr is untouched everywhere else. Non-Spin boats
+    # share the PHRF ToD scale already and need no rescale.
     def _secs(hms):
         if not hms:
             return None
         parts = [int(x) for x in hms.split(":")]
         return parts[0] * 3600 + parts[1] * 60 + parts[2]
-    gw = {}
-    for nm, b in boats.items():
-        m = b.get("meta") or {}
-        g = _group(m.get("cls")); cs = _secs(m.get("corr"))
-        if g and cs:
-            gw[g] = min(gw.get(g, 10 ** 9), cs)
-    for nm, b in boats.items():
-        m = b.get("meta") or {}
-        g = _group(m.get("cls")); cs = _secs(m.get("corr"))
-        if g and cs and g in gw:
-            m["fairPct"] = round((cs - gw[g]) / gw[g] * 100, 1)
-            b["meta"] = m
+    def _fmt(sec):
+        return f"{sec // 3600:02d}:{sec % 3600 // 60:02d}:{sec % 60:02d}"
+    phrf_win = min((_secs(b["meta"]["corr"]) for b in boats.values()
+                    if b["meta"].get("corr") and "ORC" not in (b["meta"].get("cls") or "")
+                    and "Non-Spin" not in (b["meta"].get("cls") or "")), default=None)
+    orc_win = min((_secs(b["meta"]["corr"]) for b in boats.values()
+                   if b["meta"].get("corr") and "ORC" in (b["meta"].get("cls") or "")), default=None)
+    if phrf_win and orc_win:
+        ratio = phrf_win / orc_win
+        for nm, b in boats.items():
+            m = b["meta"]
+            if m.get("corr") and "ORC" in (m.get("cls") or ""):
+                m["corrAdj"] = _fmt(round(_secs(m["corr"]) * ratio))
 
     # 2+3. phase ledger + powered/light meta ---------------------------------------
     ledger = []

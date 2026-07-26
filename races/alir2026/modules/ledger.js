@@ -35,7 +35,7 @@ registerModule({
     title: 'The phase ledger — the race in seven rows',
     note: 'Each row is one phase, judged two ways. <b>Basis A</b> (solid bars, bottom scale) is like-for-like: ' +
       'nm <span class="mag">Max</span> made minus the median of the boats within 3 nm of him when the phase opened, ' +
-      'labelled with his rank in that peer group. <b>Basis B</b> (pale bars, top scale) is the same-water fleet test: ' +
+      'Rows P1\u2013P7 are the race\u2019s natural phases (name + clock window on the axis). Labelled with Max\u2019s rank in that peer group. <b>Basis B</b> (pale bars, top scale) is the same-water fleet test: ' +
       'how much faster (+) or slower (−) Max sailed the phase\'s stretch of water than the fleet median that crossed it, ' +
       'as a percentage of elapsed time, labelled rank/fleet. The muted ±h badge is basis B\'s honesty caveat: entries into ' +
       'the stretch spread by that many hours, and a wide spread means boats met different weather there — the caveat is ' +
@@ -56,7 +56,13 @@ registerModule({
     const kColor = h.boatColor['Katara56'] || '#41658A';
 
     const ids = L.map(p => p.id);
-    const rowLbl = L.map(p => nw ? p.id : `${p.id} ${p.label}`);
+    // owner (round 1): P1-P7 need clarity on the axis — full name + clock window
+    const win = p => {
+      const a = h.tzStr(p.t1), b = h.tzStr(p.t2);
+      const sameDay = a.slice(5, 10) === b.slice(5, 10);
+      return `${a.slice(5, 16)} → ${sameDay ? b.slice(11, 16) : b.slice(5, 16)}`;
+    };
+    const rowLbl = L.map(p => nw ? p.id : `${p.id} · ${p.label}<br>${win(p)}`);
     // basis A: nm vs the 3-nm-at-entry peer median (null where no peers — P7)
     const A = L.map(p => p.peer_med == null ? null : p.hero - p.peer_med);
     // basis B: % faster (+) / slower (−) than the fleet median through the same water
