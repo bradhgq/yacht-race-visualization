@@ -1,0 +1,17 @@
+# ALIR 2026 — narrative events. PLACEHOLDER: deliberately empty at the stage-0 stop.
+#
+# The tier-2/3 events layer for this race comes from the owner's crew log, which is a
+# PRIVATE input (prime rule 4). The log itself never enters the repo. Individual entries
+# land here only after the owner opts each one in at the stage-0/stage-3 stops, with a
+# visibility flag per entry.
+#
+# The candidate set proposed at the stage-0 stop — all currently OUT of the repo — covers
+# the sail-change sequence on night 1, the 04:25 offshore decision, the Montauk rounding
+# (18:09 log vs 18:10 tracker: the two clocks agree, which is what makes a log<->tracker
+# reconciliation module possible), the Plum Gut/Orient Point current observation at 20:35,
+# and the 21:00 Sound-side decision. The two decision entries are the ones the stage-0
+# findings turn on.
+#
+# Schema: skills/race-viz/references/schemas.md (events.yaml).
+events: []
+watches: []

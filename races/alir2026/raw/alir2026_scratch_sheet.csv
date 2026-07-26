@@ -1,0 +1,60 @@
+boat_name,sail_number,design,length,bow_number,circle,division,class_name,rating,owner,owner_city,owner_state,owner_club,tactician,status,checked_in
+Avalanche,GBR20,Soto 40,40,,,,,,Craig Albrecht / Alexis Gesualdo,Glen Cove,NY,Storm Trysail Club / Northport Yacht Club,,INACTIVE,False
+Free Range,USA0,Hylas 54,54,,,,,,Robert Shook,niantic,CT,Niantic bay yacht club,,INACTIVE,False
+Gup E,USA61759,J/99,32.61,,,,,,Nathaniel Beachum,Madison,NJ,Raritan Yacht Club,,INACTIVE,False
+Habiru,USA61124,J/121,40.0,,,,,,Steve Losik,Great Neck,NY,United Yacht Club,,INACTIVE,False
+Hunter,USA 2388,Mills 41,41,,,,,,United States Merchant Marine Academy,Kings Point,NY,KPUSMMA,,INACTIVE,False
+Kitli,297,Sabre 34-2,34,,,,,,Darshan Patel,New Hyde Park,NY,"Meyran Marine, Port Washington, NY",,INACTIVE,False
+Beagle,USA44007,J/44,44,,Around Long Island Course - Spinnaker,ORC,ORC Division 0 - Warning Signal 13:40,0.9526,Willets Meyer,Oyster Bay,NY,Seawanhaka Corinthian YC/NYYC/Imperial Poona Yacht Club,,ACTIVE,False
+Della Aurora,USA27,XR41,41,,Around Long Island Course - Spinnaker,ORC,ORC Division 0 - Warning Signal 13:40,0.9505,James Bistis,New Vernon,NJ,New York Yacht Club / Liberty Yacht Club,,ACTIVE,False
+Habiru YCC,USA61124,J 121,40.0,,Around Long Island Course - Spinnaker,ORC,ORC Division 0 - Warning Signal 13:40,0.9597,Steve Losik,Great Neck,NY,United Yacht Club,,ACTIVE,False
+Imagine,USA108,X382,11.5,,Around Long Island Course - Spinnaker,ORC,ORC Division 0 - Warning Signal 13:40,0.8312,Matt Blake,Pelham,NY,Harlem,,ACTIVE,False
+Ohana,435,Arcona 435 MkII,44.7,,Around Long Island Course - Spinnaker,ORC,ORC Division 0 - Warning Signal 13:40,0.9625,Ken Wisdom,Wilton,CT,CPYC/NYYC/RORC,,ACTIVE,False
+Surface Tension,52556,Beneteau First 44.7,44,,Around Long Island Course - Spinnaker,ORC,ORC Division 0 - Warning Signal 13:40,0.9474,Lou Melillo / Mike Bermann,Middletown,NJ,Atlantic Highlands Yacht Club / Storm Trysail Club,,ACTIVE,False
+Cool Change,121,Hunter 39,39,,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 1 - Warning Signal 13:00,,James Sheed,Darien,CT,Shore and Country Club,,ACTIVE,False
+Dolcezza,53,Hunter Legend 37.5,37,,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 1 - Warning Signal 13:00,150,Neill Parker Jr,Port Washington,NY,Manhasset Bay YC,,ACTIVE,False
+Java,279,Jeanneau 36.2 SO,36,,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 1 - Warning Signal 13:00,,Marc Grill,PRT WASHINGTN,NY,Port Washington Yacht Club,,ACTIVE,False
+Yopo,103,Contest,30,,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 1 - Warning Signal 13:00,,Artur Jasinski,Queens,NY,Polish Sailing Club,,ACTIVE,False
+Palomino,USA61107,C&C 37,37.6,,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 2 - Warning Signal 13:00,129,Eugenio Silvestrini,Glen Head,NY,Hempstead Harbour Club,,ACTIVE,False
+Shooting Star,USA20802,Peterson 34,33.9,,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 2 - Warning Signal 13:00,117,David Kingsbury,Orange,CT,Housatonic Boat Club,,ACTIVE,False
+Veronique,60141,Beneteau first 345,34.5,,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 2 - Warning Signal 13:00,,Bert Rubin de Cervens,Huntington,NY,Ketewomoke Yacht Club,,ACTIVE,False
+YES 4X,393,Beneteau Oceanis 46.1,47.9,393,Around Long Island Course - Non-Spinnaker,PHRF,Non-Spinnaker Division 2 - Warning Signal 13:00,135,Henryk Walerys,Katonah,NY,CPYC,Adrian Salagenau,ACTIVE,False
+ACTAEA,USA3815,Bermuda 40,40.75,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 3 - Warning Signal 13:10,153,Michael M Cone,Philadelphia,PA,"EYC, CCA, NYYC",George Fallon,ACTIVE,False
+Golden-Eye,USA1937,Rhodes,41.1,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 3 - Warning Signal 13:10,171,Michael Emmert,Glen Head,NY,Sea Cliff Yacht Club,Grayson Emmert,ACTIVE,False
+Midnight Rider - PMP Strategy,511,J/30,29.92,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 3 - Warning Signal 13:10,141,Denis Lafarge,New York,NY,,,ACTIVE,False
+Scarlett,USA332,J Boat,30,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 3 - Warning Signal 13:10,147,David Wightman,New Paltz,NY,Kingston Sailing Club,John Stevenson,ACTIVE,False
+Tynaje,USA2222,Ohlson 38,38,2222,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 3 - Warning Signal 13:10,144,Daniel Fisher,Guilford,CT,Sachems Head Yacht Club,Philip Boulanger,ACTIVE,False
+Abilyn,USA25559,J 120,40,,Around Long Island Course - Spinnaker,PHRF,Double-Handed Division 4 - Warning Signal 14:10,39,Josh Reisberg,Sea Cliff,NY,Sea Cliff YC / Storm Trysail Club,,ACTIVE,False
+First Rate,40819,Tartan 34-2,34.42,,Around Long Island Course - Spinnaker,PHRF,Double-Handed Division 4 - Warning Signal 14:10,141,Marek Antkowiak,LAKE HOPATCONG,NJ,CIYC/Polish Sailing Club of NY,,ACTIVE,False
+Halve Maen,USA075,TARTAN 33,34,75,Around Long Island Course - Spinnaker,PHRF,Double-Handed Division 4 - Warning Signal 14:10,156,Walther van Stipriaan,AMITYVILLE,NY,UCYC - Unqua Corinthian Yacht Club,,ACTIVE,False
+Thin Man,USA24,J/99,32.6,,Around Long Island Course - Spinnaker,PHRF,Double-Handed Division 4 - Warning Signal 14:10,72,Todd Aven,Brooklyn,NY,City Island YC / Storm Trysail Club,,ACTIVE,False
+Windancer,USA25,J 37,37.4,25,Around Long Island Course - Spinnaker,PHRF,Double-Handed Division 4 - Warning Signal 14:10,72,Kenneth Horvath,Basking Ridge,NJ,RYC,,ACTIVE,False
+Athena,36,Catalina 38,38,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,,christopher Berg,huntington,ny,LHYC,Dennis Drumm,ACTIVE,False
+Elizabeth,46294,Catalina,42,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,,Tom Hurter,st petersburg,FL,St Petersburg Yacht Club,,ACTIVE,False
+MARA,P39,Pearson 39-2,39,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,,Alexander Malochka,Brooklyn,NY,none,,ACTIVE,False
+MARIE,42832,Tartan 372,37,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,135,Paul Eliea,South Huntington,NY,Ketewomoke YC - Lloyd Harbor YC,Matt Joyce,ACTIVE,False
+Mayhem,18,Frers 30,29.5,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,132,Mark May,Ossining,NY,Shattemuc YC,,ACTIVE,False
+Peggy-O,43895,Sabre,38,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,129,Pedro Escandon,Brick,NJ,Metedeconk River Yacht Club,,ACTIVE,False
+Random,USA51362,Sabre 362,36,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,126,Robert Millstein,Briarcliff Manor,NY,Shattemuc Yacht Club,,ACTIVE,False
+Ripple,USA32685,S2 9.1,29.9,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 5 - Warning Signal 13:20,135,Michael Colucci,Fishkill,NY,Chelsea Yacht Club/STC,,ACTIVE,False
+Nomad,USA52968,Hunter 41DS,40.4,,Around the Islands Course - Spinnaker,PHRF,Spinnaker Division 6 - Warning Signal 13:20,,Shane Haas,West Shokan,NY,Poughkeepsie Yacht Club,,ACTIVE,False
+ARGOS,1543,Dufour 44,44,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,87,Rad Kurek,Middle Village,New York,PSCNY / CIYC,,ACTIVE,False
+Avatar,USA61971,Beneteau First 42,42,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,,Janusz Kedzierski,New York,NY,Mill Basin Club,,ACTIVE,False
+BETELGEUSE YCC,43392,J/36,36,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,81,Ben Cohen,Brooklyn,NY,,,ACTIVE,False
+Little Texas,USA169,J/105,35,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,93,The Waterfront Center,OYSTER BAY,New York,The WaterFront Center,,ACTIVE,False
+Phantom,USA444,J/105,34.5,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,87,Max Hafen,Northport,NY,Centerport Yacht Club,Max Hafen,ACTIVE,False
+SCAPEGOAT,USAUSA 619,J/105,34,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,78,James Reichel,West Islip,NY,Lloyd Harbor YC,,ACTIVE,False
+The Rover,USA93310,Swan 44 MKII,44,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,75,S. Steven Yang,New York,NY,NYYC,,ACTIVE,False
+Valiant YCC,408,J/105,10.5,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,75,Stamford Yacht Club Juniors,Stamford,Ct,Stamford YC Junior Big Boat Program,,ACTIVE,False
+Velocita,USA319,J/109,35,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 7 - Warning Signal 13:30,69,Marc De Souter,Wayne,NJ,Liberty Yacht Club,,ACTIVE,False
+Crocodile,USA61150,Beneteau First 50,49,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 8 - Warning Signal 13:40,12,Scott Ward,Hollywood,MD,"STC, CCA",,ACTIVE,False
+DUET,USA51445,J/120,40,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 8 - Warning Signal 13:40,45,Andrian Lubimov,Scarsdale,NY,Huguenot YC,,ACTIVE,False
+Exuberance,51506,X-442,44,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 8 - Warning Signal 13:40,48,Rich Spitzenberger,PORT JEFFERSON,NY,PJYC,,ACTIVE,False
+Lioness,USA38007,Sydney 38,38,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 8 - Warning Signal 13:40,24,Lion Sailing Sailmakers,NYC,NY,Lion Racing,,ACTIVE,False
+VICITAN,USA19,FIGARO 2,33,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 8 - Warning Signal 13:40,57,NEKA SAILING,Glen Cove,NY,NEKA Sailing,,ACTIVE,False
+WANDERER,181,Hanse 458,44.5,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 8 - Warning Signal 13:40,,Stefano Basilico,BROOKLYN,NY,"Port Jefferson Yacht Club, Bellport Bay Yacht Club",Thomas Riquier,ACTIVE,False
+Katara56,CAY61887,X-Yacht 56,56,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 9 - Warning Signal 13:50,-18,Daniel Griffin,Port Washington,NY,PWYC/NYYC,,ACTIVE,False
+Max,USA75050,Pogo 50,50,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 9 - Warning Signal 13:50,-18,Moritz Hilf,New York,NY,American YC/New York YC/ Storm Trysail Club,,ACTIVE,False
+Poseidon,USA52059,Swan 45,45,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 9 - Warning Signal 13:50,-24,Nico Martinez,Annapolis,Maryland,US Naval Academy,,ACTIVE,False
+Zammermoos,Uni4224,Club Swan 42,42,,Around Long Island Course - Spinnaker,PHRF,Spinnaker Division 9 - Warning Signal 13:50,-15,David Fass,Mamaroneck,NY,New York Yacht Club,,ACTIVE,False
+Three Little Birds,USA52985,PT11 Trimaran,36,,Around Long Island Course - Multihull,PHRF,Multihull (NEMA) Division M - Warning Signal 14:00,,Peter Malloy,Orient,NY,Orient Yacht Club,,ACTIVE,False

@@ -1,0 +1,1104 @@
+{
+  "race": "alir2026 \u2014 2026 Around Long Island Regatta",
+  "fetched": "2026-07-26 01:13-01:19 EDT (coops 01:13:30-0400; ndbc+openmeteo 01:16:12-0400; era5 model probes ~01:18)",
+  "race_window": {
+    "first_warning_local": "2026-07-23 13:00 EDT (tracker live 12:00 EDT)",
+    "last_scored_finisher_local": "2026-07-25 18:09 EDT",
+    "time_limit_local": "2026-07-26 12:00 EDT (7 boats still racing at fetch)",
+    "observation_window_utc": "2026-07-23T16:00Z .. 2026-07-26T16:00Z",
+    "model_and_current_window_local_dates": "2026-07-23 .. 2026-07-26 (CO-OPS end padded one day to 2026-07-27 per the fetcher convention)",
+    "timezone": "America/New_York"
+  },
+  "scope_guard": "stage-1/2/3 EVIDENCE only \u2014 no pipeline number may depend on these files; the pipeline consumes tracks/results/scratch exclusively. VMC stays VMC (I18): the tracker measured no wind. CO-OPS files are predictions, not observations; hrrr_*/ecmwf_* files are ARCHIVED FORECASTS, not observations and not reanalysis.",
+  "evidence_classes": {
+    "ndbc/*_realtime2.txt": "observed",
+    "openmeteo/hrrr_*.json + ecmwf_*.json (historical-forecast API)": "archived forecast (model), shortest-lead archive \u2014 NEW evidence class this race",
+    "openmeteo/hrrr_prev_*.json + ecmwf_prev_*.json (previous-runs API)": "archived forecast (model), fixed lead: previous_day1 ~24 h, previous_day2 ~48 h before validity",
+    "ERA5 model reanalysis": "ABSENT at fetch (lag) \u2014 negative finding; re-fetch ~2026-08-03",
+    "coops/*.json": "predicted current (harmonic/subordinate model)"
+  },
+  "verified_coverage": {
+    "ndbc_method": "parse each realtime2 file (rows newest-first, UTC, missing sentinel MM, wind m/s, waves m), count rows in 2026-07-23T16:00Z..2026-07-26T16:00Z with non-missing WDIR/WSPD (wind) and non-missing WVHT (waves); files with zero of both deleted. Counts independently cross-checked with awk (exact match on all five kept files)",
+    "openmeteo_method": "parse each JSON, count non-null hourly wind-speed values across the served 96 local hours; record requested vs served grid coordinates and drift in nm; zero-coverage files deleted",
+    "coops_method": "count prediction rows per cut (fetcher-verified); hourly cut spans 2026-07-23 00:00..2026-07-27 23:00 local, 120 rows/station"
+  },
+  "licenses": {
+    "ndbc": "US Government work, public domain (NOAA NDBC)",
+    "openmeteo": "CC-BY 4.0 \u2014 attribution required: \"Weather data by Open-Meteo.com\". HRRR \u00a9 NOAA NCEP; ECMWF IFS open data \u00a9 ECMWF (CC-BY 4.0)",
+    "coops": "US Government work, public domain (NOAA CO-OPS). PREDICTIONS, not observations \u2014 harmonic/subordinate model output"
+  },
+  "url_patterns": {
+    "ndbc_realtime2": "https://www.ndbc.noaa.gov/data/realtime2/<STATION>.txt",
+    "ndbc_historical_probe": "https://www.ndbc.noaa.gov/data/historical/stdmet/<station>h2026.txt.gz",
+    "era5_archive": "https://archive-api.open-meteo.com/v1/archive?latitude=%3Clat%3E&longitude=%3Clon%3E&start_date=2026-07-23&end_date=2026-07-26&hourly=wind_speed_10m%2Cwind_direction_10m%2Cwind_gusts_10m&timezone=America%2FNew_York&wind_speed_unit=kn",
+    "historical_forecast": "https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=%3Clat%3E&longitude=%3Clon%3E&start_date=2026-07-23&end_date=2026-07-26&hourly=wind_speed_10m%2Cwind_direction_10m%2Cwind_gusts_10m&timezone=America%2FNew_York&wind_speed_unit=kn&models=%3Cmodel%3E",
+    "previous_runs": "https://previous-runs-api.open-meteo.com/v1/forecast?latitude=%3Clat%3E&longitude=%3Clon%3E&start_date=2026-07-23&end_date=2026-07-26&hourly=wind_speed_10m_previous_day1%2Cwind_speed_10m_previous_day2%2Cwind_direction_10m_previous_day1%2Cwind_direction_10m_previous_day2&timezone=America%2FNew_York&wind_speed_unit=kn&models=%3Cmodel%3E",
+    "coops": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&station=<id>&begin_date=20260723&end_date=20260727&time_zone=lst_ldt&units=english&format=json&interval=<60|MAX_SLACK>"
+  },
+  "ndbc": {
+    "window_utc": [
+      "2026-07-23T16:00Z",
+      "2026-07-26T16:00Z"
+    ],
+    "station_meta_verified_from": "https://www.ndbc.noaa.gov/data/stations/station_table.txt",
+    "station_meta": {
+      "44017": {
+        "name": "MONTAUK POINT - 23 NM SSW of Montauk Point, NY",
+        "location": "40.693 N 72.049 W (40&#176;41'34\" N 72&#176;2'56\" W)",
+        "lat": 40.693,
+        "lon": -72.049
+      },
+      "44022": {
+        "name": "Execution Rocks",
+        "location": "40.883 N 73.728 W (40&#176;53'0\" N 73&#176;43'42\" W)",
+        "lat": 40.883,
+        "lon": -73.728
+      },
+      "44025": {
+        "name": "LONG ISLAND - 30 NM South of Islip, NY",
+        "location": "40.258 N 73.175 W (40&#176;15'30\" N 73&#176;10'29\" W)",
+        "lat": 40.258,
+        "lon": -73.175
+      },
+      "44039": {
+        "name": "Central Long Island Sound",
+        "location": "41.138 N 72.655 W (41&#176;8'15\" N 72&#176;39'18\" W)",
+        "lat": 41.138,
+        "lon": -72.655
+      },
+      "44040": {
+        "name": "Western Long Island Sound",
+        "location": "40.956 N 73.580 W (40&#176;57'21\" N 73&#176;34'48\" W)",
+        "lat": 40.956,
+        "lon": -73.58
+      },
+      "44065": {
+        "name": "New York Harbor Entrance - 15 NM SE of Breezy Point , NY",
+        "location": "40.368 N 73.701 W (40&#176;22'6\" N 73&#176;42'2\" W)",
+        "lat": 40.368,
+        "lon": -73.701
+      },
+      "44069": {
+        "name": "Great South Bay",
+        "location": "40.699 N 73.087 W (40&#176;41'55\" N 73&#176;5'12\" W)",
+        "lat": 40.699,
+        "lon": -73.087
+      },
+      "44097": {
+        "name": "Block Island, RI  (154)",
+        "location": "40.967 N 71.124 W (40&#176;58'2\" N 71&#176;7'25\" W)",
+        "lat": 40.967,
+        "lon": -71.124
+      },
+      "kptn6": {
+        "name": "8516945 - Kings Point, NY",
+        "location": "40.811 N 73.765 W (40&#176;48'39\" N 73&#176;45'53\" W)",
+        "lat": 40.811,
+        "lon": -73.765
+      },
+      "mtkn6": {
+        "name": "8510560 - Montauk, NY",
+        "location": "41.048 N 71.959 W (41&#176;2'53\" N 71&#176;57'34\" W)",
+        "lat": 41.048,
+        "lon": -71.959
+      }
+    },
+    "historical_h2026_probe": {
+      "44065": "HTTP 404",
+      "44025": "HTTP 404",
+      "44017": "HTTP 404",
+      "44097": "HTTP 404",
+      "MTKN6": "HTTP 404",
+      "KPTN6": "HTTP 404",
+      "44039": "HTTP 404",
+      "44040": "HTTP 404",
+      "44022": "HTTP 404",
+      "44069": "HTTP 404"
+    },
+    "kept": {
+      "44065_realtime2.txt": {
+        "file": "ndbc/44065_realtime2.txt",
+        "sha256": "eebfe9596bd3bbd890b354cb3bb73d176f927290486a7e70dec50df5dac90d12",
+        "window_rows": 361,
+        "wind_rows": 360,
+        "wave_rows": 174,
+        "file_rows": 6453,
+        "file_wind_rows": 6413,
+        "file_wave_rows": 3216,
+        "wspd_ms": [
+          1.0,
+          9.0
+        ],
+        "wdir_deg": [
+          10,
+          350
+        ],
+        "wvht_m": [
+          0.5,
+          1.3
+        ],
+        "gst_ms": [
+          1.0,
+          11.0
+        ],
+        "file_first_utc": "2026-06-11T00:00Z",
+        "file_last_utc": "2026-07-26T04:50Z",
+        "window_first_utc": "2026-07-23T16:00Z",
+        "window_last_utc": "2026-07-26T04:50Z"
+      },
+      "44025_realtime2.txt": {
+        "file": "ndbc/44025_realtime2.txt",
+        "sha256": "ed9575adb145d350fb22bb479f2139d733d4c3b45db6ce8395dda0334bfe2261",
+        "window_rows": 97,
+        "wind_rows": 0,
+        "wave_rows": 97,
+        "file_rows": 2301,
+        "file_wind_rows": 178,
+        "file_wave_rows": 1682,
+        "wspd_ms": null,
+        "wdir_deg": null,
+        "wvht_m": [
+          0.6,
+          1.4
+        ],
+        "gst_ms": null,
+        "file_first_utc": "2026-06-11T00:10Z",
+        "file_last_utc": "2026-07-26T04:10Z",
+        "window_first_utc": "2026-07-23T16:10Z",
+        "window_last_utc": "2026-07-26T04:10Z"
+      },
+      "44097_realtime2.txt": {
+        "file": "ndbc/44097_realtime2.txt",
+        "sha256": "d59a2fe9c0bdda1ac1d4cdc78d0b269819acac6b5f25900ca0fb9d552b4db122",
+        "window_rows": 119,
+        "wind_rows": 0,
+        "wave_rows": 119,
+        "file_rows": 2154,
+        "file_wind_rows": 0,
+        "file_wave_rows": 2154,
+        "wspd_ms": null,
+        "wdir_deg": null,
+        "wvht_m": [
+          0.7,
+          1.6
+        ],
+        "gst_ms": null,
+        "file_first_utc": "2026-06-11T00:26Z",
+        "file_last_utc": "2026-07-26T04:26Z",
+        "window_first_utc": "2026-07-23T16:26Z",
+        "window_last_utc": "2026-07-26T04:26Z"
+      },
+      "kptn6_realtime2.txt": {
+        "file": "ndbc/kptn6_realtime2.txt",
+        "sha256": "2e6ab9d04978a61ec87aa5a01782ad86c12c412bc67bf5e754d3747223973802",
+        "window_rows": 606,
+        "wind_rows": 603,
+        "wave_rows": 0,
+        "file_rows": 10409,
+        "file_wind_rows": 10354,
+        "file_wave_rows": 0,
+        "wspd_ms": [
+          0.0,
+          6.2
+        ],
+        "wdir_deg": [
+          10,
+          360
+        ],
+        "wvht_m": null,
+        "gst_ms": [
+          0.0,
+          8.2
+        ],
+        "file_first_utc": "2026-06-11T00:00Z",
+        "file_last_utc": "2026-07-26T04:30Z",
+        "window_first_utc": "2026-07-23T16:00Z",
+        "window_last_utc": "2026-07-26T04:30Z"
+      },
+      "44069_realtime2.txt": {
+        "file": "ndbc/44069_realtime2.txt",
+        "sha256": "d99185b76cd0632c6244511e86043cb8a39ebb2d4cbfd53466e02668fae7c45f",
+        "window_rows": 236,
+        "wind_rows": 236,
+        "wave_rows": 0,
+        "file_rows": 3678,
+        "file_wind_rows": 3678,
+        "file_wave_rows": 0,
+        "wspd_ms": [
+          1.0,
+          9.0
+        ],
+        "wdir_deg": [
+          20,
+          360
+        ],
+        "wvht_m": null,
+        "gst_ms": [
+          2.0,
+          11.0
+        ],
+        "file_first_utc": "2026-06-11T00:00Z",
+        "file_last_utc": "2026-07-26T04:45Z",
+        "window_first_utc": "2026-07-23T16:00Z",
+        "window_last_utc": "2026-07-26T04:45Z"
+      }
+    },
+    "rejected": {
+      "44017_realtime2.txt": {
+        "reason": "no realtime2 file (HTTP 404) \u2014 station not reporting in the last 45 days"
+      },
+      "mtkn6_realtime2.txt": {
+        "reason": "file exists but zero non-missing wind/wave rows for the entire 45-day realtime2 span",
+        "window_rows": 606,
+        "wind_rows": 0,
+        "wave_rows": 0,
+        "file_rows": 8552,
+        "file_wind_rows": 0,
+        "file_wave_rows": 0,
+        "wspd_ms": null,
+        "wdir_deg": null,
+        "wvht_m": null,
+        "gst_ms": null,
+        "file_first_utc": "2026-06-11T00:00Z",
+        "file_last_utc": "2026-07-26T04:30Z",
+        "window_first_utc": "2026-07-23T16:00Z",
+        "window_last_utc": "2026-07-26T04:30Z"
+      },
+      "44039_realtime2.txt": {
+        "reason": "no realtime2 file (HTTP 404) \u2014 station not reporting in the last 45 days"
+      },
+      "44040_realtime2.txt": {
+        "reason": "no realtime2 file (HTTP 404) \u2014 station not reporting in the last 45 days"
+      },
+      "44022_realtime2.txt": {
+        "reason": "no realtime2 file (HTTP 404) \u2014 station not reporting in the last 45 days"
+      }
+    }
+  },
+  "openmeteo": {
+    "points": {
+      "harbor": [
+        40.6,
+        -74.03
+      ],
+      "southshore": [
+        40.58,
+        -73.1
+      ],
+      "montauk": [
+        41.05,
+        -71.9
+      ],
+      "midsound": [
+        41.05,
+        -72.6
+      ],
+      "westsound": [
+        40.9,
+        -73.55
+      ]
+    },
+    "era5": {
+      "kept": {},
+      "rejected": {
+        "era5_harbor.json": {
+          "reason": "zero actual ERA5 rows in-window \u2014 non-null values in the best_match response were an ECMWF IFS substitution (see era5_probe); deleted",
+          "best_match_response": {
+            "requested": [
+              40.6,
+              -74.03
+            ],
+            "served_grid": [
+              40.597538,
+              -74.08771
+            ],
+            "drift_nm": 2.63,
+            "hours": 96,
+            "units": "kn",
+            "wind_hours": {
+              "wind_speed_10m": 96
+            },
+            "nonnull_span_local": {
+              "wind_speed_10m": [
+                "2026-07-23T00:00",
+                "2026-07-26T23:00"
+              ]
+            },
+            "file": "openmeteo/era5_harbor.json",
+            "sha256": "e20f63a9193de74cef55e01979209a8f21f84ffe979914afabcb9c7dfeb177ab"
+          }
+        },
+        "era5_southshore.json": {
+          "reason": "zero actual ERA5 rows in-window \u2014 non-null values in the best_match response were an ECMWF IFS substitution (see era5_probe); deleted",
+          "best_match_response": {
+            "requested": [
+              40.58,
+              -73.1
+            ],
+            "served_grid": [
+              40.597538,
+              -73.069305
+            ],
+            "drift_nm": 1.75,
+            "hours": 96,
+            "units": "kn",
+            "wind_hours": {
+              "wind_speed_10m": 96
+            },
+            "nonnull_span_local": {
+              "wind_speed_10m": [
+                "2026-07-23T00:00",
+                "2026-07-26T23:00"
+              ]
+            },
+            "file": "openmeteo/era5_southshore.json",
+            "sha256": "62e24e21a78339ad164a197d4db4bd391858a9655f520fbab1fe42e48e181eab"
+          }
+        },
+        "era5_montauk.json": {
+          "reason": "zero actual ERA5 rows in-window \u2014 non-null values in the best_match response were an ECMWF IFS substitution (see era5_probe); deleted",
+          "best_match_response": {
+            "requested": [
+              41.05,
+              -71.9
+            ],
+            "served_grid": [
+              41.01933,
+              -71.89728
+            ],
+            "drift_nm": 1.84,
+            "hours": 96,
+            "units": "kn",
+            "wind_hours": {
+              "wind_speed_10m": 96
+            },
+            "nonnull_span_local": {
+              "wind_speed_10m": [
+                "2026-07-23T00:00",
+                "2026-07-26T23:00"
+              ]
+            },
+            "file": "openmeteo/era5_montauk.json",
+            "sha256": "86b5037cfbe302404f4115415816f64c41e0d7b26239a88af8f6251fa47d5477"
+          }
+        },
+        "era5_midsound.json": {
+          "reason": "zero actual ERA5 rows in-window \u2014 non-null values in the best_match response were an ECMWF IFS substitution (see era5_probe); deleted",
+          "best_match_response": {
+            "requested": [
+              41.05,
+              -72.6
+            ],
+            "served_grid": [
+              41.01933,
+              -72.539215
+            ],
+            "drift_nm": 3.31,
+            "hours": 96,
+            "units": "kn",
+            "wind_hours": {
+              "wind_speed_10m": 96
+            },
+            "nonnull_span_local": {
+              "wind_speed_10m": [
+                "2026-07-23T00:00",
+                "2026-07-26T23:00"
+              ]
+            },
+            "file": "openmeteo/era5_midsound.json",
+            "sha256": "b003d2643340be284fa6f430c9b0d8ffb10be7d5b3ffe724e508273083c52472"
+          }
+        },
+        "era5_westsound.json": {
+          "reason": "zero actual ERA5 rows in-window \u2014 non-null values in the best_match response were an ECMWF IFS substitution (see era5_probe); deleted",
+          "best_match_response": {
+            "requested": [
+              40.9,
+              -73.55
+            ],
+            "served_grid": [
+              40.878735,
+              -73.6131
+            ],
+            "drift_nm": 3.13,
+            "hours": 96,
+            "units": "kn",
+            "wind_hours": {
+              "wind_speed_10m": 96
+            },
+            "nonnull_span_local": {
+              "wind_speed_10m": [
+                "2026-07-23T00:00",
+                "2026-07-26T23:00"
+              ]
+            },
+            "file": "openmeteo/era5_westsound.json",
+            "sha256": "a9c238e4349803f91e08c087e5558c5d8749cfce6212d8527c1203de330ee3dd"
+          }
+        }
+      },
+      "probe": {
+        "method": "archive API re-queried for the harbor point with explicit model ids (probe files kept in the acquisition scratchpad, summarized here; probe run 2026-07-26 ~01:18 EDT)",
+        "results": {
+          "models=era5": "0/96 non-null wind hours (grid 40.75,-74.0)",
+          "models=era5_seamless": "0/96 non-null wind hours (grid 40.600006,-74.0)",
+          "models=ecmwf_ifs": "96/96 non-null (grid 40.597538,-74.08771) \u2014 identical grid to the best_match default",
+          "default (best_match, the 2025-pattern URL)": "96/96 non-null, same grid as models=ecmwf_ifs \u2014 best_match silently substituted ECMWF IFS for the whole window"
+        },
+        "conclusion": "true ERA5/ERA5T coverage for 2026-07-23..26 is ZERO at fetch time (reanalysis lag not yet closed). The five best_match era5_*.json files contained no ERA5 and were deleted as a mislabeled evidence class rather than kept as false coverage."
+      }
+    },
+    "historical_forecast": {
+      "model_ids": {
+        "hrrr": {
+          "chosen": "ncep_hrrr_conus",
+          "attempts": [
+            [
+              "ncep_hrrr_conus",
+              "OK"
+            ]
+          ]
+        },
+        "ecmwf": {
+          "chosen": "ecmwf_ifs025",
+          "attempts": [
+            [
+              "ecmwf_ifs025",
+              "OK"
+            ]
+          ]
+        }
+      },
+      "kept": {
+        "hrrr_harbor": {
+          "requested": [
+            40.6,
+            -74.03
+          ],
+          "served_grid": [
+            40.605984,
+            -74.02898
+          ],
+          "drift_nm": 0.36,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/hrrr_harbor.json",
+          "sha256": "0ae34b1361014ff55e7abdfee15d2a893a3b38997f085f7d13a43392f490a4ee",
+          "model": "ncep_hrrr_conus"
+        },
+        "hrrr_southshore": {
+          "requested": [
+            40.58,
+            -73.1
+          ],
+          "served_grid": [
+            40.581993,
+            -73.08211
+          ],
+          "drift_nm": 0.82,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/hrrr_southshore.json",
+          "sha256": "f118d47e90fea924bfb4d56331963359f0b7a320625ad4ff0b9f5cbf1f53aca9",
+          "model": "ncep_hrrr_conus"
+        },
+        "hrrr_montauk": {
+          "requested": [
+            41.05,
+            -71.9
+          ],
+          "served_grid": [
+            41.061855,
+            -71.90706
+          ],
+          "drift_nm": 0.78,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/hrrr_montauk.json",
+          "sha256": "24fe4e5aa6b6a8c18a064d51f2043096d1e1e716302ad1fe592c8da42e5896dc",
+          "model": "ncep_hrrr_conus"
+        },
+        "hrrr_midsound": {
+          "requested": [
+            41.05,
+            -72.6
+          ],
+          "served_grid": [
+            41.044838,
+            -72.61882
+          ],
+          "drift_nm": 0.91,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/hrrr_midsound.json",
+          "sha256": "65d81aff4d5a3bc8018a6d57fb3c64ba568ce287b2f56d9a1e779174f85256bc",
+          "model": "ncep_hrrr_conus"
+        },
+        "hrrr_westsound": {
+          "requested": [
+            40.9,
+            -73.55
+          ],
+          "served_grid": [
+            40.902275,
+            -73.55793
+          ],
+          "drift_nm": 0.38,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/hrrr_westsound.json",
+          "sha256": "22ec702599f129c89d7bd87b968fbc8f05f97b753d28d7656ce5833afaa4a39c",
+          "model": "ncep_hrrr_conus"
+        },
+        "ecmwf_harbor": {
+          "requested": [
+            40.6,
+            -74.03
+          ],
+          "served_grid": [
+            40.75,
+            -74.0
+          ],
+          "drift_nm": 9.1,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/ecmwf_harbor.json",
+          "sha256": "04ce5a76e668df8357aea3d224bcfedbd7ab86e2249e907480bfa3e17eb209a7",
+          "model": "ecmwf_ifs025"
+        },
+        "ecmwf_southshore": {
+          "requested": [
+            40.58,
+            -73.1
+          ],
+          "served_grid": [
+            40.75,
+            -73.0
+          ],
+          "drift_nm": 11.17,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/ecmwf_southshore.json",
+          "sha256": "6d4a5d2b861474817f1c7bf3a2d7fc3ed91fe40c140635cde895df8f1efdfc1d",
+          "model": "ecmwf_ifs025"
+        },
+        "ecmwf_montauk": {
+          "requested": [
+            41.05,
+            -71.9
+          ],
+          "served_grid": [
+            41.0,
+            -72.0
+          ],
+          "drift_nm": 5.43,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/ecmwf_montauk.json",
+          "sha256": "4b219835e12493e416310210622e11a46ab126e5886ea03e43903111ca09bd2f",
+          "model": "ecmwf_ifs025"
+        },
+        "ecmwf_midsound": {
+          "requested": [
+            41.05,
+            -72.6
+          ],
+          "served_grid": [
+            41.0,
+            -72.5
+          ],
+          "drift_nm": 5.43,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/ecmwf_midsound.json",
+          "sha256": "fc9fc1508fd16dda3d3fc22c70e312e31a66b91a2ca8a70ffa18464a56ef0bc0",
+          "model": "ecmwf_ifs025"
+        },
+        "ecmwf_westsound": {
+          "requested": [
+            40.9,
+            -73.55
+          ],
+          "served_grid": [
+            40.75,
+            -73.5
+          ],
+          "drift_nm": 9.28,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/ecmwf_westsound.json",
+          "sha256": "2c6811a959a3c6ec91e0e29cf4f68c58f8096c48b744faff7baff59ed3c37bdb",
+          "model": "ecmwf_ifs025"
+        }
+      },
+      "rejected": {}
+    },
+    "previous_runs": {
+      "model_ids": {
+        "hrrr": {
+          "chosen": "ncep_hrrr_conus",
+          "attempts": [
+            [
+              "ncep_hrrr_conus",
+              "OK"
+            ]
+          ]
+        },
+        "ecmwf": {
+          "chosen": "ecmwf_ifs025",
+          "attempts": [
+            [
+              "ecmwf_ifs025",
+              "OK"
+            ]
+          ]
+        }
+      },
+      "kept": {
+        "hrrr_prev_harbor": {
+          "requested": [
+            40.6,
+            -74.03
+          ],
+          "served_grid": [
+            40.605984,
+            -74.02898
+          ],
+          "drift_nm": 0.36,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m_previous_day1": 96,
+            "wind_speed_10m_previous_day2": 0
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m_previous_day1": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/hrrr_prev_harbor.json",
+          "sha256": "dc739a67dcc2a915e1ce8a9fd7229bf5312dca1af3d5aa33f3b138797a192e54",
+          "model": "ncep_hrrr_conus"
+        },
+        "hrrr_prev_southshore": {
+          "requested": [
+            40.58,
+            -73.1
+          ],
+          "served_grid": [
+            40.581993,
+            -73.08211
+          ],
+          "drift_nm": 0.82,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m_previous_day1": 96,
+            "wind_speed_10m_previous_day2": 0
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m_previous_day1": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/hrrr_prev_southshore.json",
+          "sha256": "d4666bdd609f712915baa1a2efa6bb9a9e1403cc02d0495c886515a1efaecd2a",
+          "model": "ncep_hrrr_conus"
+        },
+        "hrrr_prev_montauk": {
+          "requested": [
+            41.05,
+            -71.9
+          ],
+          "served_grid": [
+            41.061855,
+            -71.90706
+          ],
+          "drift_nm": 0.78,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m_previous_day1": 96,
+            "wind_speed_10m_previous_day2": 0
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m_previous_day1": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/hrrr_prev_montauk.json",
+          "sha256": "1fb6b4175d112a7e97cc8c9ea9677a6b193e12738653ccad238d31b3271ebed6",
+          "model": "ncep_hrrr_conus"
+        },
+        "hrrr_prev_midsound": {
+          "requested": [
+            41.05,
+            -72.6
+          ],
+          "served_grid": [
+            41.044838,
+            -72.61882
+          ],
+          "drift_nm": 0.91,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m_previous_day1": 96,
+            "wind_speed_10m_previous_day2": 0
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m_previous_day1": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/hrrr_prev_midsound.json",
+          "sha256": "d3017f2adc70cad0abc675f8ecff3a320eb288ae4fe083247e4c013f2251c2d6",
+          "model": "ncep_hrrr_conus"
+        },
+        "hrrr_prev_westsound": {
+          "requested": [
+            40.9,
+            -73.55
+          ],
+          "served_grid": [
+            40.902275,
+            -73.55793
+          ],
+          "drift_nm": 0.38,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m_previous_day1": 96,
+            "wind_speed_10m_previous_day2": 0
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m_previous_day1": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/hrrr_prev_westsound.json",
+          "sha256": "2fbe25c80ffd58b5063b43b8cf6dfb377cb1461063ae09a4e3434802f82e9c7e",
+          "model": "ncep_hrrr_conus"
+        },
+        "ecmwf_prev_harbor": {
+          "requested": [
+            40.6,
+            -74.03
+          ],
+          "served_grid": [
+            40.75,
+            -74.0
+          ],
+          "drift_nm": 9.1,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m_previous_day1": 96,
+            "wind_speed_10m_previous_day2": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m_previous_day1": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ],
+            "wind_speed_10m_previous_day2": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/ecmwf_prev_harbor.json",
+          "sha256": "7c922405efc2232c0ef49822c9c65f0466204140a4eae23f2a0f282e11a08475",
+          "model": "ecmwf_ifs025"
+        },
+        "ecmwf_prev_southshore": {
+          "requested": [
+            40.58,
+            -73.1
+          ],
+          "served_grid": [
+            40.75,
+            -73.0
+          ],
+          "drift_nm": 11.17,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m_previous_day1": 96,
+            "wind_speed_10m_previous_day2": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m_previous_day1": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ],
+            "wind_speed_10m_previous_day2": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/ecmwf_prev_southshore.json",
+          "sha256": "1fe515a5990404ddbd9abeda2d2cd10b9da39fd61aef76d6c412227d9526b6ea",
+          "model": "ecmwf_ifs025"
+        },
+        "ecmwf_prev_montauk": {
+          "requested": [
+            41.05,
+            -71.9
+          ],
+          "served_grid": [
+            41.0,
+            -72.0
+          ],
+          "drift_nm": 5.43,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m_previous_day1": 96,
+            "wind_speed_10m_previous_day2": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m_previous_day1": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ],
+            "wind_speed_10m_previous_day2": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/ecmwf_prev_montauk.json",
+          "sha256": "e6974f4c94b88f5194f23f91680077eb4761cceae30216382b1eae57b7ee3148",
+          "model": "ecmwf_ifs025"
+        },
+        "ecmwf_prev_midsound": {
+          "requested": [
+            41.05,
+            -72.6
+          ],
+          "served_grid": [
+            41.0,
+            -72.5
+          ],
+          "drift_nm": 5.43,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m_previous_day1": 96,
+            "wind_speed_10m_previous_day2": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m_previous_day1": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ],
+            "wind_speed_10m_previous_day2": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/ecmwf_prev_midsound.json",
+          "sha256": "07d319f1785719b152a571c6c06c5e1c832b91e06f35c6619d5de4e98bdabdc3",
+          "model": "ecmwf_ifs025"
+        },
+        "ecmwf_prev_westsound": {
+          "requested": [
+            40.9,
+            -73.55
+          ],
+          "served_grid": [
+            40.75,
+            -73.5
+          ],
+          "drift_nm": 9.28,
+          "hours": 96,
+          "units": "kn",
+          "wind_hours": {
+            "wind_speed_10m_previous_day1": 96,
+            "wind_speed_10m_previous_day2": 96
+          },
+          "nonnull_span_local": {
+            "wind_speed_10m_previous_day1": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ],
+            "wind_speed_10m_previous_day2": [
+              "2026-07-23T00:00",
+              "2026-07-26T23:00"
+            ]
+          },
+          "file": "openmeteo/ecmwf_prev_westsound.json",
+          "sha256": "9fa266cb5846da9f44738c3682e5a1fa47d623bf31d328b5505605718e62595f",
+          "model": "ecmwf_ifs025"
+        }
+      },
+      "rejected": {}
+    }
+  },
+  "coops": {
+    "LIS1012": {
+      "hourly": {
+        "file": "coops/LIS1012_currents_hourly.json",
+        "sha256": "672dd767c3da7358f25b6d60993fa7f77deb9a3e6a5d64e160ff5a76dc81377d",
+        "rows": 120,
+        "units": "feet, knots"
+      },
+      "maxslack": {
+        "file": "coops/LIS1012_currents_maxslack.json",
+        "sha256": "0a839f81465503f75213f11a62b49559624229730872fee4d23092db0abc829a",
+        "rows": 39,
+        "units": "feet, knots"
+      }
+    },
+    "LIS1001": {
+      "hourly": {
+        "file": "coops/LIS1001_currents_hourly.json",
+        "sha256": "af8deda231b0bb3f5430102b1a69ff281af85815678563848882668b1494478c",
+        "rows": 120,
+        "units": "feet, knots"
+      },
+      "maxslack": {
+        "file": "coops/LIS1001_currents_maxslack.json",
+        "sha256": "ac09c9d202cdbcba7eebd51ca81a1e1cfbc9f310a6ab4329899653c80683ccda",
+        "rows": 39,
+        "units": "feet, knots"
+      }
+    },
+    "LIS1035": {
+      "hourly": {
+        "file": "coops/LIS1035_currents_hourly.json",
+        "sha256": "8cefb56c05b0a0cddf0d0e31c3b1fca7807dc4a6e7c15948e8340b192b48b8bc",
+        "rows": 120,
+        "units": "feet, knots"
+      },
+      "maxslack": {
+        "file": "coops/LIS1035_currents_maxslack.json",
+        "sha256": "73bb182ba76018c586d52883955a46106a9aed441080218711fd6c60438f3f1a",
+        "rows": 50,
+        "units": "feet, knots"
+      }
+    },
+    "LIS1036": {
+      "hourly": {
+        "file": "coops/LIS1036_currents_hourly.json",
+        "sha256": "9e799d470f25f07bc3087bb9e02eed85d74b33c4d878bd1fd85ae1f644d3a4ae",
+        "rows": 120,
+        "units": "feet, knots"
+      },
+      "maxslack": {
+        "file": "coops/LIS1036_currents_maxslack.json",
+        "sha256": "973abbe412c718a16f823caa03dec8a680866f8575cedddbf43a431b9c6f296b",
+        "rows": 41,
+        "units": "feet, knots"
+      }
+    }
+  },
+  "findings": [
+    "NDBC yearly historical h2026 files: probed all 10 stations, all HTTP 404 (expected for the in-progress year) \u2014 realtime2 45-day files used instead",
+    "44017 (Montauk buoy): no realtime2 file (HTTP 404) \u2014 not reporting within the last 45 days; Montauk corner has no offshore buoy again in 2026",
+    "MTKN6 (Montauk Point shore station): realtime2 file exists, 8,552 rows 2026-06-11..07-26, EVERY wind and wave field MM \u2014 dead payload for the second straight year; deleted rather than kept as false coverage",
+    "44039 / 44040 / 44022 (Central Sound, Western Sound, Execution Rocks): no realtime2 files (HTTP 404) \u2014 Long Island Sound has ZERO offshore buoys reporting this year; the only Sound observation is the KPTN6 shore station",
+    "44025 (30 nm S of Islip): anemometer dead since 2026-07-14 10:40Z (last wind report; 9 days before the start) \u2014 kept as WAVES ONLY (97 rows), never cite it for wind. In 2025 this buoy carried full wind",
+    "44097 (Block Island): waves only by design (no anemometer), 119 rows \u2014 nearest sea-state observation to the Montauk corner, ~33 nm E",
+    "44069 (Great South Bay): alive with wind, 236 window rows \u2014 coverage 2025 did not have; but the site is inside Great South Bay behind Fire Island (sheltered, ~7 nm N of the south-shore model point): inshore evidence, never open-ocean truth",
+    "Observed-window truncation: fetched 2026-07-26 01:16 EDT while 7 boats were still racing (time limit 12:00 EDT); realtime2 series end 04:10-04:50Z on 07-26, so the last ~11 h of the formal window are not yet covered. All scored finishers (last 2026-07-25 18:09 EDT) are fully covered. Re-fetch realtime2 after the time limit (45-day retention: before ~2026-09-08) to extend coverage to 16:00Z",
+    "ERA5 (C1): NEGATIVE \u2014 reanalysis lag not closed; explicit models=era5 probe served 0/96 non-null hours. The 2025-pattern URL (no models param, best_match default) silently substituted ECMWF IFS analysis/forecast \u2014 five era5_*.json files deleted as mislabeled evidence. Re-fetch after ~2026-08-03 with explicit models=era5_seamless (or era5), verify non-null in-window rows, and only then restore era5_*.json. LESSON: inside the reanalysis lag the plain archive-API URL is NOT ERA5",
+    "historical-forecast API: model id ncep_hrrr_conus accepted on first attempt, 96/96 non-null at all five points; ecmwf_ifs025 accepted on first attempt, 96/96 at all five points",
+    "previous-runs API: HRRR previous_day1 96/96 but previous_day2 SERVED ALL NULL at every point (variable present, zero non-null) \u2014 the HRRR lead-time view is day-1 only; ECMWF ifs025 previous_day1 and previous_day2 both 96/96",
+    "All Open-Meteo series: wind in kn, timestamps race-local (America/New_York, utc_offset -14400). ECMWF IFS open data is published at 3-hourly steps \u2014 Open-Meteo serves an interpolated hourly series; treat sub-3-hourly ECMWF structure as interpolation, not model signal. HRRR is natively hourly"
+  ]
+}

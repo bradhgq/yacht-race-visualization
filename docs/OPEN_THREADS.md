@@ -25,13 +25,34 @@ introduction).
   `module_canaries.upwind_excess` can drift between config and
   tests/regression.json unchecked. Fix: iterate whatever keys both sides
   carry instead of a hardcoded list.
-- **Promote per-boat track trimming into `starter/`** (2026-07-23): the racing-
-  window trim is now a stage-0 procedure step in the skill, with
-  `races/alir2025/trim_tracks.py` as the reference implementation (dedup +
-  `[gun − 15 min, finish + 5 min]`, or furthest-point for non-finishers). It is
-  generic — every tracker export carries pre-start milling and post-finish
-  delivery. Move it to `starter/pipeline/` once a second race exercises it, so
-  the trim rule and the route model stay in one place.
+- **ALIR 2026 is built on an IN-PROGRESS snapshot** (2026-07-26): data was
+  fetched at 00:58 EDT while 7 boats were still racing (time limit 12:00 EDT
+  the same day) and with protests open until Sunday, so every official number
+  is provisional. Max and all three Division 9 rivals finished, so the hero's
+  analysis is stable; the fleet tail is not. RE-FETCH results + tracks after
+  final scoring, re-run the stage-0 ritual, and diff before anything is
+  pinned. Also re-fetch NDBC realtime2 before ~2026-09-08 (45-day retention)
+  to cover the last 11 h, and ERA5 after ~2026-08-03 once the reanalysis lag
+  closes. Details in `races/alir2026/decisions/stage-0-scope.yaml`.
+- **Open-Meteo `best_match` silently substitutes models inside the reanalysis
+  lag** (found on ALIR 2026, 2026-07-26): the 2025-pattern archive-API URL
+  carries no `models` param, and for a race inside the ERA5 lag it returned a
+  full 96/96 hours of "ERA5" that were actually ECMWF IFS — including hours
+  still in the FUTURE at fetch time. Caught only by probing explicit model
+  ids; the mislabeled files were deleted. `starter/acquisition/fetch_weather.py`
+  should pass an explicit `models=` and fail loudly rather than accept a
+  substituted series, and the stage-0 reference should carry the lesson: a
+  full-looking series is not evidence of the model you asked for.
+- **Promote `trim_tracks.py` into `starter/pipeline/`** — the second race has
+  now exercised it (supersedes the 2026-07-23 entry below, which asked for
+  exactly this trigger). ALIR 2026 forced two GENERIC fixes that the ALIR 2025
+  copy lacks: (a) scan for the end-cut only at/after `start_cut`, or a
+  pre-start GPS spike cuts a boat's end before its start and drops a boat that
+  raced; (b) require THREE consecutive over-threshold intervals for the
+  vehicle-speed rule, because a sub-minute cadence tier makes ordinary GPS
+  jitter read as 26-91 kt and truncated five still-racing boats mid-race.
+  Move the code once, carrying both fixes, rather than letting two race-local
+  copies drift.
 - **Tier-1 (fleet-only) builds need a hero today** (review, 2026-07-23):
   `build_data.py` pivots stats/groups/series on `client_boat` unconditionally
   — a null client_boat crashes at the stats step, so true fleet-commentary
