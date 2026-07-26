@@ -39,6 +39,22 @@ introduction).
   projection: the gridded DTF reads ~200 nm at the ALIR gun vs the 205.8
   polyline start — harmless to every shipped number (the harness's I14 basis
   recovers to 0.01 kt) but worth an engine look before the next marks race.
+- **Max's Expedition instrument export (ALIR 2026)** — owner supplied 66 MB of
+  1 Hz instrument logs plus the Pogo 50 VPP and sail crossover chart
+  (2026-07-26). Exploration and eight supplement proposals:
+  `races/alir2026/docs/max-instruments-exploration.md`; reproducer:
+  `races/alir2026/scripts/explore_expedition.py`. **Nothing is built and nothing
+  ships until seven owner decisions in that memo's §5 are made** — the two that
+  block everything else are (a) where the raw data lives (66 MB: release vs a
+  downsampled committed derivative) and (b) **the I18/VMG question**: I18 says
+  the harness rejects a VMG label because tracker data carries no wind, but
+  Max's log *does* carry wind, so VMG is now computable for exactly one boat.
+  That needs an owner ruling and an explicit invariant amendment before the word
+  is used anywhere. Also unresolved: polar/sail-chart provenance (both files are
+  unattributed, and the report card's authority rests on them), and whether the
+  crew can say which sail was actually up — the export's sail-selection channels
+  are all empty, so §3.6's downwind finding has two readings the data cannot
+  separate.
 - **Open-Meteo `best_match` silently substitutes models inside the reanalysis
   lag** (found on ALIR 2026, 2026-07-26): the 2025-pattern archive-API URL
   carries no `models` param, and for a race inside the ERA5 lag it returned a
