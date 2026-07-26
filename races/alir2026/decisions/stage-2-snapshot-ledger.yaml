@@ -1,0 +1,37 @@
+# I16 ledger — ALIR 2026 snapshot reference and preliminary pins (stage 2)
+#
+# WHAT MOVED: races/alir2026/snapshot/dashboard_data.json CREATED (first snapshot,
+# sha256 a70a4fb579976088ab9953709cc1c9f2df7255e798dc107999b7011675adbca4);
+# config pinned_values + tests/regression.json AUTHORED (first pinning);
+# output.generated pinned to '2026-07-26'.
+#
+# RECORDED INSTRUCTION: owner, 2026-07-26, at the stage-0 stop and again in the
+# stage-1 go ("proceed straight to stage 2 with available research outcome"):
+# build the preliminary dashboard NOW on the mid-race snapshot (data captured
+# 2026-07-26 00:58 EDT; 42 of 53 starters scored; results provisional), with a
+# future pass redoing stages 0-1 on final results. Every pin is therefore
+# PRELIMINARY by construction and the final-results pass re-pins under its own
+# ledger entry — that re-pin is EXPECTED and already authorized in scope, but
+# its entry must enumerate every diff class it ships, per I16.
+#
+# DIFF CLASSES EXPECTED at the re-pin (enumerated now so the future entry can
+# check against this list):
+#   1. the 7 unscored boats gain results rows (meta, corrected, ranks, groups)
+#   2. any protest/redress outcome from the 2026-07-26 hearings changes times/ranks
+#   3. the Max/DUET/MARIE/Ripple finish-time discrepancies may resolve to new
+#      official values (owner + RC in contact re Max's ~11:57 vs 12:38:03)
+#   4. grid.end_utc moves from the snapshot instant to last finisher/time limit
+#   5. output.generated re-pins to the rebuild date
+#   6. endpoints/tz_probe re-derive IF any of 1-3 touches Max or Katara56
+#
+# Pinned this entry (derivations in tests/regression.json _comment):
+#   tz_probe Katara56 epoch 1784984761 rendered '2026-07-25 09:06'
+#   endpoints ref Katara56: corrected_min 212.07, elapsed_min 212.07, pace 102.45
+#   names_present/names_absent per the stage-0 name-hygiene findings
+#   finstrip_count 0 · duration_roundtrip 46:43:03/168183 · start_window 13:55
+#   expected_checks 10
+#
+# Harness state at pinning: CHAIN GREEN, 10/10 checks, TZ=America/New_York and
+# TZ=UTC, snapshot compare active from the next run.
+confirmed_by: ""   # presented at the stage-2 stop for owner confirmation
+date: "2026-07-26"

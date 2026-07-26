@@ -209,15 +209,24 @@ privacy: { build: public }
 
 output:
   dir: out/
-  # generated: pin at snapshot creation (stage 4/5), per the alir2025/nb/bir precedent
+  generated: '2026-07-26'   # pinned to the snapshot's build date (alir2025/nb/bir precedent) —
+                            # unpinned, any later-day rebuild fails the snapshot compare
 
-pinned_values:                  # tz_probe verified at stage 0; EVERYTHING ELSE pins at the
-                                # stage-2 stop (prime rule 3) — zeros below are placeholders,
-                                # not values.
+pinned_values:                  # PRELIMINARY PINS (prime rule 3) — pinned at the stage-2 stop
+                                # from official PROVISIONAL results by recorded owner
+                                # instruction (stage-0 stop, 2026-07-26: proceed now on the
+                                # mid-race snapshot; redo stages 0-1 and RE-PIN on final
+                                # results). Full derivations: tests/regression.json _comment.
   tz_probe: { epoch: 1784984761, rendered: '2026-07-25 09:06' }   # Katara56's crossing
-  endpoints: { ref: "", corrected_min: 0.0, elapsed_min: 0.0 }
-  module_canaries: {}
-  names_present: []
-  names_absent: []
+  endpoints: { ref: "Katara56", corrected_min: 212.07, elapsed_min: 212.07 }   # hero(Max) − ref;
+                                # equal by construction (identical -18 ratings) — the equality
+                                # is itself a scoring probe
+  module_canaries: {}           # no zone module shipped yet — the detector found no candidate
+                                # at default knobs; the authored-zone decision is at the stop
+  names_present: ["Max", "Zammermoos", "Poseidon", "Katara56", "Habiru YCC", "Lioness",
+                  "Abilyn", "Actaea", "Duet", "Marie", "Scapegoat", "Vicitan",
+                  "Betelgeuse YCC", "Little Texas"]
+  names_absent: ["ACTAEA", "DUET", "MARIE", "SCAPEGOAT", "VICITAN", "BETELGEUSE YCC",
+                 "Habiru", "Little Texas YCC", "STARTING LINE (+ FINISH)"]
   names_meta_only: []
-  finstrip_count: 0
+  finstrip_count: 0             # largest in-division 30-min corrected cluster: 3 boats (Div 5)
