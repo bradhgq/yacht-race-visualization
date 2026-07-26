@@ -1,5 +1,10 @@
-# stage-0 — Scope Record — Around Long Island Regatta 2026 (49th), Sea Cliff YC — DRAFT
-# (awaiting owner confirmation; nothing downstream may run until this is confirmed)
+# stage-0 — Scope Record — Around Long Island Regatta 2026 (49th), Sea Cliff YC
+# CONFIRMED by the owner 2026-07-26 with the amendments recorded in
+# owner_stop_decisions at the end of this file. The exploratory verdicts under
+# hypotheses_to_test are RETRACTED to hypothesis status by owner instruction —
+# opinions form at stages 1-2, not stage 0. The hypotheses and their preliminary
+# signals are retained below as the ledger of what was believed and why; nothing
+# in them may be cited as a finding until stage 2 re-derives it.
 #
 # Every number below was computed from races/alir2026/raw/. Exploratory figures are
 # labelled as such: NO number here is a pinned value, and none has been through the
@@ -178,6 +183,11 @@ finish_time_discrepancies:       # the one material cross-source conflict — FL
     untouched. The conflict is recorded, not averaged away."
   owner_question: "OWNER CAN SETTLE THIS DIRECTLY — he sailed on Max. Did Max cross the
     finish line at ~11:57 or ~12:38 EDT on Saturday?"
+  owner_answer: "ANSWERED at the stage-0 stop (2026-07-26): 'we finished at 1157 and will
+    contact RC for clarity.' Crew testimony agrees with the YB marker against the published
+    12:38:03. Official results REMAIN the pipeline authority until the RC responds or a
+    results amendment lands; the 11:57 crossing is now testimony + tracker, the 12:38 is
+    official-provisional. Re-check on the post-race re-fetch."
   sensitivity: "MATERIAL to the headline number, immaterial to the story. Max's elapsed is
     46:43:03 as published (gap to Katara56 212.1 min); on the YB marker it would be
     46:02:24 (gap 171.4 min). The loss decomposition below is computed from POSITIONS
@@ -474,5 +484,41 @@ owner_decisions_needed:          # the stage-0 stop — these gate everything do
   - "H3 CONFIDENCE: the Sound-side claim rests on n=14 and a partial correlation. Ship it
     with an explicit hedge, or hold it until stage 2 can widen the band?"
 
-confirmed_by: ""                 # owner — NOT YET CONFIRMED
-date: ""
+owner_stop_decisions:            # the stage-0 stop outcome, owner's words paraphrased —
+                                 # each is BINDING on stages 1-4
+  opinions_held: "Stage 0 does not form opinions. The exploratory verdicts above are
+    retracted to hypothesis status; verdict-forming happens at stages 1-2 with more
+    research. Nothing above ships or is cited until re-derived there."
+  phase_boundaries: "The 21-mile decomposition's clock-window segments are REJECTED as
+    presented. Stage 2 must segment on the race's NATURAL transitions as the crew
+    experienced them: (1) the start and beat before the Ambrose turn; (2) the turn onto
+    the reach, 'where we caught a lot of boats'; (3) the first night's dying breeze;
+    (4) the rebuild through Montauk and Plum Gut; (5) the Sound night; (6) the final
+    day to the finish. Boundaries must be derived from the data (turn points, wind-phase
+    changes), not from round clock hours."
+  peer_sets: "Katara56 alone is NOT an adequate benchmark. Each phase gets its own peer
+    set: the boats PHYSICALLY CLOSEST to Max during that phase — regardless of division,
+    and not necessarily the same boats phase to phase — because only boats in the same
+    water and weather support an apples-to-apples judgment of the human calls. The
+    division-scoped comparison remains for corrected-time claims; the navigation story
+    uses spatial peers."
+  night1_reframed: "Owner's sharpened hypothesis, replacing the original: Katara56 went
+    offshore during the first night and Max did not — the ground was lost, or the losing
+    position was taken, DURING night 1 even if the distance-to-finish gap only opened at
+    the morning build. Stage 2 must separate contemporaneous loss from positional setup,
+    and visualize the divergence rather than assert it."
+  build_timing: "Proceed with stages 1+ NOW on the in-progress snapshot; owner re-fetches
+    final data tomorrow (2026-07-27). The re-fetch diff re-runs the stage-0 ritual."
+  tier3_spine: "DEFERRED — re-ask at a later stage with concrete alternatives and details."
+  crew_log: "Build an INTERNAL (non-public) events version first; the owner prunes it
+    before anything ships. AND: treat the crew log itself with a grain of salt — it is
+    one tired, self-described-inexperienced crew member's recollection, not ground truth.
+    Research and synthesize more objective data; where the log and instruments/tracker/
+    weather evidence disagree, the log yields."
+  reference_boats: "Same directive as peer_sets — the named five stand for division-level
+    scoring comparisons, but navigation-phase comparisons draw from spatial proximity."
+  finish_time: "Owner confirms Max crossed at ~11:57; RC contact initiated. See
+    finish_time_discrepancies.owner_answer."
+
+confirmed_by: "Brad"
+date: "2026-07-26"
