@@ -25,15 +25,6 @@ introduction).
   `module_canaries.upwind_excess` can drift between config and
   tests/regression.json unchecked. Fix: iterate whatever keys both sides
   carry instead of a hardcoded list.
-- **Weather-evidence acquisition — promotion trigger FIRED** (2026-07-23):
-  the ALIR 2025 layer earned its keep — it corroborated the owner's squall
-  account (31.9 kt observed vs ~30 felt), timed the squall line across three
-  stations, explained the park via the forecast gradient collapse, and fed the
-  door narrative. Follow-up owed: bake weather acquisition into
-  `starter/acquisition/` + the skill's stage-0/1 references as a first-class
-  optional source (fetch commands + verified-coverage ritual are in
-  `races/alir2025/raw/weather/MANIFEST.md`; include the negative-station
-  checks — MTKN6 existed but was empty). Spawned as its own session task.
 - **Promote per-boat track trimming into `starter/`** (2026-07-23): the racing-
   window trim is now a stage-0 procedure step in the skill, with
   `races/alir2025/trim_tracks.py` as the reference implementation (dedup +

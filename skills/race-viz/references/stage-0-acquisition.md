@@ -25,9 +25,10 @@ A race starts as a Claude Code session in the monorepo ("run race-viz on
      client boat (or none) · comparison boats (or "propose a set").
    - *Optional — each raises what's possible:* crew journal → events layer
      (Tier 2) · nav log → reconciliation module (Tier 2) · weather brief /
-     routing notes → phase-attribution evidence · broadcast or interview
-     transcripts → primary research sources · watch schedule → watch-split
-     module candidate.
+     routing notes → phase-attribution evidence · public weather/current
+     observations → fetchable (weather evidence, below) · broadcast or
+     interview transcripts → primary research sources · watch schedule →
+     watch-split module candidate.
 3. **Offer to fetch what's fetchable.** Missing data + a YachtScoring event
    id or YB race id ⇒ offer acquisition (below) and run it on the user's go.
    Ask the USER only for what remains unfetchable.
@@ -88,6 +89,60 @@ name themselves `ys<eventId>_*`. Report every warning the run produces.
 - Both APIs are undocumented and unversioned. Data for past races persists in
   practice, but keep what you downloaded in `raw/`, and re-run the ritual
   after any re-download.
+
+## Weather evidence (optional acquisition — offer it, don't assume it)
+
+A race whose story has a weather axis (a squall, a park, a gradient shift)
+can carry a weather-evidence layer; offer it at kickoff alongside the other
+optional inputs. **Scope guard, non-negotiable:** these files are
+stage-1/2/3 phase-attribution and narrative EVIDENCE only. No pipeline
+number may depend on them; the pipeline consumes tracks/results/scratch
+exclusively, and I18 stands — VMC, never VMG; a wind-referenced claim cites
+the weather files as external evidence, never implies the tracker measured
+wind.
+
+**This is a methodology, not a source list.** Each race, find the most
+authoritative public sources for *its* waters — new sources per race are
+expected, not exceptions. The axes to cover, where the story needs them:
+**wind**, **sea state**, and **current**. Prefer observations near the
+course (national buoy / coastal-station networks); use model reanalysis only
+to fill the gaps between them (grids smooth micro-features — claims resting
+on model data are "model-supported, never observed"); take currents from the
+responsible tidal authority, remembering harmonic tables are *predictions*,
+not observations. Every series gets an evidence class — observed / model /
+predicted — and it sticks to the claim in stage 1.
+
+Whatever the source, hold it to the same ritual:
+
+1. **Verify coverage before trusting a file — a file can exist yet be
+   empty.** Decompress and count actual race-window data points, net of the
+   format's missing-data sentinels (ALIR 2025's MTKN6 file existed with zero
+   wind rows all year). Delete zero-coverage files rather than keeping false
+   coverage.
+2. **Record positive AND negative findings in a manifest** — row counts and
+   ranges for kept files, reasons for rejected stations (dead all year vs
+   dead in the window vs no file), sha256s, license/attribution terms.
+3. **Author the prose judgments a script can't make** in a hand-written
+   `MANIFEST.md` beside it: stations too distant to inform the course
+   honestly, and which observation gaps constrain which claims (ALIR: no
+   observed wind at the Montauk corner; no platform at all where the fleet
+   parked — so park-zone wind claims are model-supported and say so).
+
+`starter/acquisition/fetch_weather.py` encodes the ritual for the worked
+defaults — NDBC (observed wind + sea state), Open-Meteo ERA5 archive (model
+point winds), CO-OPS (predicted tidal currents); details in
+`starter/acquisition/README.md`:
+
+```
+python3 starter/acquisition/fetch_weather.py --window <start>..<end> \
+    --ndbc <stations> --era5 <name,lat,lon> … --coops <stations> \
+    --tz <race tz> --out-dir races/<race>/raw/weather
+```
+
+Use them when they fit the race's waters; elsewhere find the local
+equivalents and apply the same ritual — extend the fetcher or fetch by hand,
+provenance recorded either way. Worked example:
+`races/alir2025/raw/weather/MANIFEST.md`.
 
 ## Scope procedures
 
