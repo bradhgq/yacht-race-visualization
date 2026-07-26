@@ -29,11 +29,15 @@ introduction).
   fetched at 00:58 EDT while 7 boats were still racing (time limit 12:00 EDT
   the same day) and with protests open until Sunday, so every official number
   is provisional. Max and all three Division 9 rivals finished, so the hero's
-  analysis is stable; the fleet tail is not. RE-FETCH results + tracks after
-  final scoring, re-run the stage-0 ritual, and diff before anything is
-  pinned. Also re-fetch NDBC realtime2 before ~2026-09-08 (45-day retention)
-  to cover the last 11 h, and ERA5 after ~2026-08-03 once the reanalysis lag
-  closes. Details in `races/alir2026/decisions/stage-0-scope.yaml`.
+  analysis is stable; the fleet tail is not. OWNER INSTRUCTION (2026-07-26):
+  proceed through stage 2 NOW on this snapshot with preliminary-labelled pins;
+  a FUTURE PASS REDOES STAGES 0 AND 1 with final results plus the press,
+  interviews and commentaries that will have appeared by then, then re-pins.
+  The redo pass also: re-fetches NDBC realtime2 before ~2026-09-08 (45-day
+  retention) to cover the last 11 h, ERA5 after ~2026-08-03 once the
+  reanalysis lag closes, and checks the RC's answer on Max's finish time
+  (crew: ~11:57; published: 12:38:03).
+  Details in `races/alir2026/decisions/stage-0-scope.yaml`.
 - **Open-Meteo `best_match` silently substitutes models inside the reanalysis
   lag** (found on ALIR 2026, 2026-07-26): the 2025-pattern archive-API URL
   carries no `models` param, and for a race inside the ERA5 lag it returned a
