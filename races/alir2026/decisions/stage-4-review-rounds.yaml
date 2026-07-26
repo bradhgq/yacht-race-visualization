@@ -1,0 +1,38 @@
+# stage-4 — Review-Round Log — ALIR 2026 — OPEN (awaiting the owner's first click round)
+rounds: 0                        # minimum 1 before stage 5; the hosted build is ready
+hosted: "launch config alir2026-dist -> http://localhost:8614 (dist committed on the branch)"
+built_from_owner_design: "2026-07-26 directives: course -> five stated theses -> won-and-lost
+  cluster (race chart / distspeed / dual-basis phase ledger / powered-light split) ->
+  night-one group (U-shape + observed gradient) -> Plum Gut gate -> Sound night
+  (compounding line) -> xte/sog -> race log -> forecast report card LAST.
+  M3+M8 merged as the dual-basis ledger (nearby-peers basis + whole-fleet same-water
+  basis with entry-spread honesty badges, overlapping lanes). M7 = the split chart.
+  M2's map panel deferred: the U-shape + gradient carry the night-one mechanism; the
+  main course map (Night-1 water peers button) carries the tracks — flagged for the
+  owner's call whether a dedicated zoomed night-map module is still wanted."
+defects:                         # found during build/self-verification, before any owner round
+  - { found: "powered/light panel silently excluded every pre-noon finisher (the whole
+       podium) by requiring phase P7 coverage — 'Max 1st of 27 powered' was a biased
+       panel artifact", fix: "postprocess requires only the P2-P6 windows; all claims
+       re-based to the 49-boat panel (Max powered #4, light #35, +31 swing — still the
+       fleet's largest)", assertion: "not expressible in the harness (panel-composition
+       judgment); guarded by the postprocess run-log line and this record" }
+  - { found: "Plum Gut / Sound-gate tables keyed on tracker spellings dropped Habiru YCC
+       (and Wanderer) from the gate data", fix: "postprocess joins raw->payload names via
+       the normalizer", assertion: "postprocess prints the joined counts (47/12); a
+       fixture is possible at re-pin if wanted" }
+  - { found: "race-module payload keys (ledger/nightone/plumgut/soundgate) were dropped by
+       the split build's KEEP whitelist — modules crashed at harness time while the
+       standalone worked (stale-standalone cousin)", fix: "additive ABI:
+       presentation.coreData declares race keys; build.py fails loudly on a declared key
+       missing from the payload; recorded in shell/INVARIANTS.md", assertion: "the loud
+       assert in build.py IS the guard; nb/bir/alir2025 chains re-verified green" }
+self_verified: "chain green both TZs (10/10 checks, snapshot compare green; snapshot
+  2b3848f0… re-frozen after the amended-finish + module-data payload, per the stage-4
+  refetch ledger); DOM verification: 16 sections render in order, five theses, all six
+  plot modules carry correct trace shapes (ledger 2 bases + ref markers on dual axes;
+  split n=49; nightone fit+28+10; plumgut 13-pt curve + 47 boats; soundnight fit + 12;
+  forecast 6+6), zero console errors."
+approved_to_productionize: false
+confirmed_by: ""
+date: ""

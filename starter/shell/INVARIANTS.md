@@ -90,3 +90,7 @@ adjudication before they ship.
   `COPY.distspeed.noteElapsed/noteCorrected/refLine/vsRef/xNote`); narrative
   never lives in shared module code. Found shipping NB2026 claims on the BIR
   page.
+- `presentation.coreData` (2026-07-26, ALIR 2026) — optional list of race-specific
+  top-level payload keys (postprocess-computed module tables) the split build
+  carries into core.json and the standalone embed. Absent list = exactly the old
+  behavior; a declared key missing from the payload fails the build loudly.

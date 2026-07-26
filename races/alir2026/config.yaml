@@ -1,10 +1,12 @@
 # ALIR 2026 — Around Long Island Regatta (49th), Sea Cliff YC
 # Schema of record: skills/race-viz/references/schemas.md.
 # DATA: stage-0 REDO fetch 2026-07-26T10:0x EDT (owner instruction) — every
-# Around-Long-Island-course boat now resolved: 45 AOK + 6 RET; the only
-# unscored boat is Nomad (Around the Islands course, out of scope). The four
-# finish-time discrepancies (incl. the hero's) SURVIVED the protest-hearing
-# window unchanged — still flagged, still unresolved (RC contacted).
+# Around-Long-Island-course boat now resolved: 45 AOK + 7 RET; the only
+# unscored boat is Nomad (Around the Islands course, out of scope — no results
+# row at all, not marked abandoned). THE HERO'S FINISH WAS AMENDED by the RC
+# (third fetch, ~14:00 EDT): 12:38:03 -> 11:57:18, six seconds from her YB
+# line marker, confirming owner + tracker. DUET/MARIE/Ripple's gaps remain
+# unamended and stay flagged.
 # NOTE the SI's "not finishing by 1200 Sunday shall call the RC" line is a
 # NOTIFICATION requirement, not a hard time limit — two boats finished Sunday
 # afternoon and scored AOK. Results remain formally 'Preliminary' on
@@ -220,9 +222,10 @@ pinned_values:                  # PRELIMINARY PINS (prime rule 3) — pinned at 
                                 # mid-race snapshot; redo stages 0-1 and RE-PIN on final
                                 # results). Full derivations: tests/regression.json _comment.
   tz_probe: { epoch: 1784984761, rendered: '2026-07-25 09:06' }   # Katara56's crossing
-  endpoints: { ref: "Katara56", corrected_min: 212.07, elapsed_min: 212.07 }   # hero(Max) − ref;
-                                # equal by construction (identical -18 ratings) — the equality
-                                # is itself a scoring probe
+  endpoints: { ref: "Katara56", corrected_min: 171.32, elapsed_min: 171.32 }   # hero(Max) − ref,
+                                # on the AMENDED official results (Max finish corrected by the
+                                # RC to 11:57:18). The GAPS are equal by construction (same -18
+                                # rating; each boat's corrected = her elapsed + 62:06)
   module_canaries: {}           # no zone module shipped yet — the detector found no candidate
                                 # at default knobs; the authored-zone decision is at the stop
   names_present: ["Max", "Zammermoos", "Poseidon", "Katara56", "Habiru YCC", "Lioness",

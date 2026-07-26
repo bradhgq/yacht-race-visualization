@@ -1,5 +1,5 @@
 {
-  "fetched": "2026-07-26T09:54:49-0400",
+  "fetched": "2026-07-26T14:12:40-0400",
   "warnings": [
     "YB decoded 54 tracked boats but RaceSetup lists 56 \u2014 public track data is a SUBSET of the fleet (the Ida Lewis case)",
     "6 name-join row(s) need review in alir2026_name_join.csv (sail-only / ambiguous / unmatched) \u2014 the join is a PROPOSAL, confirm at the stage-0 stop"
@@ -12,9 +12,9 @@
     "yb_race_id": "alir26"
   },
   "files": {
-    "alir2026_results.csv": 51,
+    "alir2026_results.csv": 52,
     "alir2026_scratch_sheet.csv": 59,
-    "alir2026_tracks.csv": 52843
+    "alir2026_tracks.csv": 53351
   },
   "name_join": {
     "file": "alir2026_name_join.csv",
@@ -22,10 +22,10 @@
   },
   "coverage": {
     "tracked_boats": 54,
-    "ping_rows": 52843,
+    "ping_rows": 53351,
     "raceSetup_teams": 56,
     "entries": 59,
-    "results_rows": 51
+    "results_rows": 52
   },
   "start_times": {
     "yb_team_starts_epoch": [
@@ -93,8 +93,8 @@
     "note": "cross-check config start_method (finish \u2212 elapsed) against these"
   },
   "sha256": {
-    "alir2026_results.csv": "3f8115cbedefd1d2d3ffa278caa894e1a55c0d38bbcea4807730f2ef99a0bd22",
+    "alir2026_results.csv": "8a49c8377bf4e1b14b7fda03a7e84541261e79023392dea83f0636b9c745fc9e",
     "alir2026_scratch_sheet.csv": "e73d7ba170f56d35110a1077e3873dbc111cbf2c3092dbc668673ff14df31f79",
-    "alir2026_tracks.csv": "d5746175ee884110a245edbab7729e892ffa89cff9ba158e16b7860ca8b652ef"
+    "alir2026_tracks.csv": "ae5c3fe0978beac34630bf6726503fe340cb8264504a151b7b0bb39e70c59524"
   }
 }

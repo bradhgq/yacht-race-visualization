@@ -37,9 +37,9 @@ same-instant view is the phase table in the findings memo; this form is the one
 that reconciles to official numbers. Both are shown because they answer
 different questions.
 
-### vs Katara56 (X-56, IDENTICAL −18 rating) — official delta +212.1 min elapsed,
-### +212.1 min corrected (equal gaps by construction; each boat's own corrected is
-### elapsed + 62:06)
+### vs Katara56 (X-56, IDENTICAL −18 rating) — official delta +171.3 min elapsed,
+### +171.3 min corrected, ON THE AMENDED RESULTS (the RC corrected Max's finish to
+### 11:57:18; equal gaps by construction; each boat's own corrected is elapsed + 62:06)
 
 | segment (course gates) | Max lost/gained | running |
 |---|---|---|
@@ -51,8 +51,8 @@ different questions.
 | Montauk approach → Plum Gut (66) | +34.1 | +81.1 |
 | Plum Gut → mid-Sound (48) | **+261.5** | +342.6 |
 | mid-Sound → final approach (15) | −162.5 | +180.1 |
-| final approach → finish | +32.0 | **+212.2** |
-| **reconciliation vs official** | | **+212.1 (residual −0.1)** |
+| final approach → finish | −8.7 | **+171.4** |
+| **reconciliation vs official** | | **+171.3 (residual −0.1)** |
 
 Reading [inference]: the two "+260/+270" segments are the same water crossed in
 different wind — Max crossed the park water while parked and the Sound-east water
@@ -63,7 +63,7 @@ phase table, not this table, carries the "where was it decided" claim — and bo
 agree on the answer.
 
 ### vs Zammermoos (ClubSwan 42, −15; the division winner) — official delta
-### +369.8 min elapsed; corrected +380.2 = elapsed + 3 s/mi × 207 nm (+10.35)
+### +329.1 min elapsed (amended); corrected +339.4 = elapsed + 3 s/mi × 207 nm (+10.35)
 
 | segment | Max lost/gained | running |
 |---|---|---|
@@ -75,8 +75,8 @@ agree on the answer.
 | Montauk approach → Plum Gut | +39.6 | +169.8 |
 | Plum Gut → mid-Sound | **+298.5** | +468.3 |
 | mid-Sound → final approach | −128.0 | +340.3 |
-| final approach → finish | +26.4 | +366.7 |
-| **reconciliation vs official** | | **+369.8 (residual +3.2, gate interpolation)** |
+| final approach → finish | −14.4 | +325.9 |
+| **reconciliation vs official** | | **+329.1 (residual +3.2, gate interpolation)** |
 
 Different benchmark, different story [inference]: against Zammermoos the damage
 starts a segment earlier — she crossed the night-one water before it died (she was
@@ -97,7 +97,7 @@ by who reached which water before each shutdown.
 | USCG LNM: ~70-vessel fleet | primary [fact] | 53 starters | pre-race planning figure; not a discrepancy in results |
 | Navy repeat of 2025 line honors | organizer framing [testimony] | Zammermoos first home 06:28:13 Sat; Poseidon second | **contradicted** (provisional) |
 | WindCheck "two courses first time" headline | unread source [testimony] | article dates to the 2025 edition | excluded from 2026 narrative |
-| Official finish 12:38:03 for Max | official [fact] vs owner [recall] + tracker | line marker + crossing 11:57:24; stationary at 12:38 | **unresolved** — RC queried; official stands in all scoring |
+| Official finish 12:38:03 for Max | official [fact] vs owner [recall] + tracker | line marker + crossing 11:57:24 | **RESOLVED — official AMENDED to 11:57:18** (third fetch), six seconds from the marker; DUET/MARIE/Ripple gaps remain open |
 
 ## 4. Case studies (ordered by lesson value)
 
@@ -115,7 +115,9 @@ by who reached which water before each shutdown.
    maps almost monotonically onto night-2 progress; the new easterly reached the
    leaders first. Being 90 min later at the gate cost hours, not minutes. [fact]
 4. **The boat you brought** (whole race). Largest powered/light split in the
-   fleet: 1/27 powered, 18/27 light. The same crew sailing the same boat was
+   fleet (49-boat clock-window basis, corrected at stage 4 — the earlier 27-boat
+   panel silently excluded pre-noon finishers): powered #4, light #35, a 31-place
+   swing. The same crew sailing the same boat was
    simultaneously the fleet's best and nearly its worst, sorted purely by wind
    band. Any lessons drawn must survive this base rate. [fact]
 

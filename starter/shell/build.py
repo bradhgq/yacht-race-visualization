@@ -228,7 +228,15 @@ def main():
     # ── payload split (I7: defaults ⊆ core; I8: insertion order preserved) ──
     quick = set(cfg['groups']['quick'])
     default_boats = set(cfg['defaults']['boats']) | {cfg['defaults']['ref']}
-    core = {k: data[k] for k in KEEP}
+    # presentation.coreData (additive ABI, ALIR 2026): a race whose modules read
+    # race-specific top-level payload keys (postprocess-computed tables) declares
+    # them here so the split build carries them into core.json — without it a
+    # module that renders from such a key crashes at harness time while working
+    # in the standalone build (a stale-standalone cousin found on ALIR 2026).
+    core_extra = [k for k in (cfg.get('coreData') or []) if k in data]
+    missing_extra = [k for k in (cfg.get('coreData') or []) if k not in data]
+    assert not missing_extra, f'presentation.coreData keys absent from payload: {missing_extra}'
+    core = {k: data[k] for k in KEEP + core_extra}
     core['boats'] = {}
     more = {}
     missing = default_boats - set(data['boats'])
@@ -324,7 +332,7 @@ def main():
 
     # ── standalone single-file fallback (file:// friendly; no fetches) ──
     page = stamp(html)
-    embedded = compact({**{k: data[k] for k in KEEP}, 'boats': data['boats'],
+    embedded = compact({**{k: data[k] for k in KEEP + core_extra}, 'boats': data['boats'],
                         'fleet': data['fleet']}).replace('</', '<\\/')
     # function repl: keeps re.sub from interpreting backslashes inside the JSON
     page, n = re.subn(r'<!-- DATA:FETCH.*?/DATA:FETCH -->',

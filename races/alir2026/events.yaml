@@ -63,13 +63,13 @@ events:
 - t: "2026-07-25 11:57"
   cat: milestone
   label: "Max finishes"
-  txt: "Tracker line-crossing 11:57:24; the published finish is 12:38:03 — one of four such gaps in the fleet, with the race committee for clarification. Official values are used throughout."
+  txt: "Tracker line-crossing 11:57:24; the official finish was AMENDED by the race committee to 11:57:18 after this project's query — six seconds from the marker. Three other boats' larger gaps remain unamended."
   source: analysis
   visibility: public
 - t: "2026-07-25 12:38"
   cat: insight
   label: "Two boats in one"
-  txt: "Across the 27 boats with full-race coverage, Max ranks 1st in the two powered phases and 18th in the three light phases — the largest split in the fleet. The Pogo 50 physics share the bill with every navigation call."
+  txt: "Across the 49 boats measurable through both wind regimes, Max ranks 4th for miles made in the powered phases and 35th in the light ones — a 31-place swing, the largest in the fleet. The Pogo 50 physics share the bill with every navigation call."
   source: analysis
   visibility: public
 watches: []

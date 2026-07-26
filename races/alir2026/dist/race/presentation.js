@@ -1,9 +1,9 @@
-/* ALIR 2026 presentation config — stage-2 MINIMUM-VIABLE authoring.
-   Enough for the chain to build and the analysis to be read; the real
-   presentation pass happens at stage 4. FACTS here must match config.yaml
-   (shell/build.py consistency check). PRELIMINARY-SNAPSHOT build: data was
-   captured mid-race (7 boats unscored); copy carries the provisional label
-   until the owner's final-results re-fetch pass. */
+/* ALIR 2026 presentation config — stage-4 authoring (owner design directives,
+   2026-07-26): course first, then the stated theses, the general won-and-lost
+   cluster (race chart, distspeed, the dual-basis phase ledger + the split),
+   the night-one group, Plum Gut, the Sound night, and the forecast report
+   card LAST. FACTS here must match config.yaml (shell/build.py consistency
+   check). Data: final (third fetch; Max's finish RC-amended). */
 window.__RACE_CONFIG__ = {
   meta: {
     title: 'ALIR 2026 — Around Long Island Regatta',
@@ -99,10 +99,10 @@ window.__RACE_CONFIG__ = {
   },
   kpis: [                                 // stage-2/3 confirmed findings only (owner endorsed
                                           // the split for the final viz at the stage-2 stop)
-    { label: 'Two boats in one', value: '1st<span class="u"> / 18th</span>',
-      sub: 'of 27 — powered phases vs light phases; the fleet\u2019s largest split' },
+    { label: 'Two boats in one', value: '#4<span class="u"> / #35</span>',
+      sub: 'of 49 — powered vs light phases; a 31-place swing, the fleet\u2019s largest' },
     { label: 'The decisive windows', value: '2<span class="u"> of 7 phases</span>',
-      sub: 'dawn Friday and the Sound night carry nearly the whole 212 min vs Katara56' },
+      sub: 'dawn Friday and the Sound night carry nearly the whole 171 min vs Katara56' },
     { label: 'Distance sailed', value: '{stats.dist_sailed}<span class="u"> nm</span>',
       sub: 'Max \u00b7 +{stats.extra} over the 207 nm course' },
   ],
@@ -112,7 +112,9 @@ window.__RACE_CONFIG__ = {
     [70, 'PLUM GUT', -10, -26],
   ],
   controls: { pills: ['@ghosts'] },       // scored course always on (2025 owner decision)
-  layout: ['map', 'dtf', 'race', '@distspeed', 'two:xte,sog', 'events'],
-  modules: ['distspeed'],
+  layout: ['map', '@theses', 'dtf', 'race', '@distspeed', '@ledger', '@split',
+           '@nightone', '@plumgut', '@soundnight', 'two:xte,sog', 'events', '@forecast'],
+  modules: ['distspeed', 'theses', 'ledger', 'split', 'nightone', 'plumgut', 'soundnight', 'forecast'],
+  coreData: ['ledger', 'nightone', 'plumgut', 'soundgate'],   // postprocess tables the modules render from
   overlays: ['courseline'],
 };
