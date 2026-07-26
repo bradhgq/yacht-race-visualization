@@ -101,32 +101,48 @@ exclusively, and I18 stands — VMC, never VMG; a wind-referenced claim cites
 the weather files as external evidence, never implies the tracker measured
 wind.
 
+**This is a methodology, not a source list.** Each race, find the most
+authoritative public sources for *its* waters — new sources per race are
+expected, not exceptions. The axes to cover, where the story needs them:
+**wind**, **sea state**, and **current**. Prefer observations near the
+course (national buoy / coastal-station networks); use model reanalysis only
+to fill the gaps between them (grids smooth micro-features — claims resting
+on model data are "model-supported, never observed"); take currents from the
+responsible tidal authority, remembering harmonic tables are *predictions*,
+not observations. Every series gets an evidence class — observed / model /
+predicted — and it sticks to the claim in stage 1.
+
+Whatever the source, hold it to the same ritual:
+
+1. **Verify coverage before trusting a file — a file can exist yet be
+   empty.** Decompress and count actual race-window data points, net of the
+   format's missing-data sentinels (ALIR 2025's MTKN6 file existed with zero
+   wind rows all year). Delete zero-coverage files rather than keeping false
+   coverage.
+2. **Record positive AND negative findings in a manifest** — row counts and
+   ranges for kept files, reasons for rejected stations (dead all year vs
+   dead in the window vs no file), sha256s, license/attribution terms.
+3. **Author the prose judgments a script can't make** in a hand-written
+   `MANIFEST.md` beside it: stations too distant to inform the course
+   honestly, and which observation gaps constrain which claims (ALIR: no
+   observed wind at the Montauk corner; no platform at all where the fleet
+   parked — so park-zone wind claims are model-supported and say so).
+
+`starter/acquisition/fetch_weather.py` encodes the ritual for the worked
+defaults — NDBC (observed wind + sea state), Open-Meteo ERA5 archive (model
+point winds), CO-OPS (predicted tidal currents); details in
+`starter/acquisition/README.md`:
+
 ```
 python3 starter/acquisition/fetch_weather.py --window <start>..<end> \
     --ndbc <stations> --era5 <name,lat,lon> … --coops <stations> \
     --tz <race tz> --out-dir races/<race>/raw/weather
 ```
 
-Three sources (details in `starter/acquisition/README.md`): NDBC buoy/shore
-observations (yearly stdmet files, UTC, public domain), Open-Meteo ERA5
-reanalysis point winds (model, CC-BY 4.0 with attribution, ~25 km grid —
-claims resting on it are "model-supported, never observed"), and CO-OPS
-tidal-current *predictions* (harmonic model, not observations). Pick NDBC
-stations and ERA5 points to bracket the course legs; pick CO-OPS stations at
-the tidal gates the fleet actually used.
-
-**The verified-coverage ritual is mandatory — a file can exist yet be
-empty.** The fetcher decompresses each NDBC file, counts non-sentinel
-race-window rows (sentinels: WDIR 999, WSPD/GST 99.0, WVHT 99.00), deletes
-zero-coverage files rather than keeping false coverage (ALIR 2025's MTKN6
-file existed with zero wind rows all year), and writes
-`weather_manifest.json` recording positive AND negative findings. Carry
-both kinds into a hand-written `MANIFEST.md` beside it, including the
-judgments the fetcher can't make: stations too distant to inform the course
-honestly, and which observation gaps constrain which claims (ALIR: no
-observed wind at the Montauk corner; no platform at all in the central Sound
-where the fleet parked — so park-zone wind claims are model-supported and
-say so). Worked example: `races/alir2025/raw/weather/MANIFEST.md`.
+Use them when they fit the race's waters; elsewhere find the local
+equivalents and apply the same ritual — extend the fetcher or fetch by hand,
+provenance recorded either way. Worked example:
+`races/alir2025/raw/weather/MANIFEST.md`.
 
 ## Scope procedures
 

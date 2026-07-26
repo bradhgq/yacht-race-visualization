@@ -112,6 +112,14 @@ https://api.yachtscoring.com/v1/public/event/{eventId}                    metada
 
 ## Weather evidence (optional; promoted from ALIR 2025)
 
+The skill's stage-0 reference carries the methodology: per race, find the
+most authoritative public sources for *its* waters — wind, sea state, and
+current — and hold every source to the verified-coverage ritual below. This
+script encodes that ritual for the worked defaults (US East Coast: NDBC
+observed, ERA5 model, CO-OPS predicted); other waters mean local
+equivalents, fetched by extending the script or by hand, same ritual either
+way.
+
 **Scope guard first:** weather files are stage-1/2/3 phase-attribution and
 narrative EVIDENCE only. No pipeline number may depend on them — the pipeline
 consumes tracks/results/scratch exclusively, and VMC stays VMC (I18): a
