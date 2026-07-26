@@ -25,19 +25,20 @@ introduction).
   `module_canaries.upwind_excess` can drift between config and
   tests/regression.json unchecked. Fix: iterate whatever keys both sides
   carry instead of a hardcoded list.
-- **ALIR 2026 is built on an IN-PROGRESS snapshot** (2026-07-26): data was
-  fetched at 00:58 EDT while 7 boats were still racing (time limit 12:00 EDT
-  the same day) and with protests open until Sunday, so every official number
-  is provisional. Max and all three Division 9 rivals finished, so the hero's
-  analysis is stable; the fleet tail is not. OWNER INSTRUCTION (2026-07-26):
-  proceed through stage 2 NOW on this snapshot with preliminary-labelled pins;
-  a FUTURE PASS REDOES STAGES 0 AND 1 with final results plus the press,
-  interviews and commentaries that will have appeared by then, then re-pins.
-  The redo pass also: re-fetches NDBC realtime2 before ~2026-09-08 (45-day
-  retention) to cover the last 11 h, ERA5 after ~2026-08-03 once the
-  reanalysis lag closes, and checks the RC's answer on Max's finish time
-  (crew: ~11:57; published: 12:38:03).
-  Details in `races/alir2026/decisions/stage-0-scope.yaml`.
+- **ALIR 2026 post-publication maintenance list** (updated at stage 5,
+  2026-07-26 evening; the in-progress-snapshot thread is RESOLVED — three
+  fetches, all ALI boats terminal, and the RC AMENDED Max's finish to 11:57:18
+  after this project's query): (a) stage-1 REDO with the press, interviews and
+  commentaries that appear post-race (nothing existed as of Sunday morning;
+  awards were 17:00 Sunday) — fold into a results-ratification re-pin when
+  YachtScoring flips off 'Preliminary'; (b) DUET +68/MARIE +28/Ripple +8 min
+  finish-time gaps remain unamended — ask the RC when convenient; (c) NDBC
+  realtime2 re-fetch before ~2026-09-08 (45-day retention) for the last-day
+  tail; ERA5 after ~2026-08-03; (d) the Captains Meeting PDF (image-only)
+  still unread — needs a PDF renderer or manual read; (e) route-model start-leg
+  projection: the gridded DTF reads ~200 nm at the ALIR gun vs the 205.8
+  polyline start — harmless to every shipped number (the harness's I14 basis
+  recovers to 0.01 kt) but worth an engine look before the next marks race.
 - **Open-Meteo `best_match` silently substitutes models inside the reanalysis
   lag** (found on ALIR 2026, 2026-07-26): the 2025-pattern archive-API URL
   carries no `models` param, and for a race inside the ERA5 lag it returned a

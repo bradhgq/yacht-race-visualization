@@ -1,14 +1,66 @@
 {
-  "_comment": "ALIR 2026 pinned values (prime rule 3) — hand-pinned at the stage-2 stop from OFFICIAL PROVISIONAL results + hand-verified probes, never emitted by the pipeline under test. PRELIMINARY PINS by recorded owner instruction (2026-07-26, stage-0 stop: proceed on the mid-race snapshot now; stages 0-1 redo + re-pin on final results — see decisions/stage-0-scope.yaml owner_stop_decisions.build_timing and docs/OPEN_THREADS.md). tz_probe: Katara56's finish-line crossing, +4.00h EDT-as-Z mislabel confirmed on 36 of 40 finishers; probe boat is deliberately NOT the hero (Max is one of four boats whose official finish diverges from her tracker crossing — flagged, unresolved). endpoints are hero (Max) minus ref (Katara56) from official results AS AMENDED 2026-07-26 (the RC corrected Max's finish to 11:57:18 — six seconds from her YB line marker — after the owner's query; see decisions/stage-4-refetch-ledger.yaml): corrected (169464-159185)/60 = 171.32 min, elapsed (165738-155459)/60 = 171.32 (identical -18 ratings make the two GAPS equal by construction — each boat's absolute corrected is her elapsed + 62:06); pace 171.3167/207*100 = 82.76 min/100nm. finstrip_count 0: largest in-division 30-min corrected cluster is 3 boats (Spin Div 5), below finish_spread.min_boats 10, so the strip never fires. duration_roundtrip: Max's official elapsed 46:02:18 = 165738 s (amended). start_window: Max's Division 9 gun 13:55 EDT 2026-07-23 (warning 13:50 + 5, reproduced by finish-minus-elapsed for all 9 divisions with finishers). expected_checks 10 = the checks that fire for this fixture set (3 timezone + 3 exact-endpoint + 4 name-hygiene/layout), counted from the harness's own report on the first gated run; grows as fixtures land.",
-  "expected_checks": 10,
-  "tz_probe": { "epoch": 1784984761, "rendered": "2026-07-25 09:06" },
-  "endpoints": { "ref": "Katara56", "corrected_min": 171.32, "elapsed_min": 171.32, "pace_min_per_100": 82.76 },
+  "_comment": "ALIR 2026 pinned values (prime rule 3) \u2014 hand-pinned at the stage-2 stop from OFFICIAL PROVISIONAL results + hand-verified probes, never emitted by the pipeline under test. PRELIMINARY PINS by recorded owner instruction (2026-07-26, stage-0 stop: proceed on the mid-race snapshot now; stages 0-1 redo + re-pin on final results \u2014 see decisions/stage-0-scope.yaml owner_stop_decisions.build_timing and docs/OPEN_THREADS.md). tz_probe: Katara56's finish-line crossing, +4.00h EDT-as-Z mislabel confirmed on 36 of 40 finishers; probe boat is deliberately NOT the hero (Max is one of four boats whose official finish diverges from her tracker crossing \u2014 flagged, unresolved). endpoints are hero (Max) minus ref (Katara56) from official results AS AMENDED 2026-07-26 (the RC corrected Max's finish to 11:57:18 \u2014 six seconds from her YB line marker \u2014 after the owner's query; see decisions/stage-4-refetch-ledger.yaml): corrected (169464-159185)/60 = 171.32 min, elapsed (165738-155459)/60 = 171.32 (identical -18 ratings make the two GAPS equal by construction \u2014 each boat's absolute corrected is her elapsed + 62:06); pace 171.3167/207*100 = 82.76 min/100nm. finstrip_count 0: largest in-division 30-min corrected cluster is 3 boats (Spin Div 5), below finish_spread.min_boats 10, so the strip never fires. duration_roundtrip: Max's official elapsed 46:02:18 = 165738 s (amended). start_window: Max's Division 9 gun 13:55 EDT 2026-07-23 (warning 13:50 + 5, reproduced by finish-minus-elapsed for all 9 divisions with finishers). expected_checks 10 = the checks that fire for this fixture set (3 timezone + 3 exact-endpoint + 4 name-hygiene/layout), counted from the harness's own report on the first gated run; grows as fixtures land. vmc fixture (added stage 5, round-1 defect->assertion): hero_mean_kt 4.46 = the harness-measured official-window mean of Max's vmc channel on the AMENDED window (the harness's startOf/parseDur window is the definition of record) \u2014 and it recovers the routed basis to 0.01 kt (205.8 nm / 46.0383 h = 4.47), so I14 holds on the routed polyline; an ad-hoc epoch-window recomputation reads ~4.53 (window-edge and null handling differ) and is NOT the basis. y_range matches presentation vmcYRange [-5.5,14] (round-1 fix for clipped values). expected_checks 12 = 10 prior + the two vmc checks.",
+  "expected_checks": 12,
+  "tz_probe": {
+    "epoch": 1784984761,
+    "rendered": "2026-07-25 09:06"
+  },
+  "endpoints": {
+    "ref": "Katara56",
+    "corrected_min": 171.32,
+    "elapsed_min": 171.32,
+    "pace_min_per_100": 82.76
+  },
   "module_canaries": {},
-  "names_present": ["Max", "Zammermoos", "Poseidon", "Katara56", "Habiru YCC", "Lioness",
-                    "Abilyn", "Actaea", "Duet", "Marie", "Scapegoat", "Vicitan", "Betelgeuse YCC", "Little Texas", "Wanderer"],
-  "names_absent": ["ACTAEA", "DUET", "MARIE", "SCAPEGOAT", "VICITAN", "BETELGEUSE YCC",
-                   "Habiru", "Little Texas YCC", "STARTING LINE (+ FINISH)"],
+  "names_present": [
+    "Max",
+    "Zammermoos",
+    "Poseidon",
+    "Katara56",
+    "Habiru YCC",
+    "Lioness",
+    "Abilyn",
+    "Actaea",
+    "Duet",
+    "Marie",
+    "Scapegoat",
+    "Vicitan",
+    "Betelgeuse YCC",
+    "Little Texas",
+    "Wanderer"
+  ],
+  "names_absent": [
+    "ACTAEA",
+    "DUET",
+    "MARIE",
+    "SCAPEGOAT",
+    "VICITAN",
+    "BETELGEUSE YCC",
+    "Habiru",
+    "Little Texas YCC",
+    "STARTING LINE (+ FINISH)"
+  ],
   "finstrip_count": 0,
-  "duration_roundtrip": { "str": "46:02:18", "seconds": 165738 },
-  "start_window": { "boat": "Max", "date": "2026-07-23", "hm_min": "13:55", "hm_max": "13:55" }
+  "duration_roundtrip": {
+    "str": "46:02:18",
+    "seconds": 165738
+  },
+  "start_window": {
+    "boat": "Max",
+    "date": "2026-07-23",
+    "hm_min": "13:55",
+    "hm_max": "13:55"
+  },
+  "vmc": {
+    "hero_mean_kt": 4.46,
+    "tol": 0.05,
+    "y_range": [
+      -5.5,
+      14
+    ]
+  },
+  "vmc_caption": [
+    "closing speed",
+    "not VMG"
+  ]
 }

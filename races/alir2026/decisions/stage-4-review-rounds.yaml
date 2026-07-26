@@ -1,4 +1,4 @@
-# stage-4 — Review-Round Log — ALIR 2026 — OPEN (awaiting the owner's first click round)
+# stage-4 — Review-Round Log — ALIR 2026 — round 1 complete
 rounds: 1                        # owner phone round, 2026-07-26 evening
 hosted: "launch config alir2026-dist -> http://localhost:8614 (dist committed on the branch)"
 built_from_owner_design: "2026-07-26 directives: course -> five stated theses -> won-and-lost
@@ -54,6 +54,6 @@ self_verified: "chain green both TZs (10/10 checks, snapshot compare green; snap
   plot modules carry correct trace shapes (ledger 2 bases + ref markers on dual axes;
   split n=49; nightone fit+28+10; plumgut 13-pt curve + 47 boats; soundnight fit + 12;
   forecast 6+6), zero console errors."
-approved_to_productionize: false
-confirmed_by: ""
-date: ""
+approved_to_productionize: true   # owner: "(Start stage 5)", 2026-07-26
+confirmed_by: "Brad"
+date: "2026-07-26"
