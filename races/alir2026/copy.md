@@ -10,8 +10,9 @@ the stage-3 corrections stop. No analysis claims until confirmed at a stop.
 - **H1:** Max · Around Long Island 2026
 - **Sub:** Ellis Island, under the Verrazzano, east to Montauk, through Plum Gut,
   down the Sound to Sea Cliff.
-- **Result:** Provisional: 4th of 4, Spinnaker Division 9 — 42 of 53 starters
-  scored when this data was captured (7 still racing; results not final).
+- **Result:** PHRF Spinnaker Division 9: 4th of 4 · elapsed 46:43:03 · every
+  Around-Long-Island boat resolved (45 finishers, 6 retired). Results labeled
+  preliminary by the organizer.
 - **TZ note:** All times EDT. Finish times verified against the tracker; see the
   notes for one open discrepancy.
 

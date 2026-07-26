@@ -5,7 +5,7 @@
   "endpoints": { "ref": "Katara56", "corrected_min": 212.07, "elapsed_min": 212.07, "pace_min_per_100": 102.45 },
   "module_canaries": {},
   "names_present": ["Max", "Zammermoos", "Poseidon", "Katara56", "Habiru YCC", "Lioness",
-                    "Abilyn", "Actaea", "Duet", "Marie", "Scapegoat", "Vicitan", "Betelgeuse YCC", "Little Texas"],
+                    "Abilyn", "Actaea", "Duet", "Marie", "Scapegoat", "Vicitan", "Betelgeuse YCC", "Little Texas", "Wanderer"],
   "names_absent": ["ACTAEA", "DUET", "MARIE", "SCAPEGOAT", "VICITAN", "BETELGEUSE YCC",
                    "Habiru", "Little Texas YCC", "STARTING LINE (+ FINISH)"],
   "finstrip_count": 0,

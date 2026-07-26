@@ -17,24 +17,24 @@
 <meta name="twitter:title" content="ALIR 2026 — Around Long Island Regatta">
 <meta name="twitter:description" content="ALIR 2026: two parks, one reach — 42 finishers (and counting) around Long Island.">
 <meta name="twitter:image" content="https://hgq.fyi/max-around-long-island-2026/og.png">
-<link rel="icon" href="favicon.svg?v=c6851f378a" type="image/svg+xml">
-<link rel="stylesheet" href="tokens.css?v=c6851f378a">
-<link rel="stylesheet" href="styles.css?v=c6851f378a">
+<link rel="icon" href="favicon.svg?v=92944805af" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css?v=92944805af">
+<link rel="stylesheet" href="styles.css?v=92944805af">
 <!-- DATA:FETCH — start the core payload download before the deferred scripts arrive -->
-<script>window.__CORE_FETCH=fetch('data/core.json?v=c6851f378a').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});</script>
+<script>window.__CORE_FETCH=fetch('data/core.json?v=92944805af').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});</script>
 <!-- /DATA:FETCH -->
-<script src="app/helpers.js?v=c6851f378a" defer></script>
-<script src="app/tokens.js?v=c6851f378a" defer></script>
-<script src="app/core.js?v=c6851f378a" defer></script>
-<script src="app/charts/map.js?v=c6851f378a" defer></script>
-<script src="app/charts/dtf.js?v=c6851f378a" defer></script>
-<script src="app/charts/race.js?v=c6851f378a" defer></script>
-<script src="app/charts/xte.js?v=c6851f378a" defer></script>
-<script src="app/charts/sog.js?v=c6851f378a" defer></script>
-<script src="race/presentation.js?v=c6851f378a" defer></script>
-<script src="race/copy.js?v=c6851f378a" defer></script>
-<script src="race/modules/distspeed.js?v=c6851f378a" defer></script>
-<script src="race/overlays/courseline.js?v=c6851f378a" defer></script>
+<script src="app/helpers.js?v=92944805af" defer></script>
+<script src="app/tokens.js?v=92944805af" defer></script>
+<script src="app/core.js?v=92944805af" defer></script>
+<script src="app/charts/map.js?v=92944805af" defer></script>
+<script src="app/charts/dtf.js?v=92944805af" defer></script>
+<script src="app/charts/race.js?v=92944805af" defer></script>
+<script src="app/charts/xte.js?v=92944805af" defer></script>
+<script src="app/charts/sog.js?v=92944805af" defer></script>
+<script src="race/presentation.js?v=92944805af" defer></script>
+<script src="race/copy.js?v=92944805af" defer></script>
+<script src="race/modules/distspeed.js?v=92944805af" defer></script>
+<script src="race/overlays/courseline.js?v=92944805af" defer></script>
 <script src="vendor/plotly-basic-2.35.2.min.js" id="plotlyjs" defer></script>
 </head>
 <body>
@@ -44,7 +44,7 @@
   <div class="tb-eyebrow">Chart of the Race · 49th Around Long Island Regatta · July 23–26, 2026 · 207 NM</div>
   <h1><span class="mag">Max</span> · Around Long Island 2026</h1>
   <div class="tb-sub">Ellis Island, under the Verrazzano, east to Montauk, through Plum Gut, down the Sound to Sea Cliff.</div>
-  <div class="tb-result">Provisional: 4th of 4, Spinnaker Division 9 — 42 of 53 starters scored when this data was captured (7 still racing; results not final).</div>
+  <div class="tb-result">PHRF Spinnaker Division 9: 4th of 4 · elapsed 46:43:03 · every Around-Long-Island boat resolved (45 finishers, 6 retired). Results labeled preliminary by the organizer.</div>
   <div class="tzn">All times EDT. Finish times verified against the tracker; see the notes for one open discrepancy.</div>
 </header>
 
@@ -141,11 +141,17 @@
 </section>
 </div>
 
+<section class="card">
+  <h2>Race log — every marked moment</h2>
+  <div class="note"></div>
+  <div id="eventtable" style="max-height:520px;overflow-y:auto"></div>
+</section>
+
 </main>
 
 <footer class="foot">
 <h3>How to read this</h3>
-  <ul><li>PRELIMINARY BUILD: data captured 00:58 EDT July 26 while 7 boats were still racing; all results provisional pending protests and final scoring.</li>
+  <ul><li>Data captured 10:00 EDT July 26 with every Around-Long-Island boat resolved (45 finishers, 6 retired); the organizer still labels results preliminary. Nomad (Around-the-Islands course — a different course around Block Island) is out of scope and unscored.</li>
   <li>Corrected times are division-scoped. PHRF divisions score time-on-distance at 207 nm; the new ORC Division 0 scores time-on-time. The two are never compared across the boundary.</li>
   <li>One open discrepancy: four official finish times (including Max&#8217;s) sit 8–68 minutes after each boat&#8217;s tracker reached the line; the race committee has been asked. Official values are used throughout.</li></ul>
   <h3>Sources &amp; method</h3>

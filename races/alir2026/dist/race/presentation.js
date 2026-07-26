@@ -58,12 +58,14 @@ window.__RACE_CONFIG__ = {
       'Division winners': ['Zammermoos', 'Habiru YCC', 'Lioness', 'Abilyn', 'Golden-Eye', 'Mayhem', 'The Rover'],
     },
   },
-  eventCategories: {},                    // events.yaml ships empty until the owner prunes the
-                                          // internal draft (stage-0 stop decision); categories
-                                          // land with the entries at stage 3/4
+  eventCategories: {                      // analysis-sourced layer only (stage 3); the crew-log
+                                          // layer lands after the owner's pruning pass
+    milestone: { c: '#41505E', sym: 'circle', label: 'Race milestones', short: 'Milestones' },
+    insight:   { c: '#0E5A8A', sym: 'star-diamond', label: 'Analysis notes', short: 'Insights', big: true },
+  },
   defaults: {
     boats: ['Max', 'Zammermoos', 'Poseidon', 'Katara56', 'Habiru YCC', 'Lioness'],  // I7 core set
-    ev: [], ref: 'Katara56',              // milestone-delta reference: the identical -18 rating
+    ev: ['insight', 'milestone'], ref: 'Katara56',   // ref = the identical -18 rating
                                           // makes her the like-for-like benchmark (doctrine 5)
     fleet: true, rhumb: false,            // marks course — the chord misleads; courseline carries it
     overlays: {},
@@ -95,16 +97,22 @@ window.__RACE_CONFIG__ = {
     toggle: { key: 'distMode', default: 'h',
               states: [{ v: 'e', label: 'Elapsed' }, { v: 'h', label: 'Corrected' }] },
   },
-  kpis: [],                               // authored at the stage-2/3 stops from CONFIRMED
-                                          // findings only — the memo proposes candidates
+  kpis: [                                 // stage-2/3 confirmed findings only (owner endorsed
+                                          // the split for the final viz at the stage-2 stop)
+    { label: 'Two boats in one', value: '1st<span class="u"> / 18th</span>',
+      sub: 'of 27 — powered phases vs light phases; the fleet\u2019s largest split' },
+    { label: 'The decisive windows', value: '2<span class="u"> of 7 phases</span>',
+      sub: 'dawn Friday and the Sound night carry nearly the whole 212 min vs Katara56' },
+    { label: 'Distance sailed', value: '{stats.dist_sailed}<span class="u"> nm</span>',
+      sub: 'Max \u00b7 +{stats.extra} over the 207 nm course' },
+  ],
   mapLabels: [
     [196, 'AMBROSE R“14”', 28, 22],
     [95, 'MONTAUK', 30, -18],
     [70, 'PLUM GUT', -10, -26],
   ],
   controls: { pills: ['@ghosts'] },       // scored course always on (2025 owner decision)
-  layout: ['map', 'dtf', 'race', '@distspeed', 'two:xte,sog'],   // no events section until
-                                          // the owner-pruned events land (stage 3/4)
+  layout: ['map', 'dtf', 'race', '@distspeed', 'two:xte,sog', 'events'],
   modules: ['distspeed'],
   overlays: ['courseline'],
 };

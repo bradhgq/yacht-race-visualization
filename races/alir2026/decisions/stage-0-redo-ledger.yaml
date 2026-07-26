@@ -1,0 +1,51 @@
+# I16 ledger — ALIR 2026 stage-0 REDO and snapshot replacement (2026-07-26, second fetch)
+#
+# RECORDED INSTRUCTION: owner, 2026-07-26 (~10:00 EDT): "redo stage 0; it is now 9
+# hours after the first fetch and most boats have finished. override existing data
+# and do a light pass on extra insights... then proceed straight to stage 3."
+#
+# WHAT MOVED:
+#   raw/ OVERRIDDEN by re-fetch (same command as stage 0; 51421 -> 52843 ping rows,
+#     45 -> 51 result rows); trim re-run (45608 -> 45893 clean rows);
+#   snapshot/dashboard_data.json REPLACED
+#     (old sha256 a70a4fb579976088ab9953709cc1c9f2df7255e798dc107999b7011675adbca4,
+#      new sha256 6123032829adecfb6aa176ba…, full value in git);
+#   config grid.end_utc 2026-07-26T05:00Z -> 2026-07-26T21:30Z (last finisher + pad);
+#   pins: names_present GAINS "Wanderer" (now scored; display override active).
+#     names_absent deliberately does NOT gain "WANDERER": her fleet-ghost hover label
+#     keeps the tracker spelling (the 2025 ACADIA convention — display overrides map
+#     results names only), and the harness's absent-check scans those labels.
+#   All other pins UNCHANGED — verified: Max's and Katara56's rows are byte-identical
+#     across the two fetches, so tz_probe and endpoints stand.
+#
+# DIFF CLASSES OBSERVED, against the list pre-enumerated in stage-2-snapshot-ledger.yaml:
+#   class 1 (unscored boats resolve): YES — WANDERER AOK 52:48:52 (official finish
+#     18:33:52 EDT matches her YB line marker 18:33:59 within 7 s); Cool Change AOK
+#     76:08:54; Veronique AOK 76:08:14; Athena, Avatar, Yopo RET. Every ALI-course
+#     boat is now resolved: 45 AOK + 6 RET of 52 entries. Nomad (ATI course) remains
+#     unscored and out of scope.
+#   class 2 (protest outcomes): NONE VISIBLE — no row changed between fetches except
+#     First Rate's place_overall 32 -> 33 (WANDERER slotting in above her).
+#   class 3 (finish-time discrepancies resolve): NO — DUET/Max/MARIE/Ripple times
+#     UNCHANGED through the hearing window. Still flagged; RC answer pending.
+#   class 4 (grid end): YES, as above.
+#   class 5 (output.generated): unchanged — same build date.
+#   class 6 (endpoints/tz_probe re-derive): NOT NEEDED (class-3 no-change).
+#
+# LIGHT-PASS INSIGHTS from the redo (recorded, not narrated as findings):
+#   - The SI's "not finishing by 1200 Sunday shall call the RC" is a NOTIFICATION
+#     requirement, not a hard time limit: two boats finished Sunday afternoon and
+#     scored AOK. The stage-0/2 "time limit noon" framing is CORRECTED here.
+#   - The Sunday finishers (Cool Change, Veronique; 76+ h elapsed) sailed a third
+#     night and a Sunday afternoon the rest of the fleet never saw — owner's
+#     apples-to-apples doubt is CONFIRMED in kind: their phase comparisons vs the
+#     main fleet are cross-weather and will be labeled as such wherever shown.
+#   - Athena retired 12.3 nm from the finish after ~64 h — the last-morning glass-off
+#     claimed three of the six RETs.
+#   - Harness note: the redo tripped the documented stale-standalone trap (dist
+#     embeds out/; the gate read the pre-redo payload) — resolved by the doctrine's
+#     own fix (one --skip-tests shell build), no code change.
+#
+# Chain state after redo: CHAIN GREEN, 10/10 checks, both TZs, snapshot compare green.
+confirmed_by: ""   # presented with the stage-3 stop
+date: "2026-07-26"

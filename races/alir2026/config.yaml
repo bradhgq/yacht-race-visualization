@@ -1,11 +1,14 @@
-# ALIR 2026 — Around Long Island Regatta (49th), Sea Cliff YC — stage-0 DRAFT
+# ALIR 2026 — Around Long Island Regatta (49th), Sea Cliff YC
 # Schema of record: skills/race-viz/references/schemas.md.
-# PRELIMINARY DATA SNAPSHOT: fetched 2026-07-26T00:58 EDT while the race was
-# STILL RUNNING (time limit 12:00 EDT 2026-07-26; 7 ALI-course boats unscored,
-# all in divisions other than the hero's). Results are PROVISIONAL — protest
-# hearings begin 11:00 Sunday; see decisions/stage-0-scope.yaml
-# finish_time_discrepancies before treating any finish value as settled.
-# Re-fetch + rebuild after final results is a recorded follow-up
+# DATA: stage-0 REDO fetch 2026-07-26T10:0x EDT (owner instruction) — every
+# Around-Long-Island-course boat now resolved: 45 AOK + 6 RET; the only
+# unscored boat is Nomad (Around the Islands course, out of scope). The four
+# finish-time discrepancies (incl. the hero's) SURVIVED the protest-hearing
+# window unchanged — still flagged, still unresolved (RC contacted).
+# NOTE the SI's "not finishing by 1200 Sunday shall call the RC" line is a
+# NOTIFICATION requirement, not a hard time limit — two boats finished Sunday
+# afternoon and scored AOK. Results remain formally 'Preliminary' on
+# YachtScoring; the stage-1 redo (press/interviews) is still queued
 # (docs/OPEN_THREADS.md).
 
 race:
@@ -178,10 +181,9 @@ exclude_boats:
                                 # preliminary build.
 extra_boats: []
 
-grid: { minutes: 15, end_utc: '2026-07-26T05:00:00+00:00', interpolate_limit: 4 }
-                                # PRELIMINARY: grid ends at the data snapshot (04:58Z fetch),
-                                # not at a last finisher — 7 boats were still racing. Final
-                                # build: last in-scope finisher (or time limit) + pad.
+grid: { minutes: 15, end_utc: '2026-07-26T21:30:00+00:00', interpolate_limit: 4 }
+                                # last in-scope finisher (Cool Change, 17:13:54 EDT 07-26
+                                # = 21:13:54Z) + pad
 sog: { half_window_s: 900, min_span_s: 600 }
 fleet: { resample: 1h, min_points: 5 }
 milestones: { start_nm: 200, step_nm: 20 }
@@ -225,7 +227,7 @@ pinned_values:                  # PRELIMINARY PINS (prime rule 3) — pinned at 
                                 # at default knobs; the authored-zone decision is at the stop
   names_present: ["Max", "Zammermoos", "Poseidon", "Katara56", "Habiru YCC", "Lioness",
                   "Abilyn", "Actaea", "Duet", "Marie", "Scapegoat", "Vicitan",
-                  "Betelgeuse YCC", "Little Texas"]
+                  "Betelgeuse YCC", "Little Texas", "Wanderer"]
   names_absent: ["ACTAEA", "DUET", "MARIE", "SCAPEGOAT", "VICITAN", "BETELGEUSE YCC",
                  "Habiru", "Little Texas YCC", "STARTING LINE (+ FINISH)"]
   names_meta_only: []

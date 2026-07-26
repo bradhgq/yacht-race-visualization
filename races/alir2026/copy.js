@@ -8,7 +8,7 @@ window.__COPY__ = {
     eyebrow: 'Chart of the Race · 49th Around Long Island Regatta · July 23–26, 2026 · 207 NM',
     h1: '<span class="mag">Max</span> · Around Long Island 2026',
     sub: 'Ellis Island, under the Verrazzano, east to Montauk, through Plum Gut, down the Sound to Sea Cliff.',
-    result: 'Provisional: 4th of 4, Spinnaker Division 9 — 42 of 53 starters scored when this data was captured (7 still racing; results not final).',
+    result: 'PHRF Spinnaker Division 9: 4th of 4 \u00b7 elapsed 46:43:03 \u00b7 every Around-Long-Island boat resolved (45 finishers, 6 retired). Results labeled preliminary by the organizer.',
     tzn: 'All times EDT. Finish times verified against the tracker; see the notes for one open discrepancy.',
   },
   loading: 'Loading the race record…',
@@ -35,7 +35,7 @@ window.__COPY__ = {
   morePanel: { note: 'Tap any boat to add or remove it.', rankedHead: 'Ranked', dnfHead: 'Retired', otherHead: 'In progress / other' },
   emptyStates: { events: 'The race log ships after the crew-log review — nothing is public yet.' },
   footer: `<h3>How to read this</h3>
-  <ul><li>PRELIMINARY BUILD: data captured 00:58 EDT July 26 while 7 boats were still racing; all results provisional pending protests and final scoring.</li>
+  <ul><li>Data captured 10:00 EDT July 26 with every Around-Long-Island boat resolved (45 finishers, 6 retired); the organizer still labels results preliminary. Nomad (Around-the-Islands course \u2014 a different course around Block Island) is out of scope and unscored.</li>
   <li>Corrected times are division-scoped. PHRF divisions score time-on-distance at 207 nm; the new ORC Division 0 scores time-on-time. The two are never compared across the boundary.</li>
   <li>One open discrepancy: four official finish times (including Max&#8217;s) sit 8–68 minutes after each boat&#8217;s tracker reached the line; the race committee has been asked. Official values are used throughout.</li></ul>
   <h3>Sources &amp; method</h3>

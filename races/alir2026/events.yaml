@@ -1,17 +1,75 @@
-# ALIR 2026 — narrative events. PLACEHOLDER: deliberately empty at the stage-0 stop.
+# ALIR 2026 — narrative events.
 #
-# The tier-2/3 events layer for this race comes from the owner's crew log, which is a
-# PRIVATE input (prime rule 4). The log itself never enters the repo. Individual entries
-# land here only after the owner opts each one in at the stage-0/stage-3 stops, with a
-# visibility flag per entry.
+# CURRENT CONTENT: analysis-sourced events ONLY (source: analysis) — milestones from
+# official/tracker data and insight notes derived from the pipeline + the public
+# weather evidence. None of these carries crew-log content.
 #
-# The candidate set proposed at the stage-0 stop — all currently OUT of the repo — covers
-# the sail-change sequence on night 1, the 04:25 offshore decision, the Montauk rounding
-# (18:09 log vs 18:10 tracker: the two clocks agree, which is what makes a log<->tracker
-# reconciliation module possible), the Plum Gut/Orient Point current observation at 20:35,
-# and the 21:00 Sound-side decision. The two decision entries are the ones the stage-0
-# findings turn on.
+# The crew-log-derived event set (sail changes, watch color, the 04:25 and 21:00
+# decision entries as EXPERIENCED aboard) remains OUT of the repo in the owner's
+# internal draft, per the stage-0 stop: the owner prunes it at a later stage, and
+# entries land here item-by-item with their own visibility flags (prime rule 4).
 #
-# Schema: skills/race-viz/references/schemas.md (events.yaml).
-events: []
+# visibility: public entries below are staged for the stage-5 publication ledger's
+# formal opt-in; they ship in the meantime on the hosted preview only.
+events:
+- t: "2026-07-23 13:55"
+  cat: milestone
+  label: "Division 9 start"
+  txt: "Max's gun off Ellis Island — warning 13:50 + 5, reproduced by finish-minus-elapsed for every scored division."
+  source: analysis
+  visibility: public
+- t: "2026-07-23 16:55"
+  cat: milestone
+  label: "Ambrose R“14”"
+  txt: "The course's one mandatory mark left to port; the fleet turns east along the south shore."
+  source: analysis
+  visibility: public
+- t: "2026-07-23 23:00"
+  cat: insight
+  label: "The peel begins"
+  txt: "Katara56 starts working offshore — 2.5 nm off the beach and heading out; by 02:00 she is 9.7 nm off while Max holds near 6. The whole ten-boat cluster was within 3 nm of Max at 22:00."
+  source: analysis
+  visibility: public
+- t: "2026-07-24 03:00"
+  cat: insight
+  label: "Max jibes back inshore"
+  txt: "The track turns toward the beach (~050M). The night itself costs Max ~1.5 nm against her ten nearest peers — the position it leaves her in costs far more at dawn."
+  source: analysis
+  visibility: public
+- t: "2026-07-24 08:00"
+  cat: insight
+  label: "The gradient takes over"
+  txt: "The cross-shore wind advantage flips offshore (buoy 44065 minus bay station 44069, sign and timing; magnitudes carry the bay-station caveat). From here every mile offshore is worth about +0.2 kt made good, along-course position controlled."
+  source: analysis
+  visibility: public
+- t: "2026-07-24 18:10"
+  cat: milestone
+  label: "Montauk rounded"
+  txt: "Max's closest approach to the point, 0.37 nm — turning north for Plum Gut against a building predicted ebb."
+  source: analysis
+  visibility: public
+- t: "2026-07-24 20:35"
+  cat: insight
+  label: "Last of her cohort through the Gut"
+  txt: "Max clears Plum Gut ~90 minutes before predicted peak ebb (-2.36 kt at 22:06). The 18:30-20:20 group ahead meets Saturday's new easterly first and compounds — entry time, not Sound side, decides the night."
+  source: analysis
+  visibility: public
+- t: "2026-07-25 02:30"
+  cat: insight
+  label: "The easterly arrives"
+  txt: "The Saturday rebuild fills from ahead. Boats already west ride it sooner; the fleet behind parks in the same water hours longer."
+  source: analysis
+  visibility: public
+- t: "2026-07-25 11:57"
+  cat: milestone
+  label: "Max finishes"
+  txt: "Tracker line-crossing 11:57:24; the published finish is 12:38:03 — one of four such gaps in the fleet, with the race committee for clarification. Official values are used throughout."
+  source: analysis
+  visibility: public
+- t: "2026-07-25 12:38"
+  cat: insight
+  label: "Two boats in one"
+  txt: "Across the 27 boats with full-race coverage, Max ranks 1st in the two powered phases and 18th in the three light phases — the largest split in the fleet. The Pogo 50 physics share the bill with every navigation call."
+  source: analysis
+  visibility: public
 watches: []
