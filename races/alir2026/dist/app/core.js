@@ -29,7 +29,7 @@ const plotlyReady = new Promise(res => {
   else go();
 });
 
-function dataURL(name) { return 'data/' + name + '?v=7bf6f323fb'; }
+function dataURL(name) { return 'data/' + name + '?v=d8d16fa2f2'; }
 async function loadJSON(name) {
   const r = await fetch(dataURL(name));
   if (!r.ok) throw new Error(name + ': HTTP ' + r.status);

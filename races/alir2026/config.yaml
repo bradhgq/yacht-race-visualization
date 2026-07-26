@@ -209,7 +209,10 @@ noise_floor_min: 10             # same basis as 2025: ~3 s/mi rating-assignment 
                                 # it; ORC margins are ToT and need their own statement at
                                 # stage 2 if narrated tightly.
 
-privacy: { build: public }
+privacy: { build: private }     # OWNER DECLARATION (2026-07-26): this build IS the private
+                                # opinionated cut — the watch layer and watch-performance
+                                # module ship here and are STRIPPED from the future public
+                                # cut, which gets its own stage-5 opt-in pass.
 
 output:
   dir: out/

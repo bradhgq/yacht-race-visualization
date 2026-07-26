@@ -68,7 +68,7 @@ window.__RACE_CONFIG__ = {
     ev: ['insight', 'milestone'], ref: 'Katara56',   // ref = the identical -18 rating
                                           // makes her the like-for-like benchmark (doctrine 5)
     fleet: true, rhumb: false,            // marks course — the chord misleads; courseline carries it
-    overlays: { arrows: true, timedots: true },
+    overlays: { arrows: true, timedots: true, watches: true },
     raceMode: 'h', raceView: 'p', axis: 'd', speedMetric: 'vmc',
   },
   race: { height: '430px', milestoneTop: 200, milestoneBottom: 1, milestoneStep: 1,
@@ -112,8 +112,9 @@ window.__RACE_CONFIG__ = {
   ],
   controls: { pills: ['@ghosts'] },       // scored course always on (2025 owner decision)
   layout: ['map', '@theses', 'dtf', 'race', '@distspeed', '@ledger', '@split',
+           '@watchperf',
            '@nightmap', '@nightone', '@plumgut', '@soundnight', 'two:xte,sog', '@forecast', 'events'],
-  modules: ['distspeed', 'theses', 'ledger', 'split', 'nightmap', 'nightone', 'plumgut', 'soundnight', 'forecast'],
-  coreData: ['ledger', 'nightone', 'plumgut', 'soundgate'],   // postprocess tables the modules render from
-  overlays: ['courseline', 'arrows', 'timedots'],
+  modules: ['distspeed', 'theses', 'ledger', 'split', 'watchperf', 'nightmap', 'nightone', 'plumgut', 'soundnight', 'forecast'],
+  coreData: ['ledger', 'nightone', 'plumgut', 'soundgate', 'watchperf'],   // postprocess tables the modules render from
+  overlays: ['courseline', 'arrows', 'timedots', 'watches'],
 };

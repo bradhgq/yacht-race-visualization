@@ -47,7 +47,7 @@ window.__COPY__ = {
   morePanel: { note: 'Tap any boat to add or remove it.', rankedHead: 'Ranked', dnfHead: 'Retired', otherHead: 'In progress / other' },
   emptyStates: { events: 'The race log ships after the crew-log review — nothing is public yet.' },
   footer: `<h3>How to read this</h3>
-  <ul><li>Data captured 10:00 EDT July 26 with every Around-Long-Island boat resolved (45 finishers, 6 retired); the organizer still labels results preliminary. Nomad (Around-the-Islands course \u2014 a different course around Block Island) is out of scope and unscored.</li>
+  <ul><li>PRIVATE ANALYSIS CUT — the crew-facing version (watch layer included); the public cut follows its own review. Data captured 10:00 EDT July 26 with every Around-Long-Island boat resolved (45 finishers, 6 retired); the organizer still labels results preliminary. Nomad (Around-the-Islands course \u2014 a different course around Block Island) is out of scope and unscored.</li>
   <li>Corrected times are division-scoped. PHRF divisions score time-on-distance at 207 nm; the new ORC Division 0 scores time-on-time. The two are never compared across the boundary.</li>
   <li>Finish-time note: Max&#8217;s official finish was amended by the race committee to 11:57:18 — six seconds from her tracker&#8217;s line marker — after this project&#8217;s query. Three other boats&#8217; official times still sit 8–68 minutes after their tracker line-crossings; official values are used throughout.</li></ul>
   <h3>Sources &amp; method</h3>

@@ -17,34 +17,36 @@
 <meta name="twitter:title" content="ALIR 2026 — Around Long Island Regatta">
 <meta name="twitter:description" content="ALIR 2026: two parks, one reach — 42 finishers (and counting) around Long Island.">
 <meta name="twitter:image" content="https://hgq.fyi/max-around-long-island-2026/og.png">
-<link rel="icon" href="favicon.svg?v=7bf6f323fb" type="image/svg+xml">
-<link rel="stylesheet" href="tokens.css?v=7bf6f323fb">
-<link rel="stylesheet" href="styles.css?v=7bf6f323fb">
+<link rel="icon" href="favicon.svg?v=d8d16fa2f2" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css?v=d8d16fa2f2">
+<link rel="stylesheet" href="styles.css?v=d8d16fa2f2">
 <!-- DATA:FETCH — start the core payload download before the deferred scripts arrive -->
-<script>window.__CORE_FETCH=fetch('data/core.json?v=7bf6f323fb').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});</script>
+<script>window.__CORE_FETCH=fetch('data/core.json?v=d8d16fa2f2').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});</script>
 <!-- /DATA:FETCH -->
-<script src="app/helpers.js?v=7bf6f323fb" defer></script>
-<script src="app/tokens.js?v=7bf6f323fb" defer></script>
-<script src="app/core.js?v=7bf6f323fb" defer></script>
-<script src="app/charts/map.js?v=7bf6f323fb" defer></script>
-<script src="app/charts/dtf.js?v=7bf6f323fb" defer></script>
-<script src="app/charts/race.js?v=7bf6f323fb" defer></script>
-<script src="app/charts/xte.js?v=7bf6f323fb" defer></script>
-<script src="app/charts/sog.js?v=7bf6f323fb" defer></script>
-<script src="race/presentation.js?v=7bf6f323fb" defer></script>
-<script src="race/copy.js?v=7bf6f323fb" defer></script>
-<script src="race/modules/distspeed.js?v=7bf6f323fb" defer></script>
-<script src="race/modules/theses.js?v=7bf6f323fb" defer></script>
-<script src="race/modules/ledger.js?v=7bf6f323fb" defer></script>
-<script src="race/modules/split.js?v=7bf6f323fb" defer></script>
-<script src="race/modules/nightmap.js?v=7bf6f323fb" defer></script>
-<script src="race/modules/nightone.js?v=7bf6f323fb" defer></script>
-<script src="race/modules/plumgut.js?v=7bf6f323fb" defer></script>
-<script src="race/modules/soundnight.js?v=7bf6f323fb" defer></script>
-<script src="race/modules/forecast.js?v=7bf6f323fb" defer></script>
-<script src="race/overlays/courseline.js?v=7bf6f323fb" defer></script>
-<script src="race/overlays/arrows.js?v=7bf6f323fb" defer></script>
-<script src="race/overlays/timedots.js?v=7bf6f323fb" defer></script>
+<script src="app/helpers.js?v=d8d16fa2f2" defer></script>
+<script src="app/tokens.js?v=d8d16fa2f2" defer></script>
+<script src="app/core.js?v=d8d16fa2f2" defer></script>
+<script src="app/charts/map.js?v=d8d16fa2f2" defer></script>
+<script src="app/charts/dtf.js?v=d8d16fa2f2" defer></script>
+<script src="app/charts/race.js?v=d8d16fa2f2" defer></script>
+<script src="app/charts/xte.js?v=d8d16fa2f2" defer></script>
+<script src="app/charts/sog.js?v=d8d16fa2f2" defer></script>
+<script src="race/presentation.js?v=d8d16fa2f2" defer></script>
+<script src="race/copy.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/distspeed.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/theses.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/ledger.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/split.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/watchperf.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/nightmap.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/nightone.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/plumgut.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/soundnight.js?v=d8d16fa2f2" defer></script>
+<script src="race/modules/forecast.js?v=d8d16fa2f2" defer></script>
+<script src="race/overlays/courseline.js?v=d8d16fa2f2" defer></script>
+<script src="race/overlays/arrows.js?v=d8d16fa2f2" defer></script>
+<script src="race/overlays/timedots.js?v=d8d16fa2f2" defer></script>
+<script src="race/overlays/watches.js?v=d8d16fa2f2" defer></script>
 <script src="vendor/plotly-basic-2.35.2.min.js" id="plotlyjs" defer></script>
 </head>
 <body>
@@ -157,6 +159,13 @@
   <div class="tapnote" id="tap_split"></div>
 </section>
 
+<section class="card" id="sec_watchperf" hidden>
+  <h2></h2>
+  <div class="note"></div>
+  <div id="watchperf" data-mount></div>
+  <div class="tapnote" id="tap_watchperf"></div>
+</section>
+
 <section class="card" id="sec_nightmap" hidden>
   <h2></h2>
   <div class="note"></div>
@@ -217,7 +226,7 @@
 
 <footer class="foot">
 <h3>How to read this</h3>
-  <ul><li>Data captured 10:00 EDT July 26 with every Around-Long-Island boat resolved (45 finishers, 6 retired); the organizer still labels results preliminary. Nomad (Around-the-Islands course — a different course around Block Island) is out of scope and unscored.</li>
+  <ul><li>PRIVATE ANALYSIS CUT — the crew-facing version (watch layer included); the public cut follows its own review. Data captured 10:00 EDT July 26 with every Around-Long-Island boat resolved (45 finishers, 6 retired); the organizer still labels results preliminary. Nomad (Around-the-Islands course — a different course around Block Island) is out of scope and unscored.</li>
   <li>Corrected times are division-scoped. PHRF divisions score time-on-distance at 207 nm; the new ORC Division 0 scores time-on-time. The two are never compared across the boundary.</li>
   <li>Finish-time note: Max&#8217;s official finish was amended by the race committee to 11:57:18 — six seconds from her tracker&#8217;s line marker — after this project&#8217;s query. Three other boats&#8217; official times still sit 8–68 minutes after their tracker line-crossings; official values are used throughout.</li></ul>
   <h3>Sources &amp; method</h3>

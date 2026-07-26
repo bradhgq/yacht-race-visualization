@@ -322,11 +322,48 @@ def main():
                           "fit": {"b0": round(float(b0), 2), "per_hour": round(float(b1), 2),
                                   "x0": int(xs.min())}}
 
+    # 7. watch-performance table (PRIVATE CUT ONLY — owner declaration 2026-07-26:
+    # this build is the private opinionated version; the future public cut strips
+    # watches + this table). Spans RECONSTRUCTED from the owner's crew log
+    # (3h-on/3h-off; owner's starts 19/01/07/13 — every on/off log entry fits;
+    # owner asked to verify). Per span: Max's made nm, the 3-nm spatial peer
+    # median (same-water control — raw pace is weather, the delta is the signal),
+    # and rank. Crew A = owner's watch, B = the other.
+    WATCH_A = [(T(23, 19), T(23, 22)), (T(24, 1), T(24, 4)), (T(24, 7), T(24, 10)),
+               (T(24, 13), T(24, 16)), (T(24, 19), T(24, 22)), (T(25, 1), T(25, 4)),
+               (T(25, 7), T(25, 10))]
+    WATCH_B = [(T(23, 22), T(24, 1)), (T(24, 4), T(24, 7)), (T(24, 10), T(24, 13)),
+               (T(24, 16), T(24, 19)), (T(24, 22), T(25, 1)), (T(25, 4), T(25, 7)),
+               (T(25, 10), T(25, 11, 57))]
+    wp = []
+    for crew, spans in (("A", WATCH_A), ("B", WATCH_B)):
+        for t1, t2 in spans:
+            m1 = at(HERO, t1)
+            mm = made(HERO, t1, t2)
+            if mm is None or m1 is None:
+                continue
+            peers = []
+            for nm in boats:
+                if nm == HERO:
+                    continue
+                a1 = at(nm, t1)
+                mk = made(nm, t1, t2)
+                if a1 and mk is not None and geo_nm(a1["lat"], a1["lon"], m1["lat"], m1["lon"]) <= PEER_NM:
+                    peers.append(mk)
+            med = sorted(peers)[len(peers) // 2] if peers else None
+            rank = (1 + sum(1 for v in peers if v > mm)) if peers else None
+            wp.append({"crew": crew, "t1": int(t1), "t2": int(t2),
+                       "made": round(mm, 1),
+                       "peer_med": round(med, 1) if med is not None else None,
+                       "peer_n": len(peers), "rank": rank})
+    wp.sort(key=lambda w: w["t1"])
+    d["watchperf"] = wp
+
     OUT.write_text(json.dumps(d, separators=(",", ":")))
     n_led = sum(1 for L in ledger if L["hero"] is not None)
     print(f"postprocess: notes for {len(boats)} boats · ledger {n_led}/7 phases · "
           f"nightone n={len(rows)} (min at {d['nightone']['fit']['min_off']} nm off) · "
-          f"plumgut n={len(plum)} · soundgate n={len(cohort)}")
+          f"plumgut n={len(plum)} · soundgate n={len(cohort)} · watchperf {len(wp)} spans")
 
 
 if __name__ == "__main__":

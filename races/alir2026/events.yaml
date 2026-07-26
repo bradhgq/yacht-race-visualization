@@ -72,4 +72,18 @@ events:
   txt: "Across the 49 boats measurable through both wind regimes, Max ranks 4th for miles made in the powered phases and 35th in the light ones — a 31-place swing, the largest in the fleet. The Pogo 50 physics share the bill with every navigation call."
   source: analysis
   visibility: public
-watches: []
+watches:                        # the OWNER'S on-watch spans, RECONSTRUCTED from his crew
+                                # log's on/off entries (private input; ships in THIS build
+                                # only — the owner declared it the private opinionated cut,
+                                # 2026-07-26; the future public cut strips this layer).
+                                # Pattern: fixed 3h-on/3h-off, owner's starts 19/01/07/13.
+                                # Soft edges, owner to verify: Fri 04:25 'off shift' read as
+                                # handover overrun (span kept to 04:00); start->19:00 Thu
+                                # treated as all-hands and excluded.
+- ["2026-07-23 19:00", "2026-07-23 22:00"]
+- ["2026-07-24 01:00", "2026-07-24 04:00"]
+- ["2026-07-24 07:00", "2026-07-24 10:00"]
+- ["2026-07-24 13:00", "2026-07-24 16:00"]
+- ["2026-07-24 19:00", "2026-07-24 22:00"]
+- ["2026-07-25 01:00", "2026-07-25 04:00"]
+- ["2026-07-25 07:00", "2026-07-25 10:00"]

@@ -1,5 +1,11 @@
-# stage-5 — Publication Ledger — ALIR 2026 — DRAFT (the hard stop before anything
-# goes live; the owner confirms each opt-in and performs the deploy himself)
+# stage-5 — Publication Ledger — ALIR 2026 — DRAFT, REFRAMED by owner declaration
+# (2026-07-26 night): THE CURRENT BUILD IS THE PRIVATE OPINIONATED CUT — it now
+# carries the watch layer (crew-log-derived spans, reconstructed and pending the
+# owner's verification) and the watch-performance module. The PUBLIC cut is a
+# FUTURE pass with its own ledger; the opt-in list below is its checklist.
+# FUTURE-PUBLIC-CUT EXCLUSIONS (mechanical: set privacy.build public, remove
+# 'watches' overlay + 'watchperf' module + events.yaml watches spans, rebuild):
+#   - the watch layer and watch-performance chart (crew-log-derived; private)
 #
 # PRIME RULE 4 CONFIRMATION: the owner's crew log NEVER entered the repo. It was
 # read in-session; the derived internal events draft exists only in the session
@@ -35,5 +41,5 @@ notes: "Productionization jobs: og.png generated (scripts/make_og.py, single-her
   stop: ALIR items compacted into the post-publication maintenance list; non-ALIR punts
   (decyb, OPINIONS_NB, NB finish-line provenance, consistency_check breadth, tier-1 hero)
   stand, dated."
-confirmed_by: ""                 # owner
+confirmed_by: ""                 # owner (confirm the reframe + the future public-cut checklist)
 date: ""
