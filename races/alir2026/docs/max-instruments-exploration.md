@@ -5,6 +5,7 @@ Exploration memo, 2026-07-26. Sources, all supplied by the owner:
 - `exp_0723.csv`, `exp_0724.csv`, `exp_0725.csv` — Expedition instrument logs
 - `Pogo_50_VPP_Expedition_v2.txt` — the design VPP polar
 - `SailChart_MaxUSA75050v1.txt` — the sail crossover chart
+- five `.grb` files — the routing forecasts downloaded **onboard** (§4)
 
 **None of these are in the repo** — see "Decisions needed" #1. Every number
 below is reproducible with
@@ -273,8 +274,20 @@ selection columns Expedition provides (`J1`–`J4`, `Reacher`, `Blade`,
 the observed one. The finding is therefore "she was slow in the conditions where
 the chart called for a kite," which is consistent with two very different
 readings — the kite was up and underperforming, or the kite often was not up at
-all — and **the data cannot distinguish them**. Only the crew can. That is a
-question worth asking them, not a conclusion to ship.
+all — and **the data cannot distinguish them**.
+
+The owner has confirmed (2026-07-26) that the only record of what was actually
+hoisted is **his crew log, explicitly offered as recollection and not
+necessarily accurate**. That settles the evidence class: an actual-sail track is
+**[recall]**, and by prime rule 4 it enters through `events.yaml` item by item
+on owner opt-in, never as a measured channel and never as raw log.
+
+**The consequence is a hard design constraint, not a caveat**: a [recall] sail
+track may *annotate* the report card — marking where memory says the kite went
+up — but it must never *drive* the judgment, because scoring a crew against
+their own fallible memory of what they did manufactures precision that does not
+exist. The 10-point gap in §3.6 is measured against the *chart*, which is a
+fixed document; that is the version that can ship.
 
 ### 3.7 Helm signal per watch
 
@@ -298,7 +311,70 @@ shift of the race; shift 13 (04:00 Sat) ran 6.4 kt in 9.3 kt at heel SD 1.27 for
 
 ---
 
-## 4. Proposals
+## 4. The onboard forecasts — what the navigator actually had
+
+Five GRIB files, and they are a **different class of evidence from anything in
+the repo**. `forecast.js` today scores *archived* model runs against *buoys*.
+These are the files that were on the boat, each stamped with its download time.
+
+| file | model | run | downloaded (EDT) | grid | out to |
+|---|---|---|---|---|---|
+| SD_GFS_22Jul | GFS | 07-22 18Z | **Wed 23:05:59** | 0.25° | +120 h |
+| SD_GFS_23Jul | GFS | 07-23 06Z | **Thu 08:18:39** | 0.25° | +96 h |
+| EX_HRRR_0027 | HRRR | 07-23 19Z | **Thu 16:36:57** | Lambert | +18 h |
+| SD_HRRRX | HRRR-X | 07-23 18Z | **Thu 17:00:57** | **0.025°** | +32 h |
+| SD_ECMWF | ECMWF | 07-23 12Z | **Thu 19:12:45** | 0.25° | +51 h |
+
+All cover roughly 39–42 N, 75–71 W — the course box — carrying `10u`/`10v`,
+`msl` and (GFS) `prate`. The filename stamps decode as **EDT**, and each one
+is consistent with when that model run actually becomes available; that
+agreement is itself a check that the stamps mean what they appear to.
+
+**Two structural findings** [fact]:
+
+1. **The last download was 19:12 Thursday — 5.3 h after the gun. The remaining
+   40.7 h, 88% of the race, was sailed on forecasts already aboard.** The dawn
+   park, the sea-breeze rebuild, Plum Gut and the entire Sound night were all
+   navigated on Thursday-evening data. *Caveat: this assumes the five files are
+   the complete set — worth confirming before it is ever stated publicly.*
+2. **`EX_HRRR_0027` contains only the u-component.** Nineteen complete
+   messages, clean `7777` terminator, not truncated — but no `10v` anywhere, so
+   the file cannot yield a wind vector at all. A request-configuration artifact
+   rather than corruption, and worth knowing: one of the five downloads could
+   never have produced wind.
+
+### Scored against Max's own measured wind, at her own position
+
+Interpolating each forecast to Max's actual track and comparing to her
+instruments — restricted to observed TWS ≥ 6 kt, because direction error is
+meaningless in drifting air (below 6 kt the direction MAE is 59–75°, above
+9 kt it is 22°):
+
+| model | n | TWS bias | TWS MAE | direction MAE |
+|---|---|---|---|---|
+| GFS | 18 | −0.9 kt | **1.6 kt** | **25°** |
+| HRRR-X | 16 | −2.1 kt | 2.2 kt | 25° |
+| ECMWF | 9 | −2.5 kt | 2.7 kt | 44° |
+| **pooled** | **51** | **−1.7 kt** | **2.1 kt** | **29°** |
+
+**Every model under-forecast the breeze**, and the coarse global GFS scored
+best of the three — the high-resolution HRRR-X did not buy accuracy here.
+
+The individual misses are where the race turns [fact]:
+
+| valid | model | forecast | measured | miss |
+|---|---|---|---|---|
+| **Fri 11:00** | GFS | 7.6 kt | **1.8 kt** | **+5.8 kt** |
+| Sat 05:00 | ECMWF | 1.6 kt @ 243° | 8.4 kt @ **045°** | −6.8 kt **and 162°** |
+| Sat 11:00 | ECMWF | 4.6 kt | 11.7 kt | −7.1 kt |
+
+The first row is the whole story of the dawn park in one line: **the park was
+not forecast.** The model had 7.6 kt at the hour she was making 1.8. The second
+row is worse than a speed miss — the last ECMWF aboard had 1.6 kt from the
+southwest at the hour the Saturday easterly actually arrived at 8.4 kt from the
+opposite side of the compass.
+
+## 5. Proposals
 
 Ranked by value per unit of work. Nothing here is built; each needs an owner
 call, and several need a decision from §5 first.
@@ -351,12 +427,23 @@ sea-temp transect (§3.6). Small, cheap, and they make the course map read as a
 passage rather than a plot.
 
 **P8 — Navigator's-intent layer.** The waypoint sequence and the Saturday-dawn
-burst (§3.6). Unusually honest material: it shows the plan *and* the moment of
+burst (§3.8). Unusually honest material: it shows the plan *and* the moment of
 indecision. Sensitive for the same reason — private cut.
+
+**P9 — "What the navigator knew" → the successor to `forecast.js`.** Rank this
+second only to P4. The existing report card scores archived models against
+buoys, which answers "was the model good?" §4 answers the question the race
+actually turned on: **"was the information on the boat good, at the boat?"**
+Same chart grammar, strictly better evidence — the forecasts that were aboard,
+scored against the wind she measured. The dawn-park row (7.6 kt forecast,
+1.8 kt measured) belongs directly under the ledger's +273 min segment, and the
+"last download 19:12 Thursday" fact reframes the whole second half of the race
+as sailed on ageing data. Note the honest limit: n = 51 scored steps is a
+report card on *this race's files*, not a general verdict on any model.
 
 ---
 
-## 5. Decisions needed before any of this is built
+## 6. Decisions needed before any of this is built
 
 1. **Where does the raw data live?** 66 MB of CSV. CLAUDE.md sends big binaries
    to a GitHub release (`archives-2026-07` precedent), not into the tree. A
@@ -389,5 +476,16 @@ indecision. Sensitive for the same reason — private cut.
    its reference. New evidence class either way; the existing evidence-constants
    pattern (`squall.js`, `forecast.js`) is the precedent for how to label it.
 7. **Ask the crew before P4 ships.** §3.6's downwind deficit has two readings
-   and the data cannot choose between them. One conversation resolves it, and
-   the answer changes what the module is allowed to say.
+   and the data cannot choose between them. The owner's crew log is the only
+   record, and is [recall] — so the answer improves the *annotation*, never the
+   judgment (§3.6). Worth having before the module is designed.
+8. **Is the GRIB set complete?** The "89% of the race sailed on Thursday-evening
+   data" finding (§4) rests on these five files being everything that came
+   aboard. If more were downloaded and not exported, the claim collapses. Cheap
+   to confirm, and nothing in P9 should ship until it is.
+9. **A new dependency, if P9 ships.** Reading GRIB needs `eccodes`, which is
+   not in `starter/requirements.txt` (pandas/numpy/pyyaml only). Either add it
+   to the acquisition-side requirements, or decode once and commit a small
+   extracted JSON of forecast-at-track-point values as an evidence constant —
+   the latter matches the existing `forecast.js` pattern and keeps the build
+   dependency-free. Recommend the latter.
