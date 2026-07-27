@@ -100,17 +100,31 @@ the doubt around the original 12:38:03 entry.
 
 ### 2.3 Boat speed over-reads 6.0% — and the calibration falls out of the data [inference]
 
-Naively integrating `BSP` gives 238.7 nm through the water against 224.4 nm over
+**What *k* is.** `BSP` is boat speed through the water, measured by a paddlewheel
+or sonic transducer in the hull. Those instruments drift — fouling, calibration
+age, flow disturbance — and read a few percent high or low. *k* is the single
+multiplicative correction that fixes it: **true boat speed = k × logged BSP**.
+k = 1.000 would mean the instrument was perfect; **k = 0.940 means it read 6.0%
+faster than the boat was actually going**, so a logged 10.0 kt was really 9.4.
+
+It matters because BSP is an input to almost everything downstream — the true
+wind solution, the current derivation, and every "% of polar target" number. A
+6% error left uncorrected would flatter the boat's performance by 6% and
+manufacture a phantom half-knot of current.
+
+Naively integrating `BSP` gives 238.7 nm through the water against 224.5 nm over
 the ground (`SOG` integral). Scaling BSP by *k* and solving for the *k* that
 zeroes the median along-heading component of the derived current gives:
 
-> **k = 0.940** — and at that scale, distance through water = **224.4 nm**,
-> exactly the distance over ground.
+> **k = 0.940** — and at that scale, distance through water = **224.4 nm**
+> against 224.5 nm over the ground.
 
 Two criteria land on the same number. The assumption is that net along-track
 current averages to ~zero across a 46 h race spanning roughly four tide cycles;
 that is reasonable here but it *is* an assumption, and any shipped current
-number inherits it.
+number inherits it. k is stable under cleaning (§2.6): computed on the raw
+export and on the cleaned file it lands on 0.940 both times, because the
+estimator is median-based and the spikes are 0.012% of samples.
 
 Residual after calibration: median drift **0.80 kt**, p90 1.90 kt, and a
 persistent **−0.22 kt across-track** term — the leeway signature, consistent
@@ -161,6 +175,42 @@ finish crossing in §2.2 comes from GPS, not from the line channels.
 
 Minor: the start waypoint the navigator had loaded was 40.7022/−74.0326,
 **0.19 nm east** of the SI's 40.7028/−74.0367.
+
+### 2.6 The export carries a second, interleaved data stream [fact]
+
+Found on the cleaning pass, and the most consequential defect in the file.
+**4.09% of race-window rows (6,664) are not Max.** They carry no position fix,
+a stale active waypoint, and a boat state flatly inconsistent with the row
+either side of them. At 07:03:44 Saturday two rows share the same millisecond:
+
+| | BSP | SOG | HDG | COG | position | active waypoint |
+|---|---|---|---|---|---|---|
+| real | 5.7 | 6.5 | 274° | 278° | 41.0347, −73.1042 | Glen Cove approach |
+| ghost | 1.1 | 0.2 | 343° | 12.7° | **none** | **Montauk** (passed 36 h earlier) |
+
+They alternate row by row for the whole race — 16:08 Thursday to 11:57
+Saturday, 300–600 rows per three-hour block — so this is a persistent second
+source (a backup instrument feed or a second Expedition instance), not a
+one-off glitch. It also fully explains the 164 duplicate timestamps: they are
+the two streams colliding, and they vanish once the ghost is dropped.
+
+**This corrupted a finding in the first draft of this memo.** The ghost's stale
+waypoint alternating with the real one produced **414 apparent waypoint
+changes**, which was read as a navigator cycling routes at dawn. Filtered to
+position-bearing rows the true count is **17** — and the real story is better
+(§3.8).
+
+The other three defects and how they are handled are documented in
+`scripts/clean_expedition.py`: boat-speed spikes (~20 samples, one 13-second
+burst at 22–24 kt while SOG held 3.4), 994 GPS fixes implying up to 534 kt, and
+`ROT`, which is dropped rather than cleaned — it is offset ~180 and correlates
+only r = 0.32 with the observed heading rate, so turn rate is derived from
+`HDG` instead.
+
+**Every headline number in this memo survives cleaning unchanged** — k, the
+polar deficit, the matched-TWS sail control — because they are median-based.
+Wind-channel coverage *rises* to 99.99%, since the dropped rows were the ones
+missing wind. Use `raw/max/max_expedition_clean.csv.gz`, never the raw exports.
 
 ---
 
@@ -344,11 +394,25 @@ shift of the race; shift 13 (04:00 Sat) ran 6.4 kt in 9.3 kt at heel SD 1.27 for
   south shore Friday evening → 21.7 °C in the Sound.
 - **Depth** minima: **4.5 m** off the south shore Friday afternoon; 7.1 m near
   the Gut. How close to the beach the inshore lane actually went.
-- **Active waypoint** — the plan, as loaded: harbor pin → Verrazzano →
-  Ambrose R"14" → **Montauk, held 25 h 55 m** → Plum Gut (7 h 17 m) → finish.
-  Then 414 changes, nearly all of them in a **burst between 06:00 and 07:04
-  Saturday** with holds of ~1 s — the navigator cycling routes in the Sound at
-  dawn. The plan, and the moment of doubt in it.
+- **Active waypoint** — the plan, as loaded. **17 changes** across the race
+  (corrected from 414; see §2.6):
+
+  | from | waypoint | held |
+  |---|---|---|
+  | 13:55 Thu | start pin | 1 h 03 |
+  | 14:58 | Verrazzano | 58 m |
+  | 15:56 | Ambrose R"14" | 59 m |
+  | 16:55 | **Montauk** | **25 h 55** |
+  | 18:50 Fri | Plum Gut | 7 h 17 |
+  | 02:07 Sat | finish | 3 h 50 |
+  | **05:58–06:29 Sat** | **10 changes in 31 min** | some held 1–3 s |
+  | 06:29 | mid-Sound 40.9610, −73.4878 | **3 h 45** |
+  | 10:14 | final approach | to the finish |
+
+  The shape is the story: one waypoint held for 26 hours down the whole south
+  shore, then a compact **31-minute flurry at dawn Saturday** — ten changes,
+  several lasting seconds — that resolves into a choice held for the next
+  3 h 45. A dateable moment of navigational doubt and its resolution.
 
 ---
 

@@ -55,7 +55,13 @@ introduction).
   if more were downloaded and not exported. Also unresolved: polar/sail-chart
   provenance (both unattributed, and the report card's authority rests on them),
   and whether `eccodes` becomes a dependency or the GRIB scoring is decoded once
-  into an evidence constant (memo recommends the latter). SETTLED 2026-07-26:
+  into an evidence constant (memo recommends the latter). The 30 proposed charts
+  for the crew-only cut are in `races/alir2026/docs/max-dashboard-chart-catalogue.md`
+  — build order and the three that are blocked are at its foot. SETTLED
+  2026-07-27: the data is committed under `races/alir2026/raw/max/` by owner
+  instruction, departing from the release-not-the-tree rule; **always analyse
+  `max_expedition_clean.csv.gz`**, since the raw export's ghost stream (§2.6)
+  gives wrong answers for anything position- or waypoint-derived. SETTLED 2026-07-26:
   actual sails are **[recall]** only (owner's crew log, offered as
   approximate) — they may annotate the performance report card, never drive its
   judgment, and they enter via `events.yaml` on opt-in per prime rule 4.
