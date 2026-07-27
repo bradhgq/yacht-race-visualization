@@ -28,12 +28,20 @@ banded by the seven narrative acts. The spine every other new chart hangs off.
 - **Confidence**: [fact]. It is a measurement at the boat, not a model.
 
 ### C2 · The dawn-park compass — the signature chart
-Polar trace of TWD through 04:00–12:00 Friday, time as colour. **2,216° of
-cumulative rotation, net −561°** — roughly one and a half full reversals — while
-TWS sat under 3 kt for 3.1 of the 8 hours.
-- **Source**: `TWD` unwrapped over the park window.
-- **Confidence**: [fact] for the rotation; **[inference]** for the reading that
-  the park cost time through *directionlessness* rather than mere calm.
+Polar trace of TWD through 04:00–12:00 Friday, time as colour. The wind covered
+a **range of 348°** — essentially the whole compass — with TWS under 3 kt for
+38% of the window. Framed against the race: **a third of the race's total wind
+rotation packed into a sixth of its duration** (1,255° of 3,682°).
+- **Source**: `TWD` on the repaired file, at an explicitly-stated 5-minute
+  timescale.
+- **Confidence**: [fact] for the range; **[inference]** for the reading that the
+  park cost time through *directionlessness* rather than mere calm.
+- **The trap, and it caught me**: cumulative rotation is sample-rate dependent
+  (5,119° at 1-min, 1,255° at 5-min, 697° at 15-min for the same wind) and net
+  rotation flips sign with timescale. **The chart must state its timescale**,
+  should lead with the range, and must not quote a net figure. An earlier draft
+  of the memo published "2,216°, net −561°", which was mis-scaled *and*
+  contaminated by the −26° heading flicker; it is withdrawn.
 - Sits directly under the ledger's **+273.4 min** row against Katara56.
 
 ### C3 · Apparent-vs-true wind phase plot

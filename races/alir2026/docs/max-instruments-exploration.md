@@ -200,7 +200,36 @@ changes**, which was read as a navigator cycling routes at dawn. Filtered to
 position-bearing rows the true count is **17** — and the real story is better
 (§3.8).
 
-The other three defects and how they are handled are documented in
+### 2.7 The −26° heading flicker [fact]
+
+**Owner-reported 2026-07-27 as a known instrument problem, and confirmed —
+it is pervasive.** `HDG` intermittently drops ~25.7° and returns:
+
+- **7.17% of samples**, at a steady 7–9.5% in *every* three-hour block of the
+  race — a persistent fault, not conditions-dependent
+- **One-sided**: 5.76% of samples sit within 3° of −26, only **0.03%** near
+  +26. A discrete fault state, not symmetric noise
+- The step histogram is cleanly bimodal — normal steering under 2°, then a
+  second population at 24–28°, with almost nothing between 10° and 22°. Real
+  steering does not produce 26° in one second while producing nothing at 15°
+- **COG does not move with it**, so the boat is not turning. The decisive tell
+  is the crab angle: `HDG − COG` runs **+4.1° normally and −20.9° during a
+  flicker**. Repairing restores it to **+4.2°**, matching the boat's true crab
+
+Repair (add 25.7° to flagged samples) cuts the HDG residual from **8.01% to
+0.57%** of samples off their local baseline.
+
+**What it contaminated, and what it did not.** `TWD` is HDG-referenced — logged
+TWD matches `HDG + TWA` within 5° for 92.6% of samples — so it inherited the
+fault and is now recomputed from the repaired heading. **`TWA` is immune**,
+because it derives from `AWA`/`AWS`/`BSP` with no heading input. That is a large
+piece of luck: everything in §3.4–3.6 — the polar report card, point of sail,
+the sail crossover, maneuver detection — is TWA-based and **needed no
+revision**. Derived current also survives (drift median 0.81 kt either way),
+because it is computed on 1-minute medians and a 7% minority cannot move a
+median.
+
+The other defects and how they are handled are documented in
 `scripts/clean_expedition.py`: boat-speed spikes (~20 samples, one 13-second
 burst at 22–24 kt while SOG held 3.4), 994 GPS fixes implying up to 534 kt, and
 `ROT`, which is dropped rather than cleaned — it is offset ~180 and correlates
@@ -227,10 +256,32 @@ Thursday afternoon · the collapse to 3–5 kt overnight · the directionless da
 the sea breeze filling at 11:00 Friday · the easterly rebuild from 040–050°
 before dawn Saturday · 12.4 kt at TWA 159 for the run to the line.
 
-**The dawn park's headline number** [fact]: between 04:00 and 12:00 Friday —
-the segment where the ledger books **+273.4 min** against Katara56 — TWD swung
-through **2,216° of cumulative rotation, a net −561°**. It was not merely light
-(TWS < 3 kt for 3.1 of the 8 h, BSP < 1.5 kt for 1.4 h); it was *directionless*.
+**The dawn park — CORRECTED 2026-07-27.** An earlier draft of this memo claimed
+"2,216° of cumulative rotation, a net −561°". **That figure was wrong three
+ways** and is withdrawn:
+
+1. **Mis-scaled** — it summed 1 Hz absolute differences and divided by 60,
+   which is not a unit of anything.
+2. **Flicker-contaminated** — the −26° heading fault (§2.7) propagated into
+   TWD, and at 1 Hz the fault dominates the sum (the raw figure is 130,064°).
+3. **The metric itself is sample-rate dependent** — cumulative absolute
+   rotation grows without bound the faster you sample. On the repaired file the
+   same window gives 5,119° at 1-minute medians, 1,255° at 5-minute, 697° at
+   15-minute. A "cumulative rotation" with no stated timescale is meaningless.
+   The *net* figure is worse: it flips sign with timescale (+164°, −201°,
+   +153°), so net rotation is not a reportable quantity here at all.
+
+**What is defensible** [fact]: between 04:00 and 12:00 Friday — the segment
+where the ledger books **+273.4 min** against Katara56 — the wind direction
+covered a **range of 348°** at a 5-minute timescale. Essentially the entire
+compass. That number is stable across timescales in a way the others are not
+(249° even at 15-minute medians).
+
+The framing that survives, and it is stronger: **the park concentrated a third
+of the race's total wind rotation into a sixth of its duration** — 1,255° of
+the whole race's 3,682° (both at 5-minute medians), in 8 of 46 hours. With TWS
+under 3 kt for 38% of the window, it was not merely light; it was
+*directionless*.
 
 ### 3.2 Measured current, including at Plum Gut
 

@@ -17,10 +17,15 @@ cleaning is not cosmetic:
    carries. Scalar wind/speed medians are unaffected either way.
 2. DUPLICATE TIMESTAMPS (164 rows, almost all in exp_0725.csv) — the two
    streams colliding on the same millisecond.
-3. BOAT-SPEED SPIKES. ~20 samples of 162,819 (0.012%): one 13-second burst at
+3. A -26 DEGREE HEADING FLICKER (owner-reported and confirmed): HDG drops
+   ~25.7 deg and returns, on 7.17% of samples, steadily all race. COG does not
+   move with it. It propagates into TWD, which is HDG-referenced; TWA is
+   immune, so all polar, point-of-sail, sail-crossover and maneuver work is
+   unaffected either way.
+4. BOAT-SPEED SPIKES. ~20 samples of 162,819 (0.012%): one 13-second burst at
    11:33 Fri reading 22-24 kt while SOG held 3.4, plus a single 35.0 kt sample
    and a handful of isolated ones. A paddlewheel artefact, not sailing.
-4. GPS OUTLIERS. 0.63% of fixes imply an impossible speed over ground.
+5. GPS OUTLIERS. 0.63% of fixes imply an impossible speed over ground.
 
 Two channels are flagged UNUSABLE rather than cleaned, because no filter
 rescues them: `ROT` (offset ~180 and correlating only r=0.32 with the observed
@@ -46,9 +51,15 @@ BSP_ABSOLUTE_MAX = 14.0
 BSP_DESPIKE_WINDOW = 31          # samples (~30 s at 1 Hz)
 BSP_DESPIKE_TOLERANCE = 4.0      # kt from the local rolling median
 MAX_GROUND_SPEED = 15.0          # kt implied between consecutive GPS fixes
+HDG_BASELINE_WINDOW = 121        # samples (~2 min at 1 Hz) for the flicker baseline
 
 UNUSABLE = ["ROT", "DistToLn", "BelowLn", "TmToLn", "RchTmToLn", "RchDtToLn",
             "Port lat", "Port lon", "Stbd lat", "Stbd lon"]
+
+
+def wrap(deg):
+    """Signed angular difference in (-180, 180]."""
+    return (deg + 180) % 360 - 180
 
 
 def load_raw(src_dir):
@@ -95,7 +106,32 @@ def clean(df, report=print):
     report(f"  drop GPS outliers    {int(bad_fix.sum()):>7d} fixes nulled "
            f"(implied up to {np.nanmax(implied):.0f} kt)")
 
-    # (5) sundries
+    # (5) the -26 deg heading flicker (owner-reported, 2026-07-27; confirmed).
+    # HDG intermittently drops ~25.7 deg and returns, 7.17% of samples, at a
+    # steady 7-9.5% in every 3-hour block of the race. It is one-sided: 5.76%
+    # of samples sit within 3 deg of -26 and only 0.03% near +26, so it is a
+    # discrete fault state, not symmetric noise. COG does not move with it
+    # (the boat is not turning), and the tell is the crab angle: HDG-COG runs
+    # +4.1 deg normally and -20.9 deg during a flicker. Repairing restores it
+    # to +4.2, which is what a correct repair looks like.
+    unwrapped = pd.Series(np.degrees(np.unwrap(np.radians(df.HDG.ffill()))), index=df.index)
+    residual = wrap(unwrapped - unwrapped.rolling(HDG_BASELINE_WINDOW, center=True,
+                                                  min_periods=20).median())
+    flicker = ((residual > -32) & (residual < -20)).fillna(False)
+    offset = -residual[flicker].median()
+    df.loc[flicker, "HDG"] = (df.loc[flicker, "HDG"] + offset) % 360
+    report(f"  repair HDG flicker   {int(flicker.sum()):>7d} samples +{offset:.1f} deg "
+           f"({100*flicker.mean():.2f}% of rows)")
+
+    # TWD is HDG-referenced (logged TWD matches HDG+TWA within 5 deg for 92.6%
+    # of samples), so it inherits the fault. Recompute it from the repaired
+    # heading rather than patching the logged value, which keeps the wind
+    # direction self-consistent with the heading it is derived from.
+    df["TWD"] = (df.HDG + df.TWA) % 360
+    report("  recompute TWD from repaired HDG + TWA (TWA is unaffected: it "
+           "derives from AWA/AWS/BSP, no heading)")
+
+    # (6) sundries
     zero_depth = int((df.Depth == 0).sum())
     df.loc[df.Depth == 0, "Depth"] = np.nan
     report(f"  null zero depths     {zero_depth:>7d} samples")
