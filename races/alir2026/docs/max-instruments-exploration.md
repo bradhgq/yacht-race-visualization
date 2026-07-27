@@ -50,6 +50,26 @@ The empty columns include `Set`, `Drift` and `Leeway` — the current channels
 were never configured, so current has to be derived (§2.3). `TackLossT` /
 `TackLossD` are also empty, so maneuver cost must be derived too.
 
+### 1.1 Continuity of the wind and speed channels
+
+The channels that matter most are effectively **continuous 1 Hz for the whole
+race** — not a sampled subset [fact]:
+
+| channel | samples | coverage | gaps > 60 s | longest gap | total missing |
+|---|---|---|---|---|---|
+| `AWA` `AWS` | 161,082 | **98.88%** | 9 | 263 s | 24.6 min |
+| `TWA` `TWS` | 161,082 | **98.88%** | 9 | 263 s | 24.6 min |
+| `TWD` | 161,113 | 98.90% | 9 | 263 s | 24.6 min |
+| `BSP` | 158,901 | **97.54%** | 9 | 264 s | 24.7 min |
+| `HDG` | 161,095 | 98.89% | 9 | 263 s | 24.6 min |
+| `SOG` `COG` | 161,065 | 98.87% | 8 | 263 s | 23.3 min |
+| `Heel` | 158,760 | 97.46% | 9 | 264 s | 24.7 min |
+
+Every channel shares the same nine dropouts, so the losses are logger-wide, not
+per-sensor. **The longest single outage in 46 h of racing is 4 minutes 24
+seconds**, and the worst clock hour still holds 85% coverage (16:00 Thursday).
+For any purpose in this memo the wind and speed record is unbroken.
+
 ---
 
 ## 2. Data-quality findings
@@ -98,6 +118,27 @@ with `Leeway` never having been configured.
 
 Also note `BSP` max = 35.0 kt and `ROT` pinned in a 166–196 band: both carry
 sensor spikes that need clipping before any chart.
+
+**The over-read does NOT materially contaminate the logged true wind** [fact].
+This matters, because `TWA`/`TWS`/`TWD` are *computed* onboard from the primary
+masthead measurements (`AWA`/`AWS`) plus boat speed and heading — so a 6% boat
+speed error propagates into them. Recomputing true wind from `AWA`/`AWS`
+reproduces the logged `TWS` to −0.03 kt and `TWA` to +0.1°, which confirms both
+the standard formula and that nothing exotic was configured. Substituting the
+calibrated boat speed then moves true wind by:
+
+| | TWS | TWA |
+|---|---|---|
+| median | −0.07 kt | −1.2° |
+| p90 \|diff\| | 0.31 kt | 3.1° |
+| upwind | +0.15 kt | −2.3° |
+| downwind | −0.15 kt | −0.7° |
+
+So the wind channels are usable **as logged**. The one place to carry the
+correction is polar work, where a 2.3° upwind TWA shift is small but not
+nothing. Note this is the boat's *own* true-wind solution: it is not corrected
+for heel, masthead upwash or rig twist, and the Expedition calibration-table
+columns are all empty, so no such correction was configured.
 
 ### 2.4 Use the SOG integral, not the GPS polyline [fact]
 
