@@ -113,8 +113,17 @@ window.__RACE_CONFIG__ = {
   controls: { pills: ['@ghosts'] },       // scored course always on (2025 owner decision)
   layout: ['map', '@theses', 'dtf', 'race', '@distspeed', '@ledger', '@split',
            '@watchperf',
-           '@nightmap', '@nightone', '@plumgut', '@soundnight', 'two:xte,sog', '@forecast', 'events'],
-  modules: ['distspeed', 'theses', 'ledger', 'split', 'watchperf', 'nightmap', 'nightone', 'plumgut', 'soundnight', 'forecast'],
+           '@nightmap', '@nightone', '@plumgut', '@soundnight', 'two:xte,sog', '@forecast',
+           // THE INSTRUMENT LAYER (private, crew-only cut) — Max's own 1 Hz record.
+           // Ordered validation-first: prove the tracker before spending its
+           // credibility, then the wind she sailed in, then what the navigator
+           // knew, then whether the boat was sailed to its numbers.
+           '@maxtruth', '@maxwind', '@maxfcst', '@maxpolar', '@maxsails',
+           'events'],
+  // maxdata FIRST and always: it defines the MAXDATA evidence constant the five
+  // instrument modules read, and race scripts load in this order.
+  modules: ['distspeed', 'theses', 'ledger', 'split', 'watchperf', 'nightmap', 'nightone', 'plumgut', 'soundnight', 'forecast',
+            'maxdata', 'maxtruth', 'maxwind', 'maxfcst', 'maxpolar', 'maxsails'],
   coreData: ['ledger', 'nightone', 'plumgut', 'soundgate', 'watchperf'],   // postprocess tables the modules render from
   overlays: ['courseline', 'arrows', 'timedots', 'watches'],
 };
