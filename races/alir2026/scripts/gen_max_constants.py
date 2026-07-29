@@ -25,10 +25,15 @@ FINISH = pd.Timestamp("2026-07-25 11:57:18")
 r = pd.read_csv(CLEAN, index_col=0, parse_dates=True)
 out = {}
 
-# ---- C1/C2 wind ribbon: TWD with TWS as magnitude, 5-min medians
+# ---- C1/C2 wind ribbon: TWD with TWS as magnitude, 5-min medians.
+# "u" is the UNWRAPPED direction (continuous degrees, no 0/360 seam): the race
+# spans only 424 deg = 1.2 turns, so an unrolled compass axis renders the park's
+# 348-degree excursion as one continuous trace instead of a jump at north.
 w = r[["TWD", "TWS"]].resample("5min").median().dropna()
-out["wind"] = [{"t": t.strftime("%Y-%m-%d %H:%M"), "d": round(float(a), 1), "s": round(float(b), 2)}
-               for t, (a, b) in zip(w.index, w.values)]
+uw = np.degrees(np.unwrap(np.radians(w.TWD.values)))
+out["wind"] = [{"t": t.strftime("%Y-%m-%d %H:%M"), "d": round(float(a), 1),
+                "u": round(float(c), 1), "s": round(float(b), 2)}
+               for t, (a, b), c in zip(w.index, w.values, uw)]
 park = r.loc["2026-07-24 04:00":"2026-07-24 12:00", "TWD"].resample("5min").median().dropna()
 un = np.degrees(np.unwrap(np.radians(park.values)))
 out["park"] = {"from": "2026-07-24 04:00", "to": "2026-07-24 12:00",

@@ -87,10 +87,15 @@ registerModule({
        every point. */
     const park = F.reduce((a, r) => (r.f - r.o) > (a ? a.f - a.o : -99) ? r : a, null);
     const fin = F.reduce((a, r) => (r.o - r.f) > (a ? a.o - a.f : -99) ? r : a, null);
+    /* Narrow: one line each and the park label pulled up-left, or the two
+       bottom-right annotations collide (found at 430px). */
+    const nrw = h.narrow();
     const annotations = [];
     if (park) annotations.push({
-      x: park.f, y: park.o, ax: 62, ay: -30, showarrow: true, arrowwidth: 1,
-      arrowcolor: MODEL_COL[park.model], text: 'the dawn park —<br>forecast 7.6, sailed 1.8',
+      x: park.f, y: park.o, ax: nrw ? -10 : 62, ay: nrw ? -40 : -30,
+      showarrow: true, arrowwidth: 1,
+      arrowcolor: MODEL_COL[park.model],
+      text: nrw ? 'the dawn park' : 'the dawn park —<br>forecast 7.6, sailed 1.8',
       font: { size: 9, color: MODEL_COL[park.model], family: MONO }, align: 'left',
     });
     if (fin) annotations.push({
@@ -103,8 +108,10 @@ registerModule({
     annotations.push({
       xref: 'paper', yref: 'paper', x: 0.995, xanchor: 'right', y: 0.03, yanchor: 'bottom',
       showarrow: false, align: 'right',
-      text: `last download ${S.last} — ${S.afterGunH.toFixed(1)} h after the gun.<br>` +
-        `${S.remainingH.toFixed(0)} h of racing followed it, on data already aboard.`,
+      text: nrw
+        ? `last download Thu 19:12 · ${S.remainingH.toFixed(0)} h raced on it`
+        : `last download ${S.last} — ${S.afterGunH.toFixed(1)} h after the gun.<br>` +
+          `${S.remainingH.toFixed(0)} h of racing followed it, on data already aboard.`,
       font: { size: 9, color: '#4C6274', family: MONO },
     });
 

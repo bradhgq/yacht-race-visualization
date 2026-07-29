@@ -81,9 +81,26 @@ registerModule({
       };
     });
 
+    /* The limitation lives ON the plot, not only in the caption (editorial
+       decision, 2026-07-27): this is the chart most likely to be read as a
+       judgment on named crew, so the fence travels with the pixels. The 4-6 kt
+       group tops out at 67%, leaving the upper-left quadrant genuinely empty —
+       the annotation claims unowned space (label-lane rule). */
+    const annotations = [{
+      xref: 'paper', yref: 'paper', x: 0.015, xanchor: 'left', y: 0.985, yanchor: 'top',
+      showarrow: false, align: 'left',
+      text: h.narrow()
+        ? 'PRESCRIBED sails — hoists were<br>never logged; see the caption.'
+        : 'sails as PRESCRIBED by the crossover chart for the measured wind —<br>' +
+          'what was actually hoisted was never logged. the gap is real at every<br>' +
+          'wind speed; whether the kite was up for it, only the crew can say.',
+      font: { size: 9.5, color: '#4C6274', family: MONO },
+    }];
+
     const layout = {
       ...h.BASE(),
       margin: { ...h.BASE().margin, t: 26 },
+      annotations,
       barmode: 'group', bargap: 0.3, bargroupgap: 0.1,
       xaxis: {
         ...h.GAX, type: 'category', automargin: true,

@@ -41,31 +41,34 @@ registerModule({
     if (!T || !T.hist) return { traces: [], layout: h.BASE() };
     const F = MAXDATA.finish;
 
-    const M2NM = 1852;
+    /* Axis in METRES (editorial decision, 2026-07-27): the chart's claim is
+       GPS-level agreement, and its own caption leads with "6.9 metres" — an
+       axis in hundredths of a nautical mile made the reader convert. The nm
+       figures stay in the corner card for the sailors. */
+    const NM2M = 1852;
     const traces = [{
       type: 'bar',
-      x: T.hist.map(b => b.b), y: T.hist.map(b => b.n),
-      width: 0.0135,
+      x: T.hist.map(b => b.b * NM2M), y: T.hist.map(b => b.n),
+      width: 0.0135 * NM2M,
       marker: { color: '#41505E', line: { color: '#FDFEFD', width: 1 } },
-      customdata: T.hist.map(b => Math.round(b.b * M2NM)),
-      hovertemplate: '≈%{customdata} m separation<br>%{y} tracker fixes<extra></extra>',
+      hovertemplate: '≈%{x:.0f} m separation<br>%{y} tracker fixes<extra></extra>',
       name: 'tracker fixes',
     }];
 
-    const medNm = T.medianM / M2NM;
+    const medM = T.medianM;
     const shapes = [{
-      type: 'line', xref: 'x', yref: 'paper', x0: medNm, x1: medNm, y0: 0, y1: 1,
+      type: 'line', xref: 'x', yref: 'paper', x0: medM, x1: medM, y0: 0, y1: 1,
       line: { color: '#C2187E', width: 1.6, dash: 'dot' },
     }];
 
     const annotations = [
-      { xref: 'x', yref: 'paper', x: medNm, xanchor: 'left', y: 0.97, yanchor: 'top',
+      { xref: 'x', yref: 'paper', x: medM, xanchor: 'left', y: 0.97, yanchor: 'top',
         showarrow: false, align: 'left',
         text: `  median ${T.medianM} m`,
         font: { size: 10, color: '#C2187E', family: MONO } },
       { xref: 'paper', yref: 'paper', x: 0.99, xanchor: 'right', y: 0.72, yanchor: 'top',
         showarrow: false, align: 'right',
-        text: `p95 ${T.p95Nm} nm · max ${T.maxNm} nm<br>` +
+        text: `p95 ${Math.round(T.p95Nm * 1852)} m (${T.p95Nm} nm) · max ${Math.round(T.maxNm * 1852)} m<br>` +
           `n = ${T.n} tracker fixes<br><br>` +
           `<b>finish crossing ${F.crossing.slice(11)}</b><br>` +
           `RC amended ${F.officialLocal.slice(11)} · ${Math.abs(F.deltaS)} s apart`,
@@ -77,8 +80,8 @@ registerModule({
       margin: { ...h.BASE().margin, t: 18 },
       shapes, annotations, bargap: 0.08,
       xaxis: {
-        ...h.GAX, range: [-0.008, 0.35], zeroline: false,
-        title: { text: 'Separation, instruments vs tracker (nm)', font: h.AXFONT },
+        ...h.GAX, range: [-15, 650], zeroline: false, dtick: 100,
+        title: { text: 'Separation, instruments vs tracker (metres)', font: h.AXFONT },
       },
       yaxis: {
         /* headroom: on a log axis the 647-fix spike otherwise touches the frame */

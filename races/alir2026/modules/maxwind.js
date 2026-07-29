@@ -5,9 +5,16 @@
    Class: MEASURED at the boat — not a buoy 10-40 nm away and not a model. This
    is the layer the tracker never had (I18: the tracker carries no wind).
 
-   FORM: direction is the story, strength is the magnitude, so TWD takes the one
-   y-axis and TWS rides a sequential single-hue ramp (dataviz: sequential = one
-   hue light->dark; never a rainbow). Deliberately NOT a dual-axis chart.
+   FORM — the unrolled compass. A 0-360 axis puts a seam at north, and the dawn
+   park's excursion crosses that seam: the first cut of this chart showed the
+   trace exiting the top and reappearing at the bottom, which read as two
+   simultaneous winds exactly where the story lives. The whole race spans only
+   424 unwrapped degrees (1.2 turns), so the axis simply unrolls: continuous
+   degrees, cardinal ticks repeating where the compass repeats ("E" appears
+   twice — that IS the one-lap-plus story), and a thin connecting line whose
+   continuity is now honest. TWS rides a sequential single-hue ramp (dataviz:
+   one hue light->dark, never a rainbow); direction in near-calm is noise, and
+   the palest marks read as exactly that.
 
    THE TRAP, stated on the chart: cumulative rotation is sample-rate dependent —
    the same wind gives 5,119 deg at 1-min medians, 1,255 at 5-min, 697 at 15-min
@@ -26,16 +33,17 @@ registerModule({
     note: '<b>Every wind number elsewhere on this page is a buoy 10–40 nm away or a model. ' +
       'This is the breeze at the boat — 46 hours of it, measured.</b> ' +
       'Each dot is a 5-minute median: wind <b>direction</b> up the y-axis, wind <b>strength</b> as ' +
-      'the dot shade (pale = drifting, dark = pressure). ' +
+      'the dot shade (pale = drifting, dark = pressure). The axis <b>unrolls the compass</b> — the ' +
+      'race used 424° of it, a lap and a fifth, which is why “E” appears twice: the southwesterly ' +
+      'Thursday and the easterly Saturday sit a full turn apart, and the trace between them never ' +
+      'jumps. ' +
       'The shaded band is <b>the dawn park</b>, the segment where the phase ledger books ' +
-      '+273 min against Katara56 — the wind there covered a range of <b>348°</b>, essentially the ' +
-      'whole compass, with the breeze under 3 kt for 38% of the window. It was not merely light; ' +
-      'it was directionless. ' +
+      '+273 min against Katara56 — inside it the wind veered through north to east, then unwound ' +
+      'all the way back through west and south: a range of <b>348°</b>, essentially the whole ' +
+      'compass, with the breeze under 3 kt for 38% of the window. Not merely light; directionless. ' +
       '<i>Read the range, not a total: cumulative rotation depends entirely on how fast you sample ' +
       '(1,255° at this 5-minute timescale, 697° at 15-minute, 5,119° at 1-minute), so a “total ' +
       'rotation” figure without a stated timescale means nothing.</i> ' +
-      '<i>The axis wraps at north:</i> a trace leaving the top reappears at the bottom — that is the ' +
-      'same wind continuing to rotate, not a second breeze and not a gap in the data. ' +
       'Evidence class: <b>measured</b> — Max\'s own instruments, cleaned (a −26° heading flicker on ' +
       '7% of samples is repaired; see the data notes).',
   },
@@ -43,7 +51,7 @@ registerModule({
     const { h, cfg } = ctx;
     const MONO = 'SF Mono, Menlo, monospace';
     const W = (typeof MAXDATA !== 'undefined' && MAXDATA.wind) || [];
-    if (!W.length) return { traces: [], layout: h.BASE() };
+    if (!W.length || W[0].u == null) return { traces: [], layout: h.BASE() };
     const P = MAXDATA.park;
 
     /* Sequential ramp: ONE hue, light -> dark (dataviz colour formula). Steps
@@ -52,8 +60,9 @@ registerModule({
                   [0.75, '#3D74B4'], [1, '#1B4A85']];
 
     const traces = [{
-      type: 'scattergl', mode: 'markers',
-      x: W.map(p => p.t), y: W.map(p => p.d),
+      type: 'scattergl', mode: 'lines+markers',
+      x: W.map(p => p.t), y: W.map(p => p.u),
+      line: { color: '#C6D6E2', width: 1 },     // under the markers: honest continuity
       marker: {
         size: h.narrow() ? 4.5 : 5.5, color: W.map(p => p.s),
         colorscale: RAMP, cmin: 0, cmax: 14,
@@ -63,8 +72,9 @@ registerModule({
         },
         line: { width: 0 },
       },
-      customdata: W.map(p => p.s),
-      hovertemplate: '%{x}<br>direction %{y:.0f}°<br>strength %{customdata:.1f} kt<extra></extra>',
+      customdata: W.map(p => [p.s, p.d]),
+      hovertemplate: '%{x}<br>direction %{customdata[1]:.0f}°<br>' +
+        'strength %{customdata[0]:.1f} kt<extra></extra>',
       name: 'measured wind',
     }];
 
@@ -76,21 +86,26 @@ registerModule({
       fillcolor: '#17293A', opacity: 0.055, line: { width: 0 }, layer: 'below',
     }];
     const annotations = [{
-      xref: 'x', yref: 'paper', x: P.from, xanchor: 'left', y: 0.5, showarrow: false,
-      textangle: -90, text: `THE DAWN PARK · ${P.rangeDeg}° of direction`,
+      xref: 'x', yref: 'paper', x: P.from, xanchor: 'left', y: 0.04, yanchor: 'bottom',
+      showarrow: false, textangle: -90,
+      text: `THE DAWN PARK · ${P.rangeDeg}° of direction`,
       font: { size: h.narrow() ? 8.5 : 9.5, color: '#41505E', family: MONO },
     }];
 
+    /* Cardinal ticks on the unrolled axis — repeats are the point. */
+    const tickvals = [45, 90, 135, 180, 225, 270, 315, 360, 405, 450];
+    const ticktext = ['NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', 'N', 'NE', 'E'];
+
     const layout = {
       ...h.BASE(),
-      margin: { ...h.BASE().margin, t: 18, r: h.narrow() ? 54 : 74 },
+      margin: { ...h.BASE().margin, t: 18, r: h.narrow() ? 54 : 74,
+        b: h.narrow() ? 58 : 40 },   // angled date ticks clip at 430px otherwise
       shapes, annotations,
       xaxis: { ...h.GAX, type: 'date',
         title: { text: `Time (${cfg.time.tzLabel})`, font: h.AXFONT } },
-      yaxis: { ...h.GAX, range: [0, 360], dtick: 90,
-        tickvals: [0, 90, 180, 270, 360],
-        ticktext: ['N', 'E', 'S', 'W', 'N'],
-        title: { text: 'Wind direction (from)', font: h.AXFONT } },
+      yaxis: { ...h.GAX, range: [20, 470], tickvals, ticktext,
+        title: { text: h.narrow() ? 'Direction (unrolled)' :
+          'Wind direction (from) — compass unrolled', font: h.AXFONT } },
       showlegend: false,
     };
     return { traces, layout };
